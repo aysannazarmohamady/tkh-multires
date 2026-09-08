@@ -12,6 +12,8 @@ Work in progress.
 - [x] T1 — Load and describe the evolving graph
 - [x] Literature review (prep for T2) — see `literature_review.md`
 - [ ] T2 — Method and formal statement (Deliverable 0)
+  - [x] Deliverable 0 draft (formal problem statement) — see `report.md`
+  - [ ] Method implementation (hyperedge clustering + node assignment)
 - [ ] T3 — Temporal coupling
 - [ ] T4 — Hyper-edge collapse
 - [ ] T5 — Labelling with measured faithfulness
