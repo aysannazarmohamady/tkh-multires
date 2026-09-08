@@ -10,6 +10,7 @@ Work in progress.
 ## Task checklist
 
 - [x] T1 — Load and describe the evolving graph
+- [x] Literature review (prep for T2) — see `literature_review.md`
 - [ ] T2 — Method and formal statement (Deliverable 0)
 - [ ] T3 — Temporal coupling
 - [ ] T4 — Hyper-edge collapse
