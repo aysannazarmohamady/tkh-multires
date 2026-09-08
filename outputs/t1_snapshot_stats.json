@@ -1,0 +1,226 @@
+{
+  "snapshots": [
+    {
+      "cutoff_year": 2020,
+      "n_nodes": 1839,
+      "n_edges": 374,
+      "node_type_distribution": {
+        "cited_work": 331,
+        "technique": 247,
+        "method": 246,
+        "component": 221,
+        "task": 197,
+        "claim": 179,
+        "problem": 146,
+        "author": 105,
+        "dataset": 74,
+        "future_topic": 43,
+        "metric": 34,
+        "article": 16
+      },
+      "relation_type_distribution": {
+        "claims": 179,
+        "evaluated_on": 61,
+        "addresses": 16,
+        "extends": 16,
+        "solves": 16,
+        "uses_component": 16,
+        "uses_technique": 16,
+        "presents": 16,
+        "authored_by": 16,
+        "proposes_future_work": 13,
+        "cites": 9
+      },
+      "arity_min": 2,
+      "arity_max": 45,
+      "arity_mean": 5.57,
+      "arity_distribution_top10": {
+        "3": 151,
+        "2": 109,
+        "5": 16,
+        "6": 12,
+        "7": 10,
+        "11": 8,
+        "9": 8,
+        "4": 7,
+        "8": 6,
+        "12": 6
+      },
+      "dropped_partial_edges": 31
+    },
+    {
+      "cutoff_year": 2022,
+      "n_nodes": 2496,
+      "n_edges": 547,
+      "node_type_distribution": {
+        "cited_work": 418,
+        "technique": 345,
+        "method": 317,
+        "component": 309,
+        "task": 263,
+        "claim": 259,
+        "problem": 198,
+        "author": 131,
+        "dataset": 118,
+        "future_topic": 67,
+        "metric": 49,
+        "article": 22
+      },
+      "relation_type_distribution": {
+        "claims": 246,
+        "evaluated_on": 114,
+        "addresses": 22,
+        "extends": 22,
+        "solves": 22,
+        "uses_component": 22,
+        "uses_technique": 22,
+        "presents": 22,
+        "authored_by": 22,
+        "proposes_future_work": 19,
+        "cites": 14
+      },
+      "arity_min": 2,
+      "arity_max": 59,
+      "arity_mean": 5.72,
+      "arity_distribution_top10": {
+        "3": 244,
+        "2": 140,
+        "5": 17,
+        "9": 14,
+        "8": 13,
+        "6": 13,
+        "7": 12,
+        "4": 12,
+        "11": 9,
+        "12": 8
+      },
+      "dropped_partial_edges": 42
+    },
+    {
+      "cutoff_year": 2024,
+      "n_nodes": 4307,
+      "n_edges": 984,
+      "node_type_distribution": {
+        "technique": 673,
+        "component": 608,
+        "task": 517,
+        "claim": 505,
+        "cited_work": 505,
+        "problem": 415,
+        "method": 401,
+        "author": 250,
+        "dataset": 201,
+        "future_topic": 121,
+        "metric": 73,
+        "article": 38
+      },
+      "relation_type_distribution": {
+        "claims": 445,
+        "evaluated_on": 222,
+        "presents": 38,
+        "authored_by": 38,
+        "addresses": 37,
+        "extends": 37,
+        "solves": 37,
+        "uses_component": 37,
+        "uses_technique": 37,
+        "proposes_future_work": 31,
+        "cites": 25
+      },
+      "arity_min": 2,
+      "arity_max": 65,
+      "arity_mean": 6.19,
+      "arity_distribution_top10": {
+        "3": 488,
+        "2": 210,
+        "5": 25,
+        "6": 24,
+        "8": 21,
+        "9": 20,
+        "7": 19,
+        "4": 19,
+        "11": 18,
+        "12": 14
+      },
+      "dropped_partial_edges": 79
+    },
+    {
+      "cutoff_year": 2026,
+      "n_nodes": 5798,
+      "n_edges": 1429,
+      "node_type_distribution": {
+        "technique": 962,
+        "component": 855,
+        "task": 732,
+        "claim": 690,
+        "problem": 634,
+        "cited_work": 580,
+        "method": 448,
+        "author": 318,
+        "dataset": 259,
+        "future_topic": 178,
+        "metric": 90,
+        "article": 52
+      },
+      "relation_type_distribution": {
+        "claims": 690,
+        "evaluated_on": 301,
+        "presents": 52,
+        "addresses": 51,
+        "solves": 51,
+        "uses_technique": 51,
+        "authored_by": 51,
+        "extends": 50,
+        "uses_component": 50,
+        "proposes_future_work": 45,
+        "cites": 37
+      },
+      "arity_min": 2,
+      "arity_max": 65,
+      "arity_mean": 6.25,
+      "arity_distribution_top10": {
+        "3": 751,
+        "2": 279,
+        "6": 34,
+        "5": 32,
+        "4": 31,
+        "8": 28,
+        "9": 24,
+        "7": 22,
+        "11": 20,
+        "12": 17
+      },
+      "dropped_partial_edges": 0
+    }
+  ],
+  "growth": [
+    {
+      "from_year": 2020,
+      "to_year": 2022,
+      "new_nodes": 657,
+      "new_edges": 173,
+      "node_growth_pct": 35.7,
+      "edge_growth_pct": 46.3
+    },
+    {
+      "from_year": 2022,
+      "to_year": 2024,
+      "new_nodes": 1811,
+      "new_edges": 437,
+      "node_growth_pct": 72.6,
+      "edge_growth_pct": 79.9
+    },
+    {
+      "from_year": 2024,
+      "to_year": 2026,
+      "new_nodes": 1491,
+      "new_edges": 445,
+      "node_growth_pct": 34.6,
+      "edge_growth_pct": 45.2
+    }
+  ],
+  "data_quality_notes": [
+    "Only 831/5798 nodes have a true `origin_year` (the rest fall back to `first_seen_year`); treat `year` as a 'first appeared in this corpus' proxy, not a verified invention date.",
+    "137/1429 hyper-edges have a `year` earlier than the max `year` among their member nodes \u2014 edge.year and node.year likely come from different definitions (e.g. article_year vs first_seen_year) and are not mutually consistent. This is why some 'dropped_partial_edges' occur at intermediate cutoffs even though the edge's own year is <= cutoff."
+  ]
+}
