@@ -6,7 +6,7 @@ incrementally as work proceeds.
 
 ## T1 - Load and describe the evolving graph
 
-**Tool:** Claude - sonnet 5 Medium
+**Tool:** Claude - Sonnet 5 
 
 **Major prompts (paraphrased from the actual session):**
 1. "Write a script that loads the TKH graph and describes it (T1): node/edge
@@ -38,3 +38,40 @@ incrementally as work proceeds.
 - Found the edge/node year inconsistency myself while doing the manual check
   above, then confirmed the automated count (137/1429) matched what I found
   by hand before accepting the added check.
+
+## T2 prep — Literature review (paper search)
+
+**Tools:** Claude (Anthropic), for both search and drafting; a second AI
+assistant (ChatGPT), used independently for a cross-check.
+
+**Process:**
+- Used AI-assisted web search to find candidate papers matching the four
+  required areas (hierarchical community detection, hypergraph
+  clustering/spectral partitioning, hypergraph coarsening, dynamic community
+  detection), combined with my own manual judgment on which candidates were
+  topically relevant enough to pursue.
+- Asked a second AI assistant to independently re-verify the candidate list
+  against primary sources (existence, correct venue/year, actual content vs.
+  claimed content), rather than trusting the first pass at face value.
+- Made the final inclusion/exclusion decisions myself based on both AI
+  outputs plus my own direct verification (see below), not by accepting
+  either AI's conclusion automatically.
+
+**What I verified myself:**
+- The second AI assistant's cross-check flagged one paper (TSA-HGNN,
+  Vusirikkayala & Viswanatham, Frontiers in AI 2026) as a likely
+  fabrication, since a quick search had not surfaced it. Rather than
+  removing it on that basis alone, I fetched the paper's PubMed record
+  directly (PMID 42290696, PMCID PMC13261176, DOI 10.3389/frai.2026.1824901)
+  and confirmed it is a real, indexed publication. The false alarm was most
+  likely due to the paper being very recent (May 2026) and not yet indexed
+  everywhere. This is recorded in `literature_review.md` under
+  "Verification note."
+- Independently confirmed HySpecPro's venue: the arXiv listing notes it was
+  accepted to DAC 2026, which is not one of the venues the task names as
+  preferred (KDD/NeurIPS/ICLR/WWW/TKDE), and I flagged this in
+  `literature_review.md` rather than overstating the venue.
+- Accepted the correction that HyperSF (2021) falls outside the task's
+  suggested 2022-2026 window, and wrote an explicit justification in
+  `literature_review.md` for keeping it anyway (best topical fit for T4),
+  rather than silently including an out-of-window paper.
