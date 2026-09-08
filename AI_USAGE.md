@@ -6,7 +6,7 @@ incrementally as work proceeds.
 
 ## T1 - Load and describe the evolving graph
 
-**Tool:** Claude - Sonnet 5 
+**Tool:** Claude (Anthropic)
 
 **Major prompts (paraphrased from the actual session):**
 1. "Write a script that loads the TKH graph and describes it (T1): node/edge
@@ -75,3 +75,53 @@ assistant (ChatGPT), used independently for a cross-check.
   suggested 2022-2026 window, and wrote an explicit justification in
   `literature_review.md` for keeping it anyway (best topical fit for T4),
   rather than silently including an out-of-window paper.
+
+## T2 — Method design and Deliverable 0
+
+**Tool:** Claude (Anthropic)
+
+**Role:** In this part of the work, Claude acted as a research assistant:
+searching for and surfacing candidate algorithms and papers on request. I
+directed the process and made the actual decisions about what to keep,
+reject, or push further on.
+
+**Major prompts (paraphrased):**
+1. "Search the world of algorithms for an idea to complete and optimize a
+   combined structural+semantic clustering approach."
+2. "Are you sure there isn't a better idea for this?" — asked repeatedly,
+   after each candidate Claude surfaced (Leiden-based multi-resolution
+   clustering, then hypergraph modularity/h-Louvain, then hyperedge-based
+   hierarchical clustering), because none of the first attempts were good
+   enough on inspection.
+3. "Write Deliverable 0 based on this literature."
+
+**What Claude helped with:**
+- Searched for and surfaced candidate algorithms and papers at each round:
+  Leiden/Louvain multi-resolution clustering, hypergraph modularity
+  (h-Louvain), and hyperedge-based hierarchical agglomerative clustering
+  (Lotito et al. 2023; DeWolfe & Théberge 2025).
+- Fetched full papers (not just search snippets) and reported their actual
+  content, including limitations, when asked to confirm a candidate was
+  solid.
+- Drafted the formal Deliverable 0 statement (objective, complexity, the
+  guarantees-vs-empirical table, and the rejected-alternative justification)
+  once a method was selected.
+
+**What I decided:**
+- I rejected the first candidate (Leiden) because it required projecting the
+  hypergraph to a pairwise graph, which conflicts with P4.
+- I rejected the second candidate (hypergraph modularity/h-Louvain) after
+  Claude reported that even the method's own authors state it "often fails
+  to find meaningful communities" without extra tuning, which made it too
+  heavy to implement soundly in this task's time budget.
+- I selected the third candidate (hyperedge-based HAC) as the final basis
+  for the method, and directed that its two known gaps relative to our task
+  (overlapping communities conflicting with P1, and no semantic signal)
+  be addressed explicitly in the design rather than glossed over.
+
+**Still outstanding:** the formal guarantees in Deliverable 0 (e.g. P1
+laminarity, P2's achievable cluster count, P5 stability) are stated based on
+known properties of hierarchical agglomerative clustering, not yet confirmed
+by running the actual implementation on our data. That confirmation is the
+next step before treating any of these guarantees as established for this
+project specifically.
