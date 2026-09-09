@@ -17,9 +17,27 @@ Work in progress.
         (similarity formula, node-assignment note, coherence-circularity
         design decision) — see `AI_USAGE.md`
   - [x] Method implementation (hyperedge clustering + node assignment) —
-        see `src/method.py`; verified on the full 2026 snapshot: 702
-        clustering edges, level-0 cluster count 13-14 (target 10-15),
-        laminar check PASS, 100% node coverage after post-hoc attachment
+        see `src/method.py`; verified on all 4 snapshots. Coverage and
+        level-0 balance vary by snapshot (this is reported honestly, not
+        smoothed over — see `report.md`, "Second/Third review round"):
+
+        | cutoff | nodes | fully unassigned | level-0 top-2 concentration |
+        |---|---|---|---|
+        | 2020 | 1,839 | 364 (19.8%) | 33.2% |
+        | 2022 | 2,496 | 357 (14.3%) | 36.5% |
+        | 2024 | 4,307 | 211 (4.9%) | 58.4% |
+        | 2026 | 5,798 | 0 (0.0%) | 47.7% |
+
+        The 2020 unassigned nodes have no incident edge among the clustered
+        or held-out/excluded relation types *at that cutoff* (their only
+        edges appear later) — this is a real property of the growing
+        corpus, not a bug; P1/P2 hold over the assigned subgraph at each
+        snapshot, not over isolated nodes that aren't in any hyperedge yet.
+  - [x] Coherence probe (bibliographic coupling between articles, with a
+        provenance assertion closing the earlier leak) — see
+        `src/coherence_probe.py` and `report.md`, "Third review round".
+        Result: a null result (no significant evidence at 2024 or 2026;
+        undefined at 2020 due to too few articles) — reported honestly.
 - [ ] T3 — Temporal coupling
 - [ ] T4 — Hyper-edge collapse
 - [ ] T5 — Labelling with measured faithfulness
@@ -89,10 +107,24 @@ python src/method.py --cutoff 2026 \
 
 Runs the core T2 method (see `report.md` for the full design): builds a
 combined structural+semantic similarity between hyperedges, runs
-hierarchical agglomerative clustering, extracts a level-0 cut targeting
-10-15 clusters (P2), assigns nodes top-down so the result is laminar by
-construction (P1, empirically verified each run), and attaches leftover
-nodes (types only connected via the excluded/held-out relation types) via a
-post-hoc pass. Produces `outputs/hierarchy.json`. Omit `--embeddings-path`
-and `--embeddings-order` to fall back to offline TF-IDF (weaker semantic
-signal; see "Semantic embeddings" above).
+hierarchical agglomerative clustering (**complete linkage by default** —
+average-linkage was found to chain into two dominant clusters holding 75%
+of all nodes; see `report.md`), extracts a level-0 cut targeting 10-15
+clusters (P2) plus geometrically-spaced intermediate levels, assigns nodes
+top-down so the result is laminar by construction (P1, empirically verified
+each run), and attaches leftover nodes via a post-hoc pass, tagging each
+with a `provenance` (`primary` / `claims` / `cites`). Produces
+`outputs/hierarchy.json`. Omit `--embeddings-path` / `--embeddings-order`
+to fall back to offline TF-IDF. The same embeddings file (computed once on
+the full 2026 snapshot) can be reused for any earlier `--cutoff`, since a
+hyperedge's embedding only depends on its own members, not the snapshot.
+
+```bash
+python src/coherence_probe.py outputs/hierarchy_2020.json \
+    outputs/hierarchy_2024.json outputs/hierarchy.json
+```
+
+Runs the T6 coherence probe (bibliographic coupling between articles via
+held-out `cites` edges, with a `provenance == "primary"` assertion that
+fails loudly if the independence guarantee is ever broken). Prints one JSON
+result line per snapshot file.
