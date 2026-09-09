@@ -405,6 +405,82 @@ uses the separate `lambda=0.2` chain. This keeps the already-verified
 non-temporal artifacts stable while still giving T3 a fair mechanism to
 evaluate — the two are not silently mixed.
 
+### T2 correction: rank-normalization (the alpha=0.5 scale mismatch)
+
+An external review found that `alpha=0.5` was not actually a balanced
+reconciliation between structure and semantics as claimed. We verified
+this directly: `s_struct` has mean 0.0044 (zero for 96.7% of pairs) while
+`s_sem` has mean 0.300 — very different scales. At `alpha=0.5` on the raw
+values, the structural term supplied only 4.7% of the combined
+similarity's variance (`var=0.000268` vs `0.005472`, confirmed by direct
+computation) — the method was effectively ~95% semantic despite the
+`alpha=0.5` framing.
+
+**Fix:** both signals are now rank-normalized to `[0,1]` over their own
+upper-triangle *before* mixing (`scipy.stats.rankdata`), so `alpha` controls
+the actual mixing weight rather than being dominated by whichever raw
+signal has larger variance. **Honest limit of this fix:** re-measuring
+after rank-normalization, the structural term's variance share rose to only
+8.7%, not 50%. This is not a remaining bug in the normalization — it's a
+property of the data: since 96.7% of structural pairs are *exactly* zero,
+rank-normalization ties all of them at the same (low) rank, so the
+structural signal is inherently low-variance regardless of any monotonic
+rescaling. We report this as a genuine, only partially fixable limitation
+rather than claiming the rank fix fully balances the two signals.
+
+**Rejected alternative from the same review:** using `authored_by` and
+`evaluated_on` as additional "independent" coherence probes for T6. We
+checked this against `src/method.py`'s actual relation-type sets and found
+both are already among the 9 relation types driving the clustering itself
+(`EXCLUDED_FROM_CLUSTERING` only contains `claims`; `HELD_OUT_FOR_COHERENCE`
+only contains `cites`) — using either as an "independent" probe would
+reintroduce the exact circularity issue already caught and fixed for
+`authored_by` in an earlier round. Not implemented.
+
+### T4 — Hyperedge collapse (implementation)
+
+Implemented in `src/hyperedge_collapse.py`, applied to *all* hyperedges
+(including `claims` and `cites`, since T4 concerns the graph after
+coarsening, independent of which edges fed clustering). For hyperedge `e`
+with endpoints landing in super-node set `sigma(e)` (multiplicities `m_S`
+= count of e's endpoints in super-node `S`):
+
+- **`|sigma(e)| = 1`:** the edge becomes internal to that super-node. Not
+  deleted — recorded in the super-node's `internal_edges`, and counted
+  toward a per-cluster cohesion score (internal edge mass / total incident
+  mass), usable later for T5/T6.
+- **`|sigma(e)| = 2`:** a coarse edge between the two super-nodes, weight
+  `1/(|sigma(e)|-1) = 1`, carrying the multiplicity vector `(m_A, m_B)` so
+  partial internalization isn't silently lost.
+- **`|sigma(e)| >= 3`:** kept as a genuine coarsened **hyperedge** of arity
+  `|sigma(e)|` between those super-nodes — not clique-expanded into
+  pairwise edges. This is what makes the coarsening hypergraph-native by
+  construction rather than a projection. A `clique_expand=True` mode is
+  also implemented specifically so the two can be directly compared.
+
+**Verified by hand** (per our established habit): traced hyperedge `h_00050`
+(arity 20) through the collapse — 18 of its members land in super-node 6,
+1 in super-node 7, 1 in super-node 11, matching the output's
+`multiplicities: {"6": 18, "7": 1, "11": 1}` exactly; combined with a
+second contributing edge (`h_01365`, also `sigma`-size 3), the aggregated
+weight `0.5 + 0.5 = 1.0` matched the output exactly.
+
+**Projection-loss result (level 0, 2026, 14 super-nodes):** 117 native
+coarse edges (62 of them true hyperedges of arity >= 3) vs. 83 edges if
+clique-expanded — clique expansion collapses 62 genuine multi-way relations
+down into far fewer *distinct* pairwise edges (28 new pairs beyond what
+native coarsening already had), because with only 14 super-nodes many of
+the `C(k,2)` pairs generated from different original hyperedges coincide.
+This directly demonstrates the information loss T2 asked us to quantify if
+a projection were tried: multiple distinct multi-way relations become
+indistinguishable from each other once flattened to pairs.
+
+**What this loses, stated directly:** which specific original members
+grounded a coarse relation, and the distinction between e.g. a `(1,1,8)`
+endpoint spread and a `(3,3,4)` spread landing in the same 3 super-nodes.
+The multiplicity vector is stored specifically so this is at least
+recoverable, not silently discarded.
+
 ### Note on scope
 
 This document will be extended with the T3 temporal-matching mechanism, the
