@@ -61,13 +61,26 @@ def build_snapshot(data: dict, cutoff_year: int) -> dict:
 def describe_snapshot(snap: dict) -> dict:
     nodes, edges = snap["nodes"], snap["edges"]
     type_counts = Counter(n["type"] for n in nodes)
-    arity_counts = Counter(len(e["members"]) for e in edges)
     relation_counts = Counter(e["relation_type"] for e in edges)
-
     arities = [len(e["members"]) for e in edges]
+
+    # Degree = number of incident hyperedges *within this snapshot's edge
+    # set*. This matters for the clustering method (Deliverable 0): if most
+    # nodes have degree 1, the node-assignment rule is trivial for them, and
+    # we want that visible from T1 rather than discovered later.
+    degree = Counter()
+    for e in edges:
+        for m in e["members"]:
+            degree[m] += 1
+    node_ids = {n["id"] for n in nodes}
+    degrees = [degree.get(nid, 0) for nid in node_ids]
+    n_nodes = len(nodes)
+    singleton_fraction = round(sum(1 for d in degrees if d == 1) / n_nodes, 3) if n_nodes else None
+    isolated_fraction = round(sum(1 for d in degrees if d == 0) / n_nodes, 3) if n_nodes else None
+
     return {
         "cutoff_year": snap["cutoff_year"],
-        "n_nodes": len(nodes),
+        "n_nodes": n_nodes,
         "n_edges": len(edges),
         "node_type_distribution": dict(type_counts.most_common()),
         "relation_type_distribution": dict(relation_counts.most_common()),
@@ -75,6 +88,11 @@ def describe_snapshot(snap: dict) -> dict:
         "arity_max": max(arities) if arities else None,
         "arity_mean": round(sum(arities) / len(arities), 2) if arities else None,
         "arity_distribution_top10": dict(Counter(arities).most_common(10)),
+        "degree_min": min(degrees) if degrees else None,
+        "degree_max": max(degrees) if degrees else None,
+        "degree_mean": round(sum(degrees) / len(degrees), 2) if degrees else None,
+        "singleton_fraction": singleton_fraction,
+        "isolated_fraction": isolated_fraction,
         "dropped_partial_edges": snap["dropped_partial_edges"],
     }
 
@@ -91,6 +109,32 @@ def describe_growth(prev_desc: dict, curr_desc: dict) -> dict:
         "edge_growth_pct": round(
             100 * (curr_desc["n_edges"] - prev_desc["n_edges"]) / prev_desc["n_edges"], 1
         ) if prev_desc["n_edges"] else None,
+    }
+
+
+def describe_growth_by_type(prev_snap: dict, curr_snap: dict) -> dict:
+    """Break growth down by node type / relation type ('churn'), since
+    snapshots are cumulative and net totals alone hide which parts of the
+    graph are actually driving growth between two cutoffs."""
+    prev_node_types = Counter(n["type"] for n in prev_snap["nodes"])
+    curr_node_types = Counter(n["type"] for n in curr_snap["nodes"])
+    node_delta = {
+        t: curr_node_types.get(t, 0) - prev_node_types.get(t, 0)
+        for t in curr_node_types
+    }
+
+    prev_rel_types = Counter(e["relation_type"] for e in prev_snap["edges"])
+    curr_rel_types = Counter(e["relation_type"] for e in curr_snap["edges"])
+    edge_delta = {
+        r: curr_rel_types.get(r, 0) - prev_rel_types.get(r, 0)
+        for r in curr_rel_types
+    }
+
+    return {
+        "from_year": prev_snap["cutoff_year"],
+        "to_year": curr_snap["cutoff_year"],
+        "new_nodes_by_type": {k: v for k, v in sorted(node_delta.items(), key=lambda kv: -kv[1]) if v},
+        "new_edges_by_relation_type": {k: v for k, v in sorted(edge_delta.items(), key=lambda kv: -kv[1]) if v},
     }
 
 
@@ -134,6 +178,35 @@ def check_data_quality(data: dict) -> list:
             f"edge's own year is <= cutoff."
         )
 
+    # Duplicate surface forms: the same normalized surface_form appearing
+    # under more than one distinct node id, *regardless of node type*
+    # (e.g. "graph neural networks" recorded separately as both a
+    # `technique` and a `method` node). These are likely the same
+    # real-world entity recorded under separate ids, which would
+    # artificially split a single concept across hyperedges/clusters if
+    # left unmerged.
+    surface_groups = {}
+    for n in data["nodes"]:
+        sf = n.get("surface_form")
+        if not sf:
+            continue
+        key = sf.strip().lower()
+        surface_groups.setdefault(key, set()).add(n["id"])
+    duplicate_groups = {k: v for k, v in surface_groups.items() if len(v) > 1}
+    if duplicate_groups:
+        example = sorted(duplicate_groups.items(), key=lambda kv: -len(kv[1]))[0]
+        issues.append(
+            f"{len(duplicate_groups)} distinct surface forms map to more than "
+            f"one node id across the whole dataset "
+            f"({sum(len(v) for v in duplicate_groups.values())} node ids total), "
+            f"suggesting duplicate entities not merged at export time (e.g. the "
+            f"same technique recorded once per article, or once per type). "
+            f"Worst case: {example[0]!r} spans {len(example[1])} separate ids. "
+            f"These are NOT merged automatically; the clustering method may "
+            f"need a de-duplication pass, or this should be treated as a known "
+            f"limitation of the raw export."
+        )
+
     return issues
 
 
@@ -150,8 +223,10 @@ def main():
           f"from {args.data}\n")
 
     descriptions = []
+    snapshots_raw = []
     for cy in sorted(args.cutoffs):
         snap = build_snapshot(data, cy)
+        snapshots_raw.append(snap)
         desc = describe_snapshot(snap)
         descriptions.append(desc)
         print(f"--- Snapshot <= {cy} ---")
@@ -159,18 +234,28 @@ def main():
         print(f"  node types: {desc['node_type_distribution']}")
         print(f"  arity range: {desc['arity_min']}-{desc['arity_max']} "
               f"(mean {desc['arity_mean']})")
+        print(f"  degree range: {desc['degree_min']}-{desc['degree_max']} "
+              f"(mean {desc['degree_mean']}), singleton fraction: "
+              f"{desc['singleton_fraction']}")
         if desc["dropped_partial_edges"]:
             print(f"  [!] {desc['dropped_partial_edges']} edges dropped "
                   f"(reference nodes outside this snapshot)")
         print()
 
     growth = []
-    for prev, curr in zip(descriptions[:-1], descriptions[1:]):
+    growth_by_type = []
+    for prev_snap, curr_snap, prev, curr in zip(
+        snapshots_raw[:-1], snapshots_raw[1:], descriptions[:-1], descriptions[1:]
+    ):
         g = describe_growth(prev, curr)
         growth.append(g)
+        gt = describe_growth_by_type(prev_snap, curr_snap)
+        growth_by_type.append(gt)
         print(f"Growth {g['from_year']} -> {g['to_year']}: "
               f"+{g['new_nodes']} nodes ({g['node_growth_pct']}%), "
               f"+{g['new_edges']} edges ({g['edge_growth_pct']}%)")
+        print(f"  by node type: {gt['new_nodes_by_type']}")
+        print(f"  by relation type: {gt['new_edges_by_relation_type']}")
 
     print("\n--- Data quality notes ---")
     issues = check_data_quality(data)
@@ -182,6 +267,7 @@ def main():
         json.dump({
             "snapshots": descriptions,
             "growth": growth,
+            "growth_by_type": growth_by_type,
             "data_quality_notes": issues,
         }, f, indent=2)
     print(f"\nSaved stats to {args.out}")
