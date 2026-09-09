@@ -307,6 +307,104 @@ explicit), since one 9-37-article probe alone is not enough evidence:**
    really is from structure, to make the "semi-independent" framing
    explicit rather than implicit.
 
+### T3 — Temporal coupling: mechanism, its real cost, and honest limits
+
+**Why a stabilization mechanism was needed, not just post-hoc matching.**
+Two findings made "just match clusters after independently re-clustering
+each snapshot" insufficient on its own:
+- Cross-snapshot ARI at level 0 (no regularization) was 0.37-0.45 — real
+  reshuffling, not the "does not reshuffle every time" behavior the task
+  asks for.
+- `alpha` sensitivity: ARI between `alpha=0.3` and `alpha=0.7` on the
+  *identical* 2026 snapshot was 0.213 — lower than the worst real
+  cross-snapshot ARI. An arbitrary hyperparameter choice moves the
+  hierarchy more than two years of real corpus growth does. (Also
+  confirmed: `alpha=1.0` collapses level 0 to a single cluster,
+  `[1, 1, 117, 702]`, an outright P2 violation — empirical evidence for why
+  a purely-structural method is unusable given this corpus's 2-3% Jaccard
+  density, which is the concrete justification for the P3 resolution.)
+- A baseline "pick the level-0 cut height that best matches the previous
+  snapshot" (operating only on which height to cut, not the distance
+  matrix itself) barely moved cross-snapshot ARI: 0.424 -> 0.449. This
+  ruled out "which height to cut" as the source of instability.
+
+**Mechanism chosen: temporal regularization on the hyperedge distance
+matrix.** For snapshot `t > 2020`, before running HAC: for every pair of
+hyperedges that both existed in snapshot `t-1` and were in the same
+level-0 cluster there, reduce their distance by a fixed `lambda`, clipped
+to `[0, inf)`. New edges are untouched. `lambda=0` recovers the
+unregularized method exactly. Implemented in `src/temporal_reg.py`.
+
+**Effect on real transitions (mean level-0 ARI across the 3 transitions):**
+
+| lambda | mean ARI (real transitions) |
+|---|---|
+| 0 | 0.424 |
+| 0.1 | 0.722 |
+| **0.2** | **0.806** |
+| 0.4 | 0.815 |
+
+This is a large improvement, and it comes at negligible cost to
+within-snapshot fit (intra-cluster distance on the *unregularized* matrix
+changes by about 1%, and level-0 cluster count stays within the 10-15
+target at every lambda tested) and actually *improves* top-2 concentration
+at 2026 (0.534 -> 0.410 at lambda=0.2). Our interpretation: the level-0
+dendrogram has several near-tied cut heights, and which one gets picked is
+close to arbitrary; regularization resolves this tie-break in favor of
+history rather than changing the underlying fit.
+
+**The decisive test, and an honest negative result.** A large ARI gain at
+near-zero apparent cost is exactly the profile of a mechanism that might
+just be locking in whatever the 2020 clustering happened to be, rather than
+genuinely stabilizing against noise. We tested this directly: run the full
+2020->2026 chain under 10% random hyperedge removal (5 seeds), compare the
+perturbed 2026 output to the unperturbed reference, for both `lambda=0` and
+`lambda=0.2`:
+
+| lambda | mean ARI under 10% perturbation (5 seeds) |
+|---|---|
+| 0.0 | 0.295 ± 0.061 |
+| 0.2 | 0.273 ± 0.079 |
+
+**`lambda=0.2` is not better under noise — it is slightly worse than
+`lambda=0`** (well within one standard deviation, so not a large effect,
+but explicitly not an improvement). This is the real, stated cost of the
+mechanism: it is a **tie-break stabilizer for consistent data, not a
+noise-robustness mechanism**. It cannot distinguish "this snapshot's
+history was arbitrary but not wrong" from "this snapshot's history was
+corrupted by the specific edges that got removed" — it reinforces whatever
+came before, correct or not. We adopt `lambda=0.2` anyway, because the task
+setting is real (not adversarial) corpus growth, where the near-0.81 ARI on
+genuine transitions is the more decision-relevant number — but we do not
+claim it as a general noise-robustness result, and `outputs/
+temporal_events.json` carries this caveat directly rather than only in
+prose here.
+
+**Event classification and its reliability ceiling.** Using the
+`lambda=0.2` chain's level-0 hyperedge-cluster labels, consecutive
+snapshots are matched via hyperedge-set Jaccard overlap (edges present in
+both snapshots only), classifying each cluster as a continuation, growth,
+merge, split, birth, dissolution, or (new) an explicit "ambiguous weak
+link" category for matches that are real but below the confidence
+threshold, rather than forcing a classification. Implemented in
+`src/build_temporal_events.py`; output in `outputs/temporal_events.json`.
+On this corpus, the observed events were births (13, at 2020, the start of
+the chain), continuations, growths, and a few ambiguous weak links — no
+merges or splits were observed in this run, which we report as-is rather
+than searching for a threshold that would produce some. Given the
+perturbation-test result above, **~0.28-0.30 ARI is the honest reliability
+ceiling for any single event in this log**: some fraction of "continued"
+classifications are plausibly arbitrary tie-breaks carried forward by the
+regularization rather than real conceptual continuity, and the report does
+not claim otherwise.
+
+**Deliberately separated from T1/T2/T6 artifacts.** `outputs/hierarchy_*.json`
+(used and verified for T1, T2, and the T6 coherence probe) are produced
+with `lambda=0` and are untouched by this section. `temporal_events.json`
+uses the separate `lambda=0.2` chain. This keeps the already-verified
+non-temporal artifacts stable while still giving T3 a fair mechanism to
+evaluate — the two are not silently mixed.
+
 ### Note on scope
 
 This document will be extended with the T3 temporal-matching mechanism, the
