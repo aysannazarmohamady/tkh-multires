@@ -1,0 +1,19 @@
+question_id;question;type
+Q1;Which methods (by Feb 2026) are best suited for predicting interatomic potentials when balancing accuracy close to DFT with computational efficiency for systems of millions of atoms?;A
+Q2;Which methods (by Feb 2026) are best suited for accelerating electronic structure calculations when self-consistent field iterations become prohibitively expensive for large systems (>10³ atoms)?;A
+Q3;Which methods (by Feb 2026) are best suited for learning DFT Hamiltonians when dealing with twisted van der Waals heterostructures containing thousands of magnetic atoms?;A
+Q4;Which methods (by Feb 2026) are best suited for phonon property prediction when universal MLIPs show inaccuracies despite good energy/force performance?;A
+Q5;Which methods (by Feb 2026) are best suited for coarse-graining molecular dynamics when crystalline symmetries and long-range elastic interactions must be preserved?;A
+Q6;Which methods (by Feb 2026) are best suited for predicting ionic conductivity when full ab initio MD is too expensive but accuracy must be maintained?;A
+Q7;Which methods (by Feb 2026) are best suited for predicting phase transitions when screening ~50,000 inorganic compounds at high throughput?;A
+Q8;Which methods (by Feb 2026) are best suited for predicting fracture patterns when generalizing from atomistic MD data to unseen bicrystalline structures?;A
+Q9;Which methods (by Feb 2026) are best suited for ensuring physical consistency when transferring information between scales without violating thermodynamic principles?;A
+Q10;Which methods (by Feb 2026) are best suited for representing atomic environments when the system exhibits significant compositional diversity, defects, and disorder?;A
+Q11;Which methods (by Feb 2026) are best suited for integrating features from three or more distinct scales simultaneously within a unified framework?;A
+Q12;What are the leading (by Feb 2026) ML-based interatomic potential methods for large-scale atomistic simulation?;A
+Q13;What are the leading (by Feb 2026) GNN architectures for predicting properties of solid-state crystalline materials?;A
+Q14;What datasets and benchmarks are commonly used (by Feb 2026) to evaluate MLIPs and property prediction models for materials discovery?;A
+Q15;What are the most important open scientific challenges (by Feb 2026) in AI-based multiscale modeling of solid-state materials?;B
+Q16;How does E(3)-equivariance improve GNN-based interatomic potentials in accuracy and data efficiency in comparison with vanilla GNN?;B
+Q17;Give evidences that ML-based coarse-grained molecular dynamics is effective for studying ionic transport and phase transitions in solid-state systems (by Feb 2026).;B
+Q18;What mechanisms embed physical constraints, i.e., symmetry, locality, and size extensivity, into machine-learned interatomic potential architectures, and what evidence bears on whether these constraints improve transfer to system sizes and conditions beyond the training set (by Feb 2026)?;B

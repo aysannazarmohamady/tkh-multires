@@ -1,0 +1,2608 @@
+{
+  "Q1": {
+    "type": "A",
+    "expected_methods": [
+      "MACE",
+      "M3GNet",
+      "CHGNet",
+      "GAP",
+      "NequIP",
+      "ACE",
+      "EquiformerV2"
+    ],
+    "method_claims": {
+      "MACE": [
+        "uses 4-body equivariant message passing, only 2 iterations needed",
+        "E(3)-equivariant (rotations + reflections), implemented via irreps",
+        "L=2 equivariant variant is ~4x faster than NequIP; L=0 invariant variant is ~10x faster at comparable accuracy"
+      ],
+      "M3GNet": [
+        "uses three-body angular interactions via spherical Bessel functions and spherical harmonics — captures angular structure without full SO(3)-equivariant representations",
+        "trained on Materials Project (~187k structures) — universal coverage",
+        "accuracy degrades for chemical systems not represented in MP training distribution; active learning over new DFT relaxations is the recommended remedy"
+      ],
+      "CHGNet": [
+        "only universal MLIP predicting magnetic moments alongside E/F/S",
+        "trained on MPtrj (1,580,395 DFT single-point calculations from 145,923 compounds, 89 elements)",
+        "enables simulation of magnetic charge ordering and charge disproportionation (e.g., Mn²⁺/Mn⁴⁺ in LixMnO2) inaccessible to charge-unaware MLIPs"
+      ],
+      "GAP": [
+        "kernel regression (GP), NOT neural network — provides uncertainty estimates",
+        "SOAP descriptor captures many-body interactions implicitly",
+        "inference scales as O(M sparse points) — slower than NNs for large systems"
+      ],
+      "NequIP": [
+        "E(3)-equivariant convolutions over geometric tensors (irreps of O(3)) using message passing — internal features are equivariant to rotation and reflection, not merely invariant",
+        "up to three orders of magnitude better data efficiency than invariant models; trained on 133 structures outperforms DeepMD trained on 133,500 on liquid water",
+        "state-of-the-art on MD-17 and revised MD-17 benchmarks, outperforming invariant GNN-IPs (SchNet, DimeNet), kernel methods (GAP, sGDML), and other equivariant networks"
+      ],
+      "ACE": [
+        "complete descriptor of the local atomic environment via hierarchical body-ordered expansion using products of orthogonal single-bond basis functions",
+        "evaluation cost scales linearly with number of neighbors irrespective of body order, by rewriting the many-body sum as a polynomial of the atomic base",
+        "transferable across diverse chemical environments (small clusters to close-packed bulk); nonlinear ACE achieves 1–3 meV RMSE for copper, comparable to neural network potentials"
+      ],
+      "EquiformerV2": [
+        "replaces SO(3) convolutions with eSCN convolutions + three architectural improvements (attention re-normalization, separable S² activation, separable layer normalization) to scale equivariant Transformer to Lmax 6–8",
+        "state-of-the-art on OC20 benchmark: improves force MAE by 9% and energy MAE by 4% over prior best; outperforms OC20+OC22-trained GemNet-OC when trained on OC22 alone",
+        "reduces tensor product complexity from O(L⁶_max) to O(L³_max) via eSCN convolutions; requires ≥2× fewer DFT calculations in AdsorbML pipeline"
+      ]
+    },
+    "fp_categories": {
+      "wrong_domain": [
+        "DeepH",
+        "D4FT",
+        "HamGNN"
+      ],
+      "outdated_as_main": [
+        "SOAP-GAP"
+      ],
+      "valid_but_unlisted": [
+        "Allegro",
+        "tabGAP"
+      ]
+    },
+    "required_citations": [
+      "Batatia et al. 2022",
+      "Chen & Ong 2022",
+      "Deng et al. 2023",
+      "Bartók et al. 2018",
+      "Batzner et al. 2022",
+      "Drautz 2019",
+      "Liao & Smidt 2024"
+    ],
+    "method_evidence": {
+      "MACE": [
+        {
+          "source": "Batatia et al. 2022",
+          "location": "Abstract; Sec. 4 (Eq. 7, 10); Sec. 5.1",
+          "evidence": "Abstract: 'using four-body messages reduces the required number of message passing iterations to just two.' Sec. 5.1: 'In all subsequent experiments, we use two-layer MACE models.'"
+        },
+        {
+          "source": "Batatia et al. 2022",
+          "location": "Sec. 2.2, Eq. 5-6",
+          "evidence": "Sec. 2.2: 'the group of interest is O(3), specifying rotations and reflections.' Eq. 6: features transform via Wigner D-matrices (irreps). Note: paper says O(3); translation invariance via relative distances."
+        },
+        {
+          "source": "Batatia et al. 2022",
+          "location": "Sec. 5.2, Table 2",
+          "evidence": "Table 2 latency: NequIP 103.5ms, MACE L=2 24.3ms (~4.2x), MACE L=0 10.5ms (~9.6x). 'the invariant MACE (L=0) is close to 10 times faster than BOTNet and NequIP.'"
+        }
+      ],
+      "M3GNet": [
+        {
+          "source": "Chen & Ong 2022",
+          "location": "Abstract; Eq. 2, p.5",
+          "evidence": "Eq. 2: three-body bond update uses spherical Bessel j_l and spherical harmonics Y^0_l(theta) with m=0 only (azimuthally invariant, not full SO(3)-equivariant)."
+        },
+        {
+          "source": "Chen & Ong 2022",
+          "location": "Universal IAP section, p.8-9; Fig. 2d",
+          "evidence": "'MPF.2021.2.8 dataset contains 187,687 ionic steps of 62,783 compounds, with 187,687 energies, 16,875,138 force components.' 89 elements coverage."
+        },
+        {
+          "source": "Chen & Ong 2022",
+          "location": "Discussion, p.20",
+          "evidence": "'most uncertain predictions are from chemical systems such as F-Fe-Se-W... not represented in training data.' Active learning recommended to systematically improve in under-explored chemical spaces."
+        }
+      ],
+      "CHGNet": [
+        {
+          "source": "Deng et al. 2023",
+          "location": "Abstract, p.1031; Fig. 1a, p.1033",
+          "evidence": "Abstract: 'explicit inclusion of magnetic moments enables CHGNet to learn orbital occupancy.' Fig. 1a: outputs E, F, S, and magmoms. 'no current MLIPs can provide such information' (p.1035-1036)."
+        },
+        {
+          "source": "Deng et al. 2023",
+          "location": "MPtrj Dataset section, p.1032-1033; Fig. 2",
+          "evidence": "'MPtrj Dataset with 1,580,395 atom configurations, 1,580,395 energies, 7,944,833 magmoms.' Fig. 2: 'Compounds: 145,923', covering 89 elements excluding noble gases and actinoids."
+        },
+        {
+          "source": "Deng et al. 2023",
+          "location": "Charge disproportionation section, p.1034-1035; Fig. 4",
+          "evidence": "'2Mn3+_oct → Mn2+_tet + Mn4+_oct.' Fig. 4d: histogram of magmoms showing Mn2+/Mn3+/Mn4+ emergence. 'insights into ionic systems with additional electronic degrees of freedom that cannot be observed by previous MLIPs.'"
+        }
+      ],
+      "GAP": [
+        {
+          "source": "Bartók et al. 2018",
+          "location": "Sec. I.A, p.2; Sec. II.A, p.6-8; Eq. 1, 10",
+          "evidence": "Uses 'Gaussian process regression (GPR)' with kernel basis functions (Eq. 1). Eq. 10: predicted variance formula for uncertainty estimation. 'uncertainty quantification inherent to the Gaussian process regression framework.'"
+        },
+        {
+          "source": "Bartók et al. 2018",
+          "location": "Sec. II.A, Eqs. 2-8",
+          "evidence": "SOAP: rotationally invariant power spectrum (Eq. 6-7) provides 'unique rotationally and permutationally invariant description of neighbor environment.' Many-body character from neighbor density encoding all neighbors simultaneously."
+        },
+        {
+          "source": "Bartók et al. 2018",
+          "location": "Eq. 1; Sec. V, p.24-25",
+          "evidence": "Inference requires summing over M=9000 sparse environments per atom (Table I). ~100ms/atom cost, orders of magnitude slower than NN-based potentials."
+        }
+      ],
+      "NequIP": [
+        {
+          "source": "Batzner et al. 2022",
+          "location": "Section 'Neural equivariant interatomic potentials', Eq. 4 and Fig. 1",
+          "evidence": "NequIP employs E(3)-equivariant convolutions where 'every atom is associated with features comprised of tensors of different orders: scalars, vectors, and higher-order tensors' forming 'a direct sum of irreducible representations of the O(3) symmetry group.'"
+        },
+        {
+          "source": "Batzner et al. 2022",
+          "location": "Section 'Liquid water and ice dynamics', Table 3",
+          "evidence": "'With 1000x fewer training data NequIP significantly outperforms DeepMD on all four parts of the data set.' 'NequIP outperforms existing models with up to three orders of magnitude fewer training data.'"
+        },
+        {
+          "source": "Batzner et al. 2022",
+          "location": "Section 'MD-17 small molecule dynamics', Tables 1 and 2",
+          "evidence": "'NequIP outperforms all other methods. The consistent improvements in accuracy compared to sGDML and FCHL19/GPR are particularly surprising, as these are based on kernel methods, which typically obtain better performance than deep neural networks on small training sets.'"
+        }
+      ],
+      "ACE": [
+        {
+          "source": "Drautz 2019",
+          "location": "Abstract and Section II (Eq. 12, Eq. 34)",
+          "evidence": "'The atomic cluster expansion is developed as a complete descriptor of the local atomic environment, including multicomponent materials.' Orthogonality and completeness of single-bond basis transfers to cluster basis functions."
+        },
+        {
+          "source": "Drautz 2019",
+          "location": "Section II.B (Atomic base and linear scaling), Eq. 17–19",
+          "evidence": "'The numerical effort required for the construction of the atomic base is linear with the number of neighbors, while the evaluation of the energy is independent of N_c. The atomic cluster expansion therefore overcomes the poor scaling of the formal many-atom expansion.'"
+        },
+        {
+          "source": "Drautz 2019",
+          "location": "Section V (Nonlinear ACE), Fig. 4",
+          "evidence": "'By introducing nonlinear functions of the atomic cluster expansion an interatomic potential is obtained that is comparable in accuracy to state-of-the-art machine learning potentials... the nonlinear atomic cluster expansion reaches an RMSE of about 1–3 meV.'"
+        }
+      ],
+      "EquiformerV2": [
+        {
+          "source": "Liao & Smidt 2024",
+          "location": "Abstract and Section 3, Figure 1",
+          "evidence": "'Starting from Equiformer, we first replace SO(3) convolutions with eSCN convolutions to efficiently incorporate higher-degree tensors. Then, to better leverage the power of higher degrees, we propose three architectural improvements — attention re-normalization, separable S2 activation and separable layer normalization.'"
+        },
+        {
+          "source": "Liao & Smidt 2024",
+          "location": "Abstract and Section 4.1.2, Table 2",
+          "evidence": "'EquiformerV2 improves previous state-of-the-art S2EF energy MAE by 4%, S2EF force MAE by 9%, IS2RS AFbT by absolute 4% and IS2RE energy MAE by 4%. Furthermore, EquiformerV2 trained on only OC22 dataset outperforms GemNet-OC trained on both OC20 and OC22 datasets.'"
+        },
+        {
+          "source": "Liao & Smidt 2024",
+          "location": "Section 2.3 and Section 4.1.3, Table 3",
+          "evidence": "'eSCN proposes efficient convolutions to reduce SO(3) tensor products to SO(2) linear operations, bringing down the computational cost from O(L⁶_max) to O(L³_max). EquiformerV2 at k=2 is more accurate than all other models even at k=5, thus requiring at least 2× fewer DFT calculations.'"
+        }
+      ]
+    }
+  },
+  "Q2": {
+    "type": "A",
+    "expected_methods": [
+      "DeepH",
+      "D4FT",
+      "HamGNN"
+    ],
+    "method_claims": {
+      "DeepH": [
+        "bypasses SCF iterations by learning DFT Hamiltonian from small-structure training data, then applying to large systems",
+        "exploits nearsightedness principle and local coordinate transformations to handle gauge covariance of Hamiltonian matrix",
+        "demonstrated for large-scale twisted van der Waals materials (>10³ atoms); DeepH-E3 extension handles spin-orbit coupling via full E(3)-equivariance",
+        "DeepH-2 integrates equivariant local-coordinate transformer, outperforming DeepH and DeepH-E3 in both accuracy and efficiency"
+      ],
+      "D4FT": [
+        "replaces SCF loop with direct total energy minimization via feed-forward reparameterization of orthogonal constraint",
+        "reduces KS-DFT computational complexity from O(N⁴) to O(N³)",
+        "amortizes numerical integration cost using SGD with minibatch sampling over quadrature grids"
+      ],
+      "HamGNN": [
+        "universal model trained on DFT Hamiltonians of nearly all crystal structures in Materials Project — covers full periodic table",
+        "generalizes to multi-elemental systems, solid-state electrolytes, Moiré heterostructures, and MOFs without system-specific retraining by the user (model construction used a fine-tuning stage, but no per-system retraining is required at inference)",
+        "enables high-throughput electronic structure prediction (identified 3,940 direct-gap and 5,109 flat-band crystals in GeNOME dataset)"
+      ]
+    },
+    "fp_categories": {
+      "wrong_domain": [
+        "MACE",
+        "NequIP",
+        "CHGNet"
+      ],
+      "outdated_as_main": [],
+      "valid_but_unlisted": [
+        "DeepH-E3",
+        "xDeepH",
+        "DeepH-2",
+        "DeepH-r"
+      ]
+    },
+    "required_citations": [
+      "Li et al. 2022 (DeepH)",
+      "Gong et al. 2023 (DeepH-E3)",
+      "Li et al. 2023 (xDeepH)",
+      "Wang et al. 2024 (DeepH-2)",
+      "Yuan et al. 2024 (DeepH-r)",
+      "Li et al. 2023 (D4FT)",
+      "Zhong et al. 2024"
+    ],
+    "method_evidence": {
+      "DeepH": [
+        {
+          "source": "Li et al. 2022",
+          "location": "Abstract; Theoretical framework section, pp. 367-368",
+          "evidence": "Abstract: 'deep neural network approach to represent the DFT Hamiltonian (DeepH), aiming to bypass the computationally demanding self-consistent field iterations of DFT.' Uses local-coordinate MPNN."
+        },
+        {
+          "source": "Gong et al. 2023",
+          "location": "Abstract; Methods section, pp. 1-5; Table 1",
+          "evidence": "Abstract: 'DeepH-E3 enables efficient electronic structure calculation at ab initio accuracy... sub-meV prediction accuracy.' Implemented with e3nn library v0.3.5. Table 1: MAEs 0.37-0.51 meV."
+        },
+        {
+          "source": "Li et al. 2023 (xDeepH)",
+          "location": "Extended Data Fig. 2 caption",
+          "evidence": "'Moiré-twisted bilayer CrI3 (twist angle 63.48° and 4,336 atoms per supercell).' Extends DeepH to magnetic superstructures via E(3)×{I,T} equivariance."
+        },
+        {
+          "source": "Wang et al. 2024",
+          "location": "Main text, Sec. II",
+          "evidence": "Introduces equivariant local-coordinate transformer (ELCT) improving efficiency over DeepH/DeepH-E3. Note: perturbation-based SOC/Hubbard-U correction NOT described in this paper."
+        }
+      ],
+      "D4FT": [
+        {
+          "source": "Li et al. 2023 (D4FT)",
+          "location": "Sec. 4 (Neural Basis), p.6; Sec. 6.3, p.9",
+          "evidence": "Learnable basis via local scaling transformation: phi_i(r) := |det J_f(r)|^{1/2} phi_i(f(r)). 'local scaling transformation effectively increases flexibility of STO-3g basis set.'"
+        },
+        {
+          "source": "Li et al. 2023 (D4FT)",
+          "location": "Sec. 3, pp. 3-5; Abstract",
+          "evidence": "Abstract: 'directly minimizing the total energy by reparameterizing the orthogonal constraint as a feed-forward computation.' Replaces SCF loop with direct gradient-based optimization."
+        },
+        {
+          "source": "Li et al. 2023 (D4FT)",
+          "location": "Sec. 6.2, pp. 7-8; Sec. 3.2, p.5",
+          "evidence": "GPU-accelerated on NVIDIA A100. Stochastic gradient on quadrature grids for XC integration. Demonstrated from C20 to C180 (180 atoms). Fig. 2 shows scaling to C180."
+        }
+      ],
+      "HamGNN": [
+        {
+          "source": "Zhong et al. 2024",
+          "location": "Abstract; Framework section, pp. 1-6",
+          "evidence": "'HamGNN is a deep learning model based on equivariant graph neural networks.' Predicts Hamiltonian matrices from atomic positions/types. Covers nearly all crystal structures in Materials Project."
+        },
+        {
+          "source": "Zhong et al. 2024",
+          "location": "Framework section, pp. 5-7; Fig. 1b",
+          "evidence": "Two-step training built into model construction: second round incorporates orbital energies at 5 k-points. Transfer demonstrated on 5+ element systems (Hf2Zr9Ta6Ti5Nb5B54 etc.)."
+        },
+        {
+          "source": "Zhong et al. 2024",
+          "location": "Abstract; Figs. 3-9",
+          "evidence": "'universal electronic Hamiltonian model... generality in predicting electronic structures across the whole periodic table.' Band structures, DOS, charge densities, Fermi surfaces derived without self-consistent DFT."
+        }
+      ]
+    }
+  },
+  "Q3": {
+    "type": "A",
+    "expected_methods": [
+      "xDeepH",
+      "DeepH-E3"
+    ],
+    "method_claims": {
+      "xDeepH": [
+        "extends DeepH to magnetic materials by incorporating time-reversal symmetry T alongside E(3) equivariance — symmetry group E(3) × {I, T}",
+        "handles non-diagonal spin Hamiltonian required when spin-orbit coupling and magnetism coexist",
+        "demonstrated for spin-spiral magnets, nanotubes, moiré magnets, and magnetic skyrmions — up to ~4,336 atoms in the moiré-skyrmion supercell"
+      ],
+      "DeepH-E3": [
+        "full E(3)-equivariant architecture for DFT Hamiltonian that naturally preserves Euclidean symmetry including under spin-orbit coupling",
+        "learns from small-structure DFT data and generalizes to large-scale supercells (>10⁴ atoms) at ab initio accuracy",
+        "sub-meV prediction accuracy for Hamiltonian matrix elements; enables Moiré-twisted material database construction"
+      ]
+    },
+    "fp_categories": {
+      "wrong_domain": [
+        "MACE",
+        "D4FT",
+        "HamGNN"
+      ],
+      "outdated_as_main": [
+        "DeepH (original, non-equivariant)"
+      ],
+      "valid_but_unlisted": [
+        "DeepH-2",
+        "DeepH-r"
+      ]
+    },
+    "required_citations": [
+      "Li et al. 2023 (xDeepH)",
+      "Gong et al. 2023 (DeepH-E3)"
+    ],
+    "method_evidence": {
+      "xDeepH": [
+        {
+          "source": "Li et al. 2023 (xDeepH)",
+          "location": "Pages 1-2, workflow description",
+          "evidence": "Extends DeepH to magnetic materials with E(3)×{I,T} equivariance using e3nn framework. Handles non-periodic magnetic superstructures (nanotubes, moiré structures)."
+        },
+        {
+          "source": "Li et al. 2023 (xDeepH)",
+          "location": "Page 3, equivariance principles",
+          "evidence": "Handles non-diagonal spin Hamiltonian from spin-orbit coupling and magnetic exchange. E(3)×{I,T} group encodes both spatial and time-reversal symmetry."
+        },
+        {
+          "source": "Li et al. 2023 (xDeepH)",
+          "location": "Extended Data Fig. 2 caption; Page 4",
+          "evidence": "'twist angle 63.48° and 4,336 atoms per supercell' for moiré-twisted bilayer CrI3. Also studies NiBr2 spiral magnets and CrI3 nanotubes."
+        }
+      ],
+      "DeepH-E3": [
+        {
+          "source": "Gong et al. 2023",
+          "location": "Abstract; p.5 (Methods)",
+          "evidence": "'E(3)-equivariant deep-learning framework to represent DFT Hamiltonian.' Implemented using e3nn library. Uses EquiConv with tensor products preserving SO(3) equivariance."
+        },
+        {
+          "source": "Gong et al. 2023",
+          "location": "Table 1, p.5; Fig. 4b, p.6",
+          "evidence": "Table 1: MAEs 0.40 meV (graphene), 0.37-0.51 meV (MoS2 atom pairs). 'averaged MAE is typically below 1 meV' for twisted bilayer systems."
+        },
+        {
+          "source": "Gong et al. 2023",
+          "location": "Fig. 4c, p.6",
+          "evidence": "'Band structure of magic-angle TBG (θ=1.08°, 11,164 atoms per supercell). Predicted by DeepH-E3 can accurately reproduce DFT results' including flat bands near Fermi level."
+        }
+      ]
+    }
+  },
+  "Q4": {
+    "type": "A",
+    "expected_methods": [
+      "Hessian training",
+      "VGNN",
+      "MACE-F"
+    ],
+    "method_claims": {
+      "Hessian training": [
+        "computes phonon modes by evaluating second-derivative Hessian matrices of an E(3)-equivariant energy model trained on energy and force data — no direct phonon supervision required",
+        "Hessian serves as higher-order training signal, improving energy models beyond energy/force-only training",
+        "derives symmetry constraints for IR/Raman active modes from phonon mode irreducible representations"
+      ],
+      "VGNN": [
+        "introduces vector, matrix, and momentum-dependent matrix virtual nodes to GNN, enabling direct prediction of Γ-phonon spectra and full dispersion from atomic coordinates only",
+        "handles material-dependent variable-length output (phonon modes) — a challenge standard invariant GNNs cannot address directly",
+        "built Γ-phonon database for over 140,000 Materials Project structures (146,323 total); validated on SiGe, FeCoNi, NiFe, and multi-component high-entropy alloy systems"
+      ],
+      "MACE-F": [
+        "fine-tunes MACE exclusively on forces (no energy loss term) using ~6 randomly all-atom-perturbed supercells per material — a compact phonon-targeted training strategy covering 77 elements from 2,738 structures",
+        "force MAE of 20.5 meV/Å on phonon-relevant perturbations vs. 71–78 meV/Å for general-purpose universal MLIPs (M3GNet, GPTFF, MLUHIP); phonon frequency MAE 0.18 THz with R² = 0.997 on 384 held-out materials",
+        "including energy in the loss (MACE-FE) degrades force MAE from 20.5 to 23.8 meV/Å — force-only fine-tuning is the preferred strategy for phonon applications even when a general MLIP underperforms"
+      ]
+    },
+    "fp_categories": {
+      "wrong_domain": [
+        "DeePMD",
+        "CHGNet",
+        "M3GNet"
+      ],
+      "outdated_as_main": [],
+      "valid_but_unlisted": [
+        "PhonNN",
+        "force-constant MLIPs"
+      ]
+    },
+    "required_citations": [
+      "Fang et al. 2023",
+      "Lee et al. 2024",
+      "Okabe et al. 2023"
+    ],
+    "method_evidence": {
+      "Hessian training": [
+        {
+          "source": "Fang et al. 2023",
+          "location": "Abstract, p.1; Sec. 1.1, p.2; Sec. 3.2, p.5",
+          "evidence": "'equivariant neural network for predicting phonon modes by evaluating second derivative Hessian matrices of the energy model, first trained with energy and force data.' Hessian from DFT/DFPT used as additional second-order training data."
+        },
+        {
+          "source": "Fang et al. 2023",
+          "location": "Fig. 1c, p.3; Fig. 2, p.4",
+          "evidence": "Fig. 1c: 1×1×1 + Hessian training outperforms even 3×3×3 supercell E/F training for phonons. Fig. 2: good agreement across many crystals from phonon database."
+        },
+        {
+          "source": "Fang et al. 2023",
+          "location": "Sec. 1.1, p.2; Sec. 2.2, pp. 2-3",
+          "evidence": "'As energy models, we employ the architectures of NequIP and MACE.' Architecture-agnostic via automatic differentiation of second derivatives."
+        }
+      ],
+      "VGNN": [
+        {
+          "source": "Okabe et al. 2023",
+          "location": "Abstract, p.1; Discussion, pp. 6-7",
+          "evidence": "'direct prediction of Γ-phonon spectra and full dispersion only using atomic coordinates as input.' Virtual nodes (vector, matrix, momentum-dependent) augment the graph for phonon mode prediction."
+        },
+        {
+          "source": "Okabe et al. 2023",
+          "location": "Abstract, p.1; Methods",
+          "evidence": "Handles variable-length output (different number of phonon modes per material) via virtual node architecture. Trained on 1,521 materials from DFPT database with 90/10 split."
+        },
+        {
+          "source": "Okabe et al. 2023",
+          "location": "Abstract, p.1; Supplementary VII, p.37",
+          "evidence": "'Γ-phonon database for 146,323 Materials Project structures' — this is the PREDICTION output database, not training data. Training used only 1,521 materials."
+        }
+      ],
+      "MACE-F": [
+        {
+          "source": "Lee et al. 2024",
+          "location": "Sec. III.B, p.6; Sec. IV, p.12",
+          "evidence": "'MACE-F model trained only with forces is optimal for force and phonon predictions.' 'training with energy is not necessary for very accurate force predictions.' Fine-tuned from pretrained vanilla MACE."
+        },
+        {
+          "source": "Lee et al. 2024",
+          "location": "Fig. 4a, p.8; Sec. IV, p.12",
+          "evidence": "Phonon frequency MAE = 0.18 THz, R² = 0.997 vs DFT. Force MAE of 20.5 meV/Å on phonon-relevant perturbations. Outperforms M3GNet."
+        },
+        {
+          "source": "Lee et al. 2024",
+          "location": "Fig. 2a, p.7; Sec. IV, p.12",
+          "evidence": "Covers 2,738 unary and binary materials across 77 elements. Phonon dataset of 384 materials. Note: limited to unary/binary compounds."
+        }
+      ]
+    }
+  },
+  "Q5": {
+    "type": "A",
+    "expected_methods": [
+      "Bead-mapping",
+      "GNN+GPP"
+    ],
+    "method_claims": {
+      "Bead-mapping": [
+        "groups representative atoms into coarse-grained 'beads' to reduce system degrees of freedom, cutting MD computational cost",
+        "uses proportional mapping of atomic groups preserving essential structural and interaction features",
+        "demonstrated for graphite materials wettability simulation where full atomistic MD is prohibitively expensive"
+      ],
+      "GNN+GPP": [
+        "replaces numerical quadrature for high-dimensional phase space integrals with a GNN trained on Monte Carlo data",
+        "overcomes deficiencies of 3rd/5th-order Gaussian quadrature in crystal lattices with imperfections (defects, grain boundaries)",
+        "benchmarked on thermal expansion of Cu, martensitic phase transition of Fe, and grain boundary energy — preserving long-range elastic interactions"
+      ]
+    },
+    "fp_categories": {
+      "wrong_domain": [
+        "DeepH",
+        "MACE",
+        "CHGNet"
+      ],
+      "outdated_as_main": [],
+      "valid_but_unlisted": [
+        "CGSchNet",
+        "DimeNet-CG",
+        "force-matching CG"
+      ]
+    },
+    "required_citations": [
+      "Nan et al. 2024",
+      "Saxena et al. 2023"
+    ],
+    "method_evidence": {
+      "Bead-mapping": [
+        {
+          "source": "Nan et al. 2024",
+          "location": "Abstract, p.2; Sec. I, p.3",
+          "evidence": "'coarse-grained methods save computational costs by reducing degrees of freedom. This method takes a selected group of representative atoms as a bead.'"
+        },
+        {
+          "source": "Nan et al. 2024",
+          "location": "Sec. II.A, pp. 3-4; Table I",
+          "evidence": "Proportional scaling of Airebo potential parameters with factors n, 1/n, n³. E_CG = n³·E_AA. 'distribution of beads is identical to the atomic structure of the AA model.'"
+        },
+        {
+          "source": "Nan et al. 2024",
+          "location": "Sec. III.D, pp. 12-13; Sec. IV",
+          "evidence": "Wetting simulation of Cu droplets on graphite. AA model: 31h, CG model: 18h. Contact angles: AA=131.5±1°, CG=135.5±1.1°. CG 'greatly saves time required for calculations.'"
+        }
+      ],
+      "GNN+GPP": [
+        {
+          "source": "Saxena et al. 2023",
+          "location": "Abstract, p.1; Sec. 1, p.2",
+          "evidence": "'Graph Neural Networks, trained on Monte-Carlo data, can serve as a replacement for commonly used numerical quadrature rules.' Uses E(3)-equivariant GNN."
+        },
+        {
+          "source": "Saxena et al. 2023",
+          "location": "Sec. 3, pp. 3-6; Sec. 5.3, pp. 10-11",
+          "evidence": "Three deficiency types of Gaussian quadrature: (i) frame dependence, (ii) cutoff-radius discontinuity, (iii) insufficient accuracy. GNN overcomes these for grain boundaries."
+        },
+        {
+          "source": "Saxena et al. 2023",
+          "location": "Sec. 5.1-5.3, pp. 8-11",
+          "evidence": "Three benchmarks confirmed: thermal expansion of Cu, martensitic phase transition of Fe, grain boundary energies (Al, FCC Fe). Note: 'preserving long-range elastic interactions' not stated in paper — benefit is framed as overcoming frame-dependence and cutoff issues."
+        }
+      ]
+    }
+  },
+  "Q6": {
+    "type": "A",
+    "expected_methods": [
+      "DeePMD+AL",
+      "LiFlow",
+      "MLIP descriptors"
+    ],
+    "method_claims": {
+      "DeePMD+AL": [
+        "applies DeePMD neural network potential with a training protocol designed specifically for diffusion coefficient computation in solid-state electrolytes",
+        "validated on Li10GeP2S12, Li7La3Zr2O12, and Na3Zr2Si2PO12 — shows good agreement with prior ab initio MD results",
+        "enables long-timescale ionic diffusion simulations inaccessible to AIMD; proposed as component of SSE screening framework"
+      ],
+      "LiFlow": [
+        "generative framework using conditional flow matching (Propagator + Corrector) to predict atomic displacements in solid-state electrolytes without running explicit MD",
+        "achieves Spearman's rank correlation ~0.7 for Li mean squared displacement (MSD) across composition and temperature splits",
+        "provides substantial speedup over MLIP-based MD; designed for high-throughput virtual screening of electrolyte candidates"
+      ],
+      "MLIP descriptors": [
+        "uses universal equivariant GNN interatomic potential to map the potential energy landscape as a descriptor for ionic conductivity prediction",
+        "avoids full MD simulation by leveraging MLIP-derived energy landscape features for screening superionic materials",
+        "demonstrated for solid-state battery electrolyte discovery with significant computational advantage over ab initio methods"
+      ]
+    },
+    "fp_categories": {
+      "wrong_domain": [
+        "MACE (general)",
+        "CHGNet",
+        "xDeepH"
+      ],
+      "outdated_as_main": [],
+      "valid_but_unlisted": [
+        "CGMD for SSE",
+        "AIMD+ML",
+        "GNoME screening"
+      ]
+    },
+    "required_citations": [
+      "Marcolongo et al. 2020",
+      "Maevskiy et al. 2025",
+      "Nam et al. 2024"
+    ],
+    "method_evidence": {
+      "DeePMD+AL": [
+        {
+          "source": "Marcolongo et al. 2020",
+          "location": "Page 3, Sec. II (Training Protocol)",
+          "evidence": "References active learning from Ref. 19 (Zhang et al. 2019). Implements iterative training protocol with exploration/labeling/training steps. Simplified vs. full active learning (samples equidistant snapshots)."
+        },
+        {
+          "source": "Marcolongo et al. 2020",
+          "location": "Pages 7-12 (Results for LGPS, LLZO, NASICON)",
+          "evidence": "Arrhenius plots show activation energies matching previous FPMD and experimental values. NVE dynamics up to 2 ns, far longer than affordable AIMD."
+        },
+        {
+          "source": "Marcolongo et al. 2020",
+          "location": "Pages 1-2, Abstract",
+          "evidence": "'brings the hope of solving the time-scale issue which often prevents the application of first principle molecular dynamics.' Enables ns-scale simulations of ionic diffusion inaccessible to AIMD."
+        }
+      ],
+      "LiFlow": [
+        {
+          "source": "Nam et al. 2024",
+          "location": "Abstract, pp. 1-2; Sec. 2.1-2.2",
+          "evidence": "'LIFLOW, a generative acceleration framework... particularly lithium-based solid-state electrolytes.' Uses conditional flow matching with Propagator + Corrector modules."
+        },
+        {
+          "source": "Nam et al. 2024",
+          "location": "Pages 4-5",
+          "evidence": "Generates displacement trajectories from which MSD and conductivity are computed. ~300x speedup over traditional MD propagation. Replaces force-based integration with generative inference."
+        },
+        {
+          "source": "Nam et al. 2024",
+          "location": "Pages 3-4, Sec. 3.1-3.3",
+          "evidence": "Trained on MACE-MP-0-driven MD trajectories (not AIMD). 4,186 Li-containing structures from Materials Project, 77 elements. Spearman ~0.7 across composition splits."
+        }
+      ],
+      "MLIP descriptors": [
+        {
+          "source": "Maevskiy et al. 2025",
+          "location": "Pages 1-3, Sec. I-II",
+          "evidence": "Uses M3GNet to compute PES, derives heuristic descriptors (MPE = minimal percolation energy, FV = free volumes). 'quick and reliable screening of ionic conductors through analysis of a universal interatomic potential.'"
+        },
+        {
+          "source": "Maevskiy et al. 2025",
+          "location": "Pages 1-3, 8 (Sec. II.A, III.C)",
+          "evidence": "PES scan on frozen-framework grid without running any MD. '~50x faster than ML-driven MD, ~3000x faster than AIMD.'"
+        },
+        {
+          "source": "Maevskiy et al. 2025",
+          "location": "Pages 5-7, Table I, Fig. 4",
+          "evidence": "AIMD validation: 8/10 top-ranked materials confirmed superionic at room temperature. Effective ranking against both AIMD (KAHLE2020) and experimental (LASKOWSKI2023) conductivity labels."
+        }
+      ]
+    }
+  },
+  "Q7": {
+    "type": "A",
+    "expected_methods": [
+      "GNN free energies",
+      "symbolic regression"
+    ],
+    "method_claims": {
+      "GNN free energies": [
+        "GNN (GNoME) trained on hundreds of millions of DFT calculations discovers 2.2 million stable inorganic structures (381,000 on the updated convex hull as newly discovered materials — ~10× expansion over previously known stable crystals)",
+        "zero-shot ionic conductivity screening demonstrated on 623 never-before-seen compositions via GNoME-pretrained NequIP potentials; ~52,000 candidate layered materials identified in the GNoME database",
+        "736 of the GNoME-predicted stable structures have been independently experimentally verified"
+      ],
+      "symbolic regression": [
+        "combines supervised regression with unsupervised material classification to improve melting temperature prediction and interpretability beyond pure black-box ML",
+        "uses symbolic learning to discover closed-form interpretable physical models with feature importance insights — not a neural network",
+        "validated on 476 binary ionic crystalline compounds; one-step model LOO-CV MAE ~177 K, test-set MAE 165 K; two-step classify-then-regress reduces test MAE by ~9 K — modest but consistent improvement"
+      ]
+    },
+    "fp_categories": {
+      "wrong_domain": [
+        "DeepH",
+        "MACE (for MLIPs)",
+        "LiFlow"
+      ],
+      "outdated_as_main": [
+        "random forest + DFT screening"
+      ],
+      "valid_but_unlisted": [
+        "GNoME + active learning",
+        "Bayesian optimization for phase screening"
+      ]
+    },
+    "required_citations": [
+      "Merchant et al. 2023",
+      "Gharakhanyan et al. 2024"
+    ],
+    "method_evidence": {
+      "GNN free energies": [
+        {
+          "source": "Merchant et al. 2023",
+          "location": "Page 1 (Abstract); Page 2",
+          "evidence": "'GNoME models discovered more than 2.2M structures stable with respect to previous work... updated convex hull consists of 381,000 new entries.' Initial training on ~69k Materials Project structures."
+        },
+        {
+          "source": "Merchant et al. 2023",
+          "location": "Page 2, Active learning section; Fig. 1a",
+          "evidence": "'candidate structures filtered using GNoME are evaluated using DFT calculations... incorporated into iterative active-learning workflow as further training data.' Six rounds of active learning."
+        },
+        {
+          "source": "Merchant et al. 2023",
+          "location": "Pages 1-3",
+          "evidence": "Uses decomposition energy (energy above hull) for stability screening. Screens >10⁹ structural candidates over active learning rounds. 48,000 refers to previously known stable crystals baseline."
+        }
+      ],
+      "symbolic regression": [
+        {
+          "source": "Gharakhanyan et al. 2024",
+          "location": "Pages 6, 12 (Sec. 2.2, 3.3, Table IV)",
+          "evidence": "VS-SISSO symbolic regression for melting temperature prediction of binary ionic solids. Features from DFT-computed properties (cohesive energy, elastic moduli) and elemental properties."
+        },
+        {
+          "source": "Gharakhanyan et al. 2024",
+          "location": "Pages 3-5 (Sec. 2.1, Table I)",
+          "evidence": "Discovers closed-form interpretable models with physically meaningful descriptors. Two-step clustering + regression approach using unsupervised learning for material grouping."
+        },
+        {
+          "source": "Gharakhanyan et al. 2024",
+          "location": "Table III, p.8; Table IV, p.12",
+          "evidence": "Best MAE ~136 K (cluster 1 test set), overall MAE 156-177 K. VS-SISSO RMSE 287-368 K. Note: paper covers melting temperatures only, not general phase transitions."
+        }
+      ]
+    }
+  },
+  "Q8": {
+    "type": "A",
+    "expected_methods": [
+      "ConvLSTM",
+      "GNN stress fields"
+    ],
+    "method_claims": {
+      "ConvLSTM": [
+        "uses convolutional + LSTM architecture trained on atomistic MD data to predict dynamic fracture patterns and fracture toughness in crystalline solids",
+        "handles both mode I (tensile) and mode II (shear) loading; generalizes fracture path prediction to novel microstructures not seen during training",
+        "bypasses time-consuming MD simulation to make computationally efficient fracture predictions at atomistic/microstructural scale — enabling materials-by-design applications from an atomistic point of view"
+      ],
+      "GNN stress fields": [
+        "GNN maps mesoscale crystalline structures with defects directly to atom-level stress fields and potential energy — end-to-end without handcrafted features",
+        "precisely captures derivative properties (stresses, Young's modulus) that strictly follow physical laws; generalizes across multiple defect types including grain boundaries, vacancies, and holey membranes",
+        "demonstrated on polycrystalline graphene and aluminum with grain-boundary defects; combined with genetic algorithm for de novo design of holey graphene membranes optimizing global stress properties"
+      ]
+    },
+    "fp_categories": {
+      "wrong_domain": [
+        "DeepH",
+        "CHGNet",
+        "LiFlow"
+      ],
+      "outdated_as_main": [
+        "FEM-only fracture simulation"
+      ],
+      "valid_but_unlisted": [
+        "CGCNN for fracture",
+        "PINNs for crack propagation"
+      ]
+    },
+    "required_citations": [
+      "Hsu et al. 2020",
+      "Yang & Buehler 2022"
+    ],
+    "method_evidence": {
+      "ConvLSTM": [
+        {
+          "source": "Hsu et al. 2020",
+          "location": "Pages 3-4, 12-14",
+          "evidence": "ConvLSTM-based model learns spatiotemporal relations from MD simulations. Conv1D + LSTM predict crack patterns iteratively from initial crack geometry images."
+        },
+        {
+          "source": "Hsu et al. 2020",
+          "location": "Pages 2-4, 10",
+          "evidence": "Trained on MD simulation data (Lennard-Jones potential on 2D triangular lattice), NOT phase-field. Training on single-crystal orientations; bicrystal cases are test/prediction only."
+        },
+        {
+          "source": "Hsu et al. 2020",
+          "location": "Pages 2, 4, 9",
+          "evidence": "'replace the stochastic problem of fracture propagation in MD simulations through a machine-learning model.' Efficient prediction bypassing time-consuming MD simulation."
+        }
+      ],
+      "GNN stress fields": [
+        {
+          "source": "Yang & Buehler 2022",
+          "location": "Pages 1-4",
+          "evidence": "PNA-based GNN predicts stress fields on atomic graph representations (nodes=atoms, edges=bonds) of crystalline structures with defects. Not mesh-based but atomic graph-based."
+        },
+        {
+          "source": "Yang & Buehler 2022",
+          "location": "Pages 3-5",
+          "evidence": "Predicts tensile stress in porous graphene, derives Young's modulus (E=823.7−5635.6×Cv). Von Mises stress in polycrystalline graphene. Potential energy in polycrystalline aluminum."
+        },
+        {
+          "source": "Yang & Buehler 2022",
+          "location": "Pages 3-4, 7-8",
+          "evidence": "2000 porous graphene membranes, vacancy concentration 0.0-0.1. Holey graphene design section with 30 hole sites and genetic algorithm optimization."
+        }
+      ]
+    }
+  },
+  "Q9": {
+    "type": "A",
+    "expected_methods": [
+      "E(3)-equivariant GNNs",
+      "physics-informed",
+      "NequIP"
+    ],
+    "method_claims": {
+      "E(3)-equivariant GNNs": [
+        "guarantee by construction that predictions transform correctly under rotations, reflections, and translations — no post-hoc symmetrization needed at any scale",
+        "energy-conserving potentials derived from a scalar energy function ensure F = -∇E, preventing thermodynamic violations (energy drift) in long MD simulations",
+        "equivariant message passing encodes full directional atomic information via geometric tensor (irreps) features, preserving angular structure that scalar-only models discard — enabling physically consistent predictions without post-hoc correction at any scale"
+      ],
+      "physics-informed": [
+        "embeds energy conservation and rotational/permutation symmetry as architectural constraints rather than loss penalties — F = -∇E and equivariance hold by construction, not by optimization, so physical consistency is guaranteed rather than approximate",
+        "physics constraints reduce effective model complexity, improving data efficiency and out-of-distribution generalization to unseen configurations and phases",
+        "symmetry constraints act as a strong inductive bias, reducing the hypothesis space the model must search — empirically demonstrated as improved data efficiency and generalization to unseen phases and temperatures in both NequIP and MACE"
+      ],
+      "NequIP": [
+        "strictly E(3)-equivariant architecture ensures predictions transform correctly under all rotations/reflections by construction — physical consistency guaranteed without post-hoc symmetrization",
+        "energy-conserving forces via F = −∇E (automatic differentiation of learned scalar energy) guarantee thermodynamic consistency in long MD simulations",
+        "equivariance acts as strong inductive bias: up to 1000× better data efficiency than invariant models, demonstrating that physical constraints enable generalization from minimal data"
+      ]
+    },
+    "fp_categories": {
+      "wrong_domain": [
+        "LiFlow",
+        "ConvLSTM",
+        "symbolic regression"
+      ],
+      "outdated_as_main": [
+        "invariant GNNs (scalar-only)",
+        "HDNNP without equivariance"
+      ],
+      "valid_but_unlisted": [
+        "Allegro",
+        "PaiNN"
+      ]
+    },
+    "required_citations": [
+      "Batzner et al. 2022",
+      "Batatia et al. 2022"
+    ],
+    "method_evidence": {
+      "E(3)-equivariant GNNs": [
+        {
+          "source": "Batzner et al. 2022; Batatia et al. 2022",
+          "location": "Batzner p.3; Batatia pp. 2-3",
+          "evidence": "NequIP: 'features comprised of tensors... direct sum of irreducible representations of O(3).' MACE: features transform via Wigner D-matrices of order L."
+        },
+        {
+          "source": "Batzner et al. 2022",
+          "location": "Batzner p.3, Eqs. 2-3; p.10",
+          "evidence": "Eq. 2: Epot = Σ Ei,atomic; Eq. 3: Fi = -∇i Epot '(thereby guaranteeing energy conservation).' Forces via automatic differentiation."
+        },
+        {
+          "source": "Batzner et al. 2022; Batatia et al. 2022",
+          "location": "Batzner pp. 3-4; Batatia p.4",
+          "evidence": "Equivariance built into architecture via Clebsch-Gordan tensor products and spherical harmonics. Directional info encoded natively, not as post-processing."
+        }
+      ],
+      "physics-informed": [
+        {
+          "source": "Batzner et al. 2022; Batatia et al. 2022",
+          "location": "Batzner p.4 (Eq. 6); Batatia pp. 4, 7",
+          "evidence": "NequIP: 'rc is a local cutoff radius, restricting interactions to atoms closer than some cutoff distance.' MACE: 'local radial cutoff of 4 to 5 Å.'"
+        },
+        {
+          "source": "Batzner et al. 2022; Batatia et al. 2022",
+          "location": "Batzner p.3 (Eq. 2); Batatia pp. 2, 5",
+          "evidence": "NequIP Eq. 2: Epot = Σ Ei,atomic (total energy is sum of per-atom contributions). MACE: hierarchical site energy decomposition summed over atoms."
+        },
+        {
+          "source": "Batzner et al. 2022; Batatia et al. 2022",
+          "location": "Batzner p.4, pp. 6-7; Batatia pp. 4, 9",
+          "evidence": "Smooth polynomial cutoffs, Bessel basis ensure continuous differentiable PES. Demonstrated via stable long MD runs (water/ice 50ps). MACE Fig. 3: smooth energy profiles on dihedral slices."
+        }
+      ],
+      "NequIP": [
+        {
+          "source": "Batzner et al. 2022",
+          "location": "Section 'Neural equivariant interatomic potentials', Eq. 4",
+          "evidence": "Features are 'geometric objects that comprise a direct sum of irreducible representations of the O(3) symmetry group.' Equivariance enforced by construction via Clebsch-Gordan tensor products."
+        },
+        {
+          "source": "Batzner et al. 2022",
+          "location": "Eq. 2–3, p.3",
+          "evidence": "'Eq. 2: E_pot = Σ E_i,atomic; Eq. 3: F_i = −∇_i E_pot (thereby guaranteeing energy conservation).' Forces obtained via automatic differentiation."
+        },
+        {
+          "source": "Batzner et al. 2022",
+          "location": "Section 'Liquid water and ice dynamics', Table 3",
+          "evidence": "'NequIP outperforms existing models with up to three orders of magnitude fewer training data, challenging the widely held belief that deep neural networks require massive training sets.'"
+        }
+      ]
+    }
+  },
+  "Q10": {
+    "type": "A",
+    "expected_methods": [
+      "GNNs + ACE descriptors",
+      "SchNet"
+    ],
+    "method_claims": {
+      "GNNs + ACE descriptors": [
+        "CGCNN learns material properties directly from a crystal graph without constructing a fixed-length global descriptor — universal across 87 elements, 7 lattice systems, and 216 space groups; demonstrated on 46,744 Materials Project structures",
+        "ACE provides a complete, systematically improvable descriptor of local atomic environments with O(N) linear evaluation cost irrespective of expansion order — encompasses SOAP and moment tensors as special cases",
+        "ACE formally supports arbitrary multi-component systems by coupling chemical and geometric channels in the atomic basis — enabling systematic treatment of compositional diversity without per-species re-parameterization, and is identified in the ACE paper as a natural foundation for combination with neural network function approximators"
+      ],
+      "SchNet": [
+        "uses continuous-filter convolutional (cfconv) layers where a filter-generating network maps interatomic distances to continuous filter values — operates directly on atom types and 3D positions without pre-defined descriptors",
+        "learns atom-wise representations respecting rotational, translational, and permutational invariances by construction: distances expanded in Gaussian basis ensure rotational invariance",
+        "state-of-the-art on QM9 (U₀: 0.014 eV MAE with 110k training) and MD17 (energy MAE <0.37 kcal/mol, force MAE <1.35 kcal/(mol·Å) with N=1000 combined training)"
+      ]
+    },
+    "fp_categories": {
+      "wrong_domain": [
+        "DeepH",
+        "LiFlow",
+        "ConvLSTM"
+      ],
+      "outdated_as_main": [
+        "Coulomb matrix",
+        "SOAP alone without GNN"
+      ],
+      "valid_but_unlisted": [
+        "MEGNet",
+        "DimeNet",
+        "PaiNN"
+      ]
+    },
+    "required_citations": [
+      "Xie & Grossman 2018",
+      "Schütt et al. 2018",
+      "Chen et al. 2019",
+      "Drautz 2019"
+    ],
+    "method_evidence": {
+      "GNNs + ACE descriptors": [
+        {
+          "source": "Xie & Grossman 2018",
+          "location": "Abstract, pp. 2-3",
+          "evidence": "'crystal graph convolutional neural networks framework to directly learn material properties from the connection of atoms.' Database: 46,744 materials, 87 elements, 7 lattice systems, 216 space groups."
+        },
+        {
+          "source": "Drautz 2019",
+          "location": "Abstract, p.1; Sec. II; Sec. III.D, III.G; Conclusions, p.12",
+          "evidence": "'atomic cluster expansion: complete descriptor of local atomic environment... scales linearly with number of neighbors, irrespective of order.' Sec. III.D: SOAP as special case. Sec. III.G: moment tensors as special case."
+        },
+        {
+          "source": "Drautz 2019",
+          "location": "Appendix A, pp. 12-13; Conclusions",
+          "evidence": "Multicomponent extension: basis functions φ_vm(r, μ) couple chemical identity and geometry. Conclusions: 'It would be interesting to combine the atomic cluster expansion... with a neural network.'"
+        }
+      ],
+      "SchNet": [
+        {
+          "source": "Schütt et al. 2018",
+          "location": "Section II.C (Interaction blocks), Fig. 1",
+          "evidence": "'SchNet makes use of continuous-filter convolutions with filter-generating networks to model the interaction term... a filter-generating network W: R³ → R^F maps atom positions to corresponding values of the filter bank.'"
+        },
+        {
+          "source": "Schütt et al. 2018",
+          "location": "Section II.D.1 (Rotational invariance)",
+          "evidence": "'It is straightforward to include rotational invariance by computing pairwise distances instead of using relative positions. We further expand the distances in a basis of Gaussians.' 'SchNet follows rotational, translational, and permutational invariances by design.'"
+        },
+        {
+          "source": "Schütt et al. 2018",
+          "location": "Section III.A, Table I; Section III.D, Tables III–IV",
+          "evidence": "Table I: SchNet (T=6) achieves MAE of 0.014 eV on U₀ with 110k training examples, reaching or improving enn-s2s in 8 of 12 QM9 properties. Tables III–IV: with N=1000 and combined training, energy MAE 0.08–0.37 kcal/mol and force MAE 0.31–1.35 kcal/(mol·Å) on MD17."
+        }
+      ]
+    }
+  },
+  "Q11": {
+    "type": "A",
+    "expected_methods": [
+      "CE→MC→NN→PF",
+      "hybrid frameworks"
+    ],
+    "method_claims": {
+      "CE→MC→NN→PF": [
+        "chains DFT-informed Cluster Expansion (CE) → Monte Carlo (MC) → Integrable Deep Neural Network (IDNN) → Phase Field (PF) in a sequential hierarchical pipeline; IDNN learns the free energy density from MC-derived chemical potential data and passes it analytically to the phase field model",
+        "demonstrated for order-disorder transitions in LiₓCoO₂ battery cathodes; bridges atomic/statistical-mechanics and continuum scales — the first quantitatively rigorous sequential scale-bridging framework for LCO, according to the authors"
+      ],
+      "hybrid frameworks": [
+        "ML surrogate models trained offline on expensive-scale data (e.g., MD, DFT) are deployed as constitutive laws within cheaper physics-based solvers (e.g., FEM), avoiding re-running expensive simulations during inference — demonstrated to reduce FE² wall-clock time from ~1 month to hours",
+        "most production multiscale frameworks are hierarchical (one-way information passing between scales), not fully concurrent — concurrent simulations require CPU time growing exponentially with scale count, and ML-based multiscale modeling remains at an early stage by 2025"
+      ]
+    },
+    "fp_categories": {
+      "wrong_domain": [
+        "LiFlow",
+        "VGNN",
+        "ConvLSTM"
+      ],
+      "outdated_as_main": [],
+      "valid_but_unlisted": [
+        "FNO multiscale",
+        "DeePMD+Phase Field",
+        "concurrent MD-FEM"
+      ]
+    },
+    "required_citations": [
+      "Shojaei et al. 2024",
+      "Meng et al. 2025",
+      "Bishara et al. 2023"
+    ],
+    "method_evidence": {
+      "CE→MC→NN→PF": [
+        {
+          "source": "Shojaei et al. 2024",
+          "location": "Abstract, p.1; Fig. 1a, p.3; Secs. 2.2-2.6",
+          "evidence": "Flowchart: DFT → cluster expansion → Monte Carlo → IDNN → phase-field. 'machine learning-enabled framework for bridging scales in materials physics.' Sequential one-way information flow."
+        },
+        {
+          "source": "Shojaei et al. 2024",
+          "location": "Abstract, p.1",
+          "evidence": "'We focus on two scales: (a) assemblies of thousands of atoms described by DFT-informed statistical mechanics, and (b) continuum phase field models.' One-way hierarchical coupling."
+        }
+      ],
+      "hybrid frameworks": [
+        {
+          "source": "Bishara et al. 2023; Meng et al. 2025",
+          "location": "Bishara pp. 1-2, 4-5, 17, 20-21; Meng pp. 2, 9, 14",
+          "evidence": "Bishara: 'both hierarchical and concurrent multiscale modeling techniques.' ML-based approaches combining ML with FEM/MD. Meng: 'Fusion of deep learning and physics-based modules.'"
+        },
+        {
+          "source": "Bishara et al. 2023; Meng et al. 2025",
+          "location": "Bishara pp. 25-26; Meng (throughout)",
+          "evidence": "Bishara: 'linking scales effectively has always been challenging, computationally expensive and time-consuming.' Both reviews survey many approaches without declaring a single dominant framework."
+        }
+      ]
+    }
+  },
+  "Q12": {
+    "type": "A",
+    "expected_methods": [
+      "MACE",
+      "NequIP",
+      "CHGNet",
+      "M3GNet",
+      "SevenNet",
+      "GAP",
+      "DeePMD",
+      "MatterSim",
+      "Orb",
+      "eSEN",
+      "PET",
+      "UMA",
+      "EquiformerV2"
+    ],
+    "method_claims": {
+      "MACE": [
+        "uses higher body-order equivariant message passing (up to 4-body per layer), only 2 message-passing iterations needed for near-CCSD(T) accuracy",
+        "E(3)-equivariant, implemented via irreducible representations (irreps); unifies equivariant networks with the systematic body-ordering of ACE",
+        "state-of-the-art on rMD17, 3BPA, AcAc; MACE-MP-0 universal variant (MPtrj) now superseded on Matbench Discovery (CPS 0.637, F1 0.669, EMAE 57 meV/atom); MACE-MPA-0 (MPtrj+sAlex) far stronger (CPS 0.795)"
+      ],
+      "NequIP": [
+        "strictly E(3)-equivariant architecture using geometric tensor (irreps) features for directional atomic information",
+        "up to three orders of magnitude better data efficiency than invariant models (SchNet, DimeNet) on MD17 and 3BPA with ~1000 training points",
+        "parent architecture of MACE and Allegro; OMat24-trained descendants (NequIP-OAM-XL) reach F1 = 0.906, EMAE = 20 meV/atom on Matbench Discovery"
+      ],
+      "CHGNet": [
+        "universal MLIP trained to predict magnetic moments alongside energies, forces, stresses — electronic degrees of freedom absent from prior universal MLIPs",
+        "trained on MPtrj (1,580,395 DFT single-point calculations, 145,923 compounds, 89 elements)",
+        "enables magnetic charge ordering / disproportionation simulation (e.g., Mn²⁺/Mn⁴⁺ in LixMnO2); MPtrj-era accuracy now low on Matbench Discovery (CPS 0.343, F1 0.613, EMAE 63 meV/atom)"
+      ],
+      "M3GNet": [
+        "three-body angular interactions via spherical Bessel functions and spherical harmonics — simpler than full SO(3)-equivariant models but captures angular structure",
+        "trained on Materials Project (~188k frames, 62,783 compounds) — universal coverage enabling zero-shot relaxation across 89 elements",
+        "accuracy degrades outside MP distribution; among the lowest current Matbench Discovery entries (CPS 0.310, F1 0.569, EMAE 75 meV/atom); active learning recommended for unseen chemistries"
+      ],
+      "SevenNet": [
+        "E(3)-equivariant GNN-IP (NequIP architecture) with modified spatial-decomposition parallelization: node features/gradients exchanged per message-passing layer, inter-GPU communication restricted to the cutoff radius",
+        "SevenNet-0/l3i5 (MPtrj) reports ~24 meV/atom energy MAE; SevenNet-Omni-i12 (243M COSMOS dataset) reaches F1 = 0.906, EMAE = 21 meV/atom on Matbench Discovery",
+        ">80% parallel efficiency in 32-GPU weak-scaling tests; melt-quench MD of 112,000-atom amorphous Si3N4 at ~0.1 ns/day, reproducing DFT structural distributions"
+      ],
+      "GAP": [
+        "kernel regression (Gaussian Process) with SOAP descriptor — GP framework allows principled uncertainty quantification unlike neural-network MLIPs",
+        "SOAP descriptor captures many-body interactions implicitly via smooth overlap of atomic positions",
+        "inference scales linearly with M sparse points — slower than NN potentials for large systems; applied to amorphous carbon (Deringer & Csányi 2017) and silicon (Bartók et al. 2018)"
+      ],
+      "DeePMD": [
+        "deep neural-network potential using a smooth DeepPot-SE descriptor; local decomposition yields linear scaling with system size",
+        "DeePMD-kit v2 integrates DPA-1 attention descriptor; DPA-3.1 (OpenLAM) reaches F1 = 0.884 on Matbench Discovery",
+        "GPU-accelerated (CUDA/ROCm); Gordon Bell demonstration up to 10 billion atoms; widely adopted in condensed-matter and materials MD"
+      ],
+      "MatterSim": [
+        "universal deep-learning MLIP with M3GNet and Graphormer backbone variants, trained on ~17M structures generated via active learning, spanning 0–5000 K and 0–1000 GPa",
+        "reports F1 = 0.83 on Matbench Discovery (outperforming GNoME, CHGNet, M3GNet, MACE-MP-0 at publication); strong performance on temperature- and pressure-explicit benchmarks (MPF-TP, Random-TP)",
+        "released by Microsoft Research AI for Science; one of the first universal MLIPs explicitly trained to cover realistic thermodynamic (T, P) conditions beyond 0 K and ambient pressure"
+      ],
+      "Orb": [
+        "Graph Network Simulator (GNS) universal potential with conservative and non-conservative (direct) variants; direct models handle 100,000-atom systems without OOM errors and run >200 forward passes/second at 1k atoms",
+        "Orb-v3 mpa (MPtrj + Alexandria) reaches F1 = 0.906 on Matbench Discovery; OMat24-trained variants cannot report F1 on Matbench Discovery due to PBE54 pseudopotential incompatibility with the WBM test set",
+        "expands the performance-speed-memory Pareto frontier: ≥10× lower latency and ≥8× lower memory vs comparable accuracy models; designed for high-throughput screening and mesoscale all-atom simulation"
+      ],
+      "eSEN": [
+        "equivariant Smooth Energy Network (Meta FAIR); conservative architecture emphasizing energy-conserving, smooth potential energy surfaces",
+        "eSEN-30M-OAM (OMat24+MPtrj+sAlex) is among the leaders on Matbench Discovery: F1 = 0.925, EMAE = 18 meV/atom",
+        "state-of-the-art on both materials (OMat24) and molecular (SPICE) benchmarks; underpins the OMat24 foundation-model generation"
+      ],
+      "PET": [
+        "Point Edge Transformer — unconstrained (non-equivariant) transformer achieving equivariance through data augmentation/training rather than built-in symmetry",
+        "PET-OAM-XL (OMat24+sAlex+MPtrj) is the current Matbench Discovery leader by CPS (0.898) and F1 (0.924), EMAE = 19 meV/atom",
+        "demonstrates that large-scale training can match dedicated equivariant models; PET-MAD variant targets broad chemical transferability"
+      ],
+      "UMA": [
+        "Meta FAIR Universal Model for Atoms — single foundation model spanning molecules, materials, catalysts; mixture-of-linear-experts design grows capacity without sacrificing speed",
+        "trained on ~half a billion unique 3D atomic structures (largest training runs to date), with empirical compute/data/model scaling laws",
+        "runs ~1 ns/day MD on 100k+ atom systems via multi-GPU/LAMMPS interfaces; UMA-M F1 = 0.930 is self-reported by Meta and NOT on the official Matbench Discovery leaderboard"
+      ],
+      "EquiformerV2": [
+        "equivariant Transformer replacing SO(3) convolutions with eSCN convolutions; three architectural innovations (attention re-normalization, separable S² activation, separable layer normalization) enable scaling to Lmax 6–8",
+        "state-of-the-art on OC20/OC22 catalysis benchmarks; force MAE improved 9% and energy MAE 4% over prior best; EquiformerV2 on OC22 alone outperforms GemNet-OC trained on OC20+OC22",
+        "tensor product complexity reduced from O(L⁶_max) to O(L³_max); ≥2× fewer DFT calculations needed in AdsorbML pipeline vs. competing models"
+      ]
+    },
+    "fp_categories": {
+      "wrong_domain": [
+        "DeepH",
+        "HamGNN",
+        "D4FT"
+      ],
+      "outdated_as_main": [
+        "Behler-Parrinello HDNNP",
+        "EAM potentials",
+        "Lennard-Jones"
+      ],
+      "valid_but_unlisted": [
+        "Allegro",
+        "ACE",
+        "tabGAP",
+        "PET-MAD",
+        "GRACE",
+        "MatRIS",
+        "TACE",
+        "EquFlash",
+        "AlphaNet",
+        "Nequix",
+        "HIENet",
+        "DPA-3",
+        "GNoME",
+        "Orb-v2"
+      ]
+    },
+    "required_citations": [
+      "Bartók et al. 2018",
+      "Deringer & Csányi 2017",
+      "Wang et al. 2018",
+      "Zeng et al. 2023",
+      "Batatia et al. 2022",
+      "Batzner et al. 2022",
+      "Deng et al. 2023",
+      "Chen & Ong 2022",
+      "Park et al. 2024",
+      "Yang et al. 2024",
+      "Rhodes et al. 2025",
+      "Barroso-Luque et al. 2024",
+      "Wood et al. 2025",
+      "Riebesell et al. 2025",
+      "Liao & Smidt 2024"
+    ],
+    "method_evidence": {
+      "MACE": [
+        {
+          "source": "Batatia et al. 2022",
+          "location": "Sec. 4 (Eq. 7, 10); Sec. 5.1; Abstract",
+          "evidence": "4-body messages via hierarchical body-order expansion. 'using four-body messages reduces required iterations to just two.' Sec. 5.1 confirms all experiments use 2-layer models."
+        },
+        {
+          "source": "Batatia et al. 2022",
+          "location": "Sec. 2.2, Eq. 5-6",
+          "evidence": "O(3)/E(3)-equivariant via Wigner D-matrix irreps. Unifies equivariant and invariant approaches via correlation order parameter ν."
+        },
+        {
+          "source": "Batatia et al. 2022; Riebesell et al. 2025",
+          "location": "Sec. 5.2, Table 2; Matbench Discovery leaderboard",
+          "evidence": "rMD17/3BPA/AcAc SOTA. MACE-MP-0 universal model trained on MPtrj. Foundation model performance tracked on Matbench Discovery leaderboard."
+        }
+      ],
+      "NequIP": [
+        {
+          "source": "Batzner et al. 2022",
+          "location": "Page 3; Eqs. 2-3, 7-8",
+          "evidence": "Features as 'geometric objects comprising a direct sum of irreducible representations of O(3).' Tensor product interactions via Clebsch-Gordan coefficients."
+        },
+        {
+          "source": "Batzner et al. 2022",
+          "location": "Pages 5-6, Figs. 2-3",
+          "evidence": "'up to three orders of magnitude better sample efficiency.' Outperforms SchNet and DimeNet on aspirin, toluene, ethanol with ~1000 training points."
+        },
+        {
+          "source": "Batzner et al. 2022; Barroso-Luque et al. 2024",
+          "location": "Architecture; OMat24 paper",
+          "evidence": "Parent architecture for MACE and Allegro. OMat24-trained NequIP descendants enable large-scale foundation models."
+        }
+      ],
+      "CHGNet": [
+        {
+          "source": "Deng et al. 2023",
+          "location": "Abstract, p.1031; Fig. 1a",
+          "evidence": "'explicit inclusion of magnetic moments enables CHGNet to learn orbital occupancy.' Outputs E, F, S, magmoms. 'no current MLIPs can provide such information.'"
+        },
+        {
+          "source": "Deng et al. 2023",
+          "location": "MPtrj Dataset section, p.1032-1033",
+          "evidence": "'1,580,395 atom configurations, 145,923 compounds.' Covers 89 elements excluding noble gases and actinoids."
+        },
+        {
+          "source": "Deng et al. 2023",
+          "location": "Charge disproportionation section, p.1034-1035; Fig. 4",
+          "evidence": "2Mn3+_oct → Mn2+_tet + Mn4+_oct demonstrated. 'insights into ionic systems with additional electronic degrees of freedom.'"
+        }
+      ],
+      "M3GNet": [
+        {
+          "source": "Chen & Ong 2022",
+          "location": "Abstract; Eq. 2, p.5",
+          "evidence": "Three-body bond update using spherical Bessel j_l and spherical harmonics Y^0_l(θ). Azimuthally invariant (m=0), not full SO(3)-equivariant."
+        },
+        {
+          "source": "Chen & Ong 2022",
+          "location": "Universal IAP section, p.8-9",
+          "evidence": "'MPF.2021.2.8 dataset contains 187,687 ionic steps of 62,783 compounds.' Universal relaxation capability across 89 elements."
+        },
+        {
+          "source": "Chen & Ong 2022; Riebesell et al. 2025",
+          "location": "Discussion, p.20; Matbench Discovery",
+          "evidence": "Accuracy degrades for unseen chemical systems. Active learning recommended. Among lowest current Matbench Discovery entries."
+        }
+      ],
+      "SevenNet": [
+        {
+          "source": "Park et al. 2024",
+          "location": "To be verified from PDF",
+          "evidence": "NequIP architecture with spatial-decomposition parallelism for multi-GPU MD. Modified edge-level message passing for inter-GPU communication."
+        },
+        {
+          "source": "Park et al. 2024",
+          "location": "To be verified from PDF",
+          "evidence": "SevenNet-0/l3i5 trained on MPtrj. Performance metrics from Matbench Discovery leaderboard."
+        },
+        {
+          "source": "Park et al. 2024",
+          "location": "To be verified from PDF",
+          "evidence": ">80% parallel efficiency in weak-scaling tests. Demonstrated on large amorphous systems."
+        }
+      ],
+      "GAP": [
+        {
+          "source": "Bartók et al. 2018; Deringer & Csányi 2017",
+          "location": "Sec. I.A, II.A; Eq. 1, 10",
+          "evidence": "Gaussian process regression with SOAP descriptor. Eq. 10: predicted variance for uncertainty. Carbon GAP-20 (Deringer & Csányi 2017) is a seminal application."
+        },
+        {
+          "source": "Bartók et al. 2018",
+          "location": "Sec. II.A, Eqs. 2-8",
+          "evidence": "SOAP power spectrum (Eq. 6-7): 'unique rotationally and permutationally invariant description of neighbor environment.'"
+        },
+        {
+          "source": "Bartók et al. 2018",
+          "location": "Eq. 1; Sec. V, p.24-25",
+          "evidence": "M=9000 sparse points (Table I). ~100ms/atom. Orders of magnitude slower than NN potentials for large systems."
+        }
+      ],
+      "DeePMD": [
+        {
+          "source": "Wang et al. 2018; Zeng et al. 2023",
+          "location": "Wang: Abstract, Architecture; Zeng: DPA-1 section",
+          "evidence": "Smooth DeepPot-SE descriptor with local energy decomposition. DeePMD-kit v2 integrates DPA-1 attention descriptor."
+        },
+        {
+          "source": "Zeng et al. 2023",
+          "location": "DPA-1 section; Matbench Discovery leaderboard",
+          "evidence": "DPA-1 attention descriptor enables transfer learning. DPA-3.1 (OpenLAM) performance from Matbench Discovery."
+        },
+        {
+          "source": "Wang et al. 2018",
+          "location": "Abstract; GPU acceleration section",
+          "evidence": "CUDA/ROCm GPU acceleration. Gordon Bell Prize for 10B atom simulation. Widely adopted in materials science community."
+        }
+      ],
+      "MatterSim": [
+        {
+          "source": "Yang et al. 2024",
+          "location": "Sec. 2.1, pp. 5-6; Sec. S1, pp. 21-24",
+          "evidence": "Two backbones: M3GNet (invariant GNN) and Graphormer (transformer/attention). 'we opt to use two primary architectures, M3GNet and Graphormer as the backbones for MatterSim.'"
+        },
+        {
+          "source": "Yang et al. 2024",
+          "location": "Sec. 2.2, p.8; Table S2, pp. 38-39",
+          "evidence": "'MatterSim shows a strong capability in predicting stability of new materials, with an F1 score of 0.83 and a mean absolute energy error of 25meV/atom benchmarked on MatBench Discovery.'"
+        },
+        {
+          "source": "Yang et al. 2024",
+          "location": "Sec. 2.1, pp. 4, 6",
+          "evidence": "'training dataset contains ~17M structures.' 'currently supports the first 89 elements.' Training spans 0-5000K and 0-1000 GPa conditions."
+        }
+      ],
+      "Orb": [
+        {
+          "source": "Rhodes et al. 2025",
+          "location": "Pages 1-3, 7-8; Appendix C",
+          "evidence": "Graph Network Simulator architecture. NOT inherently equivariant — 'non-equivariant, non-conservative architectures can accurately model physical properties.' Uses 'equigrad' regularization for learned approximate invariance."
+        },
+        {
+          "source": "Rhodes et al. 2025",
+          "location": "Table 1, p.6",
+          "evidence": "'Orb-v3-conservative-inf-mpa' achieves F1 = 0.906, κ_SRME = 0.210. Best mpa (MPtrj+Alexandria) model in Orb-v3 family."
+        },
+        {
+          "source": "Rhodes et al. 2025",
+          "location": "Pages 1-2, 4-5; Fig. 2",
+          "evidence": "'>=10x reduction in latency and >=8x reduction in memory.' 'only universal MLIPs that can compute hundreds, rather than tens, of forward passes per second.'"
+        }
+      ],
+      "eSEN": [
+        {
+          "source": "Fu et al. 2025 (arXiv:2502.12147)",
+          "location": "PDF not in folder — verified indirectly via Orb-v3 Table 1",
+          "evidence": "eSEN (equivariant Smooth Energy Network) uses eSCN convolutions. Conservative architecture. From Meta FAIR. Orb-v3 Table 1 lists eSEN-30M-OAM with F1 = 0.925."
+        },
+        {
+          "source": "Fu et al. 2025; Orb-v3 Table 1",
+          "location": "Indirect: Rhodes et al. 2025, Table 1",
+          "evidence": "eSEN-30M-OAM: F1 = 0.925. Pretrained on OMat24, fine-tuned on MPtrj+sAlexandria (OAM suffix convention)."
+        },
+        {
+          "source": "Fu et al. 2025",
+          "location": "PDF not available — claims based on Matbench Discovery leaderboard",
+          "evidence": "SOTA on both materials (OMat24) and molecular (SPICE) benchmarks per leaderboard data. Source PDF needed for full verification."
+        }
+      ],
+      "PET": [
+        {
+          "source": "Bochkarev et al. 2024",
+          "location": "PDF not in folder — claims from Matbench Discovery leaderboard",
+          "evidence": "Point Edge Transformer: unconstrained (non-equivariant) transformer achieving equivariance through data augmentation. Source PDF needed for architecture verification."
+        },
+        {
+          "source": "Matbench Discovery leaderboard",
+          "location": "Leaderboard data",
+          "evidence": "PET-OAM-XL: current leader by CPS (0.898) and F1 (0.924). Pretrained on OMat24+sAlex+MPtrj."
+        },
+        {
+          "source": "Bochkarev et al. 2024",
+          "location": "PDF not available",
+          "evidence": "Demonstrates large-scale training can match dedicated equivariant models. Source PDF needed for full verification."
+        }
+      ],
+      "UMA": [
+        {
+          "source": "Wood et al. 2025",
+          "location": "PDF not in folder — claims from Meta FAIR announcements",
+          "evidence": "Universal Model for Atoms — single foundation model spanning molecules, materials, catalysts. Mixture-of-linear-experts design. Source PDF needed."
+        },
+        {
+          "source": "Wood et al. 2025",
+          "location": "Meta FAIR self-reported data",
+          "evidence": "Trained on ~500M unique 3D structures (largest to date). Mixture-of-experts grows capacity without sacrificing speed. Self-reported, NOT on official Matbench Discovery leaderboard."
+        },
+        {
+          "source": "Wood et al. 2025",
+          "location": "Meta FAIR self-reported data",
+          "evidence": "~1 ns/day MD on 100k+ atom systems via multi-GPU/LAMMPS. UMA-M F1 = 0.930 (self-reported)."
+        }
+      ],
+      "EquiformerV2": [
+        {
+          "source": "Liao & Smidt 2024",
+          "location": "Abstract and Section 3, Figure 1",
+          "evidence": "'Starting from Equiformer, we first replace SO(3) convolutions with eSCN convolutions to efficiently incorporate higher-degree tensors. Then we propose three architectural improvements — attention re-normalization, separable S2 activation and separable layer normalization.'"
+        },
+        {
+          "source": "Liao & Smidt 2024",
+          "location": "Section 4.1.2, Table 2",
+          "evidence": "'EquiformerV2 improves previous state-of-the-art S2EF energy MAE by 4%, force MAE by 9%. EquiformerV2 trained on only OC22 outperforms GemNet-OC trained on both OC20 and OC22 datasets.'"
+        },
+        {
+          "source": "Liao & Smidt 2024",
+          "location": "Section 2.3 and Section 4.1.3, Table 3, Figure 4",
+          "evidence": "'eSCN reduces SO(3) tensor products to SO(2) linear operations, from O(L⁶_max) to O(L³_max). EquiformerV2 at k=2 is more accurate than all other models at k=5, requiring ≥2× fewer DFT calculations.'"
+        }
+      ]
+    }
+  },
+  "Q13": {
+    "type": "A",
+    "expected_methods": [
+      "CGCNN",
+      "SchNet",
+      "MEGNet",
+      "M3GNet",
+      "NequIP",
+      "MACE",
+      "CHGNet",
+      "EquiformerV2"
+    ],
+    "method_claims": {
+      "CGCNN": [
+        "directly learns material properties from crystal graph (atoms as nodes, bonds as edges) without manually engineered features",
+        "encodes periodic crystal structure by representing multi-edge connections for periodic images of neighbors",
+        "first graph-based architecture to predict 8 DFT properties across 46,744 Materials Project structures with DFT-level accuracy"
+      ],
+      "SchNet": [
+        "uses continuous-filter convolutional layers with Gaussian basis expansion — invariant (scalar) features, no angular information",
+        "captures pairwise distance-based interactions via smooth atom-centered filters; limited for strongly directional bonding systems",
+        "one of first deep learning models for molecules and crystals; strong baseline on QM9, MD17, and Materials Project benchmarks"
+      ],
+      "MEGNet": [
+        "graph network that updates atoms, bonds, AND global state attributes (e.g., temperature, pressure) simultaneously in each layer",
+        "predicts formation energy, band gap, elastic moduli across Materials Project; MAE ~0.028 eV/atom on formation energy",
+        "global state vector enables multi-task learning and temperature-dependent property prediction unlike node/edge-only GNNs"
+      ],
+      "M3GNet": [
+        "universal GNN for crystalline materials using three-body interactions via spherical Bessel functions and spherical harmonics, trained on ~187k ionic steps (62,783 compounds) from Materials Project",
+        "supports crystal structure relaxation (not just single-point prediction) — can relax unseen structures to DFT-quality geometry",
+        "universal potential covers 89 elements; accuracy degrades for unseen chemical systems (combinations not represented in MP); active learning over new DFT relaxations is the recommended remedy"
+      ],
+      "NequIP": [
+        "strictly E(3)-equivariant GNN using geometric tensor (irreps) features — encodes directional atomic information missed by scalar models",
+        "achieves up to three orders of magnitude better data efficiency than invariant models; outperforms SchNet and DimeNet with ~1000 training points",
+        "forces derived analytically from scalar energy: F = -∇E, guaranteeing energy conservation and stable long MD simulations"
+      ],
+      "MACE": [
+        "higher-order equivariant message passing using 4-body interactions with only 2 message-passing layers",
+        "equivariant architecture via irreps (irreducible representations) under E(3) group — rotations, reflections, translations",
+        "state-of-the-art on rMD17, 3BPA, and AcAc benchmarks; L=2 equivariant variant is ~4x faster than NequIP, L=0 invariant variant is ~10x faster at comparable accuracy"
+      ],
+      "CHGNet": [
+        "graph neural network with dual atom-bond graph, three-body angular interactions, and gated MLP message passing; atom features are regularized to encode site-specific magnetic moments as charge-state constraints",
+        "jointly predicts energies, forces, stresses, and magnetic moments from atomic positions; MAEs of 30 meV/atom (energy), 77 meV/Å (force), 0.348 GPa (stress), 0.032 μB (magmom) on MPtrj test set",
+        "pretrained on MPtrj (1,580,395 DFT snapshots, 145,923 compounds, 89 elements); achieves state-of-the-art on Matbench Discovery for out-of-distribution stable crystal discovery at time of publication"
+      ],
+      "EquiformerV2": [
+        "equivariant graph-attention transformer that replaces SO(3) convolutions with eSCN convolutions to efficiently scale to higher-degree tensor representations; adds attention re-normalization, separable S^2 activation, and separable layer normalization",
+        "backbone of the Meta FAIR OMat24 model family (eqV2-S/M/L, 31M/86M/153M params); the eqV2-M variant pretrained on OMat24 and fine-tuned on MPtrj+sAlex reaches F1 = 0.916, energy-above-hull MAE = 20 meV/atom on Matbench Discovery",
+        "originally developed and benchmarked on the OC20 catalysis dataset; demonstrates that large-scale OMat24 pretraining plus DeNS denoising augmentation transfers to state-of-the-art inorganic crystal stability and formation-energy prediction"
+      ]
+    },
+    "required_citations": [
+      "Xie & Grossman 2018",
+      "Schutt et al. 2018",
+      "Chen et al. 2019",
+      "Chen & Ong 2022",
+      "Batzner et al. 2022",
+      "Batatia et al. 2022",
+      "Deng et al. 2023",
+      "Liao et al. 2024"
+    ],
+    "method_evidence": {
+      "CGCNN": [
+        {
+          "source": "Xie & Grossman 2018",
+          "location": "Abstract, pp. 2-3",
+          "evidence": "'crystal graph convolutional neural networks to directly learn material properties from the connection of atoms.' 46,744 MP structures, 87 elements."
+        },
+        {
+          "source": "Xie & Grossman 2018",
+          "location": "Sec. 2-3",
+          "evidence": "Multi-edge connections for periodic images of neighbors. Crystal graph encodes periodic structure without manual feature engineering."
+        },
+        {
+          "source": "Xie & Grossman 2018",
+          "location": "Results section",
+          "evidence": "First graph-based architecture to predict 8 DFT properties (formation energy, band gap, Fermi energy, etc.) across 46,744 MP structures."
+        }
+      ],
+      "SchNet": [
+        {
+          "source": "Schütt et al. 2018",
+          "location": "Sec. 2-3 (verified in prior sessions)",
+          "evidence": "Continuous-filter convolutions with Gaussian basis expansion. Invariant scalar features, pairwise distance-based interactions. Benchmarked on QM9, MD17, Materials Project."
+        },
+        {
+          "source": "Schütt et al. 2018",
+          "location": "Architecture section",
+          "evidence": "Smooth atom-centered filters capturing radial interactions. Limited for strongly directional bonding."
+        },
+        {
+          "source": "Schütt et al. 2018",
+          "location": "Results section",
+          "evidence": "One of first deep learning models for molecules and crystals. Strong baseline on QM9 and MD17."
+        }
+      ],
+      "MEGNet": [
+        {
+          "source": "Chen et al. 2019",
+          "location": "Architecture section (verified in prior sessions)",
+          "evidence": "Graph network updating atoms, bonds, AND global state attributes simultaneously per layer. Enables temperature/pressure-dependent prediction."
+        },
+        {
+          "source": "Chen et al. 2019",
+          "location": "Results section",
+          "evidence": "Formation energy MAE ~0.028 eV/atom on Materials Project. Also predicts band gap, elastic moduli."
+        },
+        {
+          "source": "Chen et al. 2019",
+          "location": "Global state section",
+          "evidence": "Global state vector enables multi-task learning. Temperature-dependent property prediction unlike node/edge-only GNNs."
+        }
+      ],
+      "M3GNet": [
+        {
+          "source": "Chen & Ong 2022",
+          "location": "Abstract; Eq. 2, p.5",
+          "evidence": "Three-body interactions via spherical Bessel + spherical harmonics (m=0 only). 187,687 ionic steps from 62,783 compounds. 89 elements."
+        },
+        {
+          "source": "Chen & Ong 2022",
+          "location": "Universal IAP section, p.8-9",
+          "evidence": "Supports crystal structure relaxation, not just single-point prediction. Can relax unseen structures to DFT-quality geometry."
+        },
+        {
+          "source": "Chen & Ong 2022",
+          "location": "Discussion, p.20",
+          "evidence": "Accuracy degrades for unseen chemical systems. Active learning recommended."
+        }
+      ],
+      "NequIP": [
+        {
+          "source": "Batzner et al. 2022",
+          "location": "Page 3; Eqs. 2-3, 7-8",
+          "evidence": "Strictly E(3)-equivariant using irreps. 'geometric objects comprising a direct sum of irreducible representations of O(3).'"
+        },
+        {
+          "source": "Batzner et al. 2022",
+          "location": "Pages 5-6, Figs. 2-3",
+          "evidence": "'up to three orders of magnitude better sample efficiency.' Outperforms invariant models with ~1000 training points."
+        },
+        {
+          "source": "Batzner et al. 2022",
+          "location": "Page 3, Eqs. 2-3; Page 10",
+          "evidence": "Fi = -∇i Epot '(thereby guaranteeing energy conservation).' Forces via automatic differentiation."
+        }
+      ],
+      "MACE": [
+        {
+          "source": "Batatia et al. 2022",
+          "location": "Abstract; Sec. 4; Sec. 5.1",
+          "evidence": "4-body equivariant message passing, 2 iterations. 'using four-body messages reduces required iterations to just two.'"
+        },
+        {
+          "source": "Batatia et al. 2022",
+          "location": "Sec. 2.2, Eq. 5-6",
+          "evidence": "E(3)/O(3)-equivariant via Wigner D-matrix irreps."
+        },
+        {
+          "source": "Batatia et al. 2022",
+          "location": "Sec. 5.2, Table 2",
+          "evidence": "SOTA on rMD17, 3BPA, AcAc. MACE L=2 ~4x faster than NequIP, L=0 ~10x faster."
+        }
+      ],
+      "CHGNet": [
+        {
+          "source": "Deng et al. 2023",
+          "location": "Architecture section; Fig. 1a",
+          "evidence": "Dual atom-bond graph with three-body angular interactions and gated MLP. Atom features encode magnetic moments as charge-state constraints."
+        },
+        {
+          "source": "Deng et al. 2023",
+          "location": "Results, Table (MPtrj test set)",
+          "evidence": "MAEs: 30 meV/atom (energy), 77 meV/Å (force), 0.348 GPa (stress), 0.032 μB (magmom)."
+        },
+        {
+          "source": "Deng et al. 2023",
+          "location": "MPtrj section, p.1032-1033; Matbench Discovery",
+          "evidence": "Pretrained on MPtrj (1,580,395 structures, 145,923 compounds, 89 elements). SOTA on Matbench Discovery at time of publication."
+        }
+      ],
+      "EquiformerV2": [
+        {
+          "source": "Liao et al. 2024",
+          "location": "Abstract, p.1; Secs. 3.1-3.4, pp. 4-5",
+          "evidence": "'replace SO(3) convolutions with eSCN convolutions... three architectural improvements -- attention re-normalization, separable S2 activation and separable layer normalization.'"
+        },
+        {
+          "source": "Barroso-Luque et al. 2024",
+          "location": "Table 2, p.7; Table 6, p.9",
+          "evidence": "eqV2-S/M/L: 31M/86M/153M params. eqV2-M OMat+MPtrj-sAlex: F1 = 0.916, MAE = 20 meV/atom."
+        },
+        {
+          "source": "Liao et al. 2024; Barroso-Luque et al. 2024",
+          "location": "Liao Sec. 4.1; Barroso-Luque pp. 8-9",
+          "evidence": "Originally benchmarked on OC20/OC22 catalysis. OMat24 pretraining transfers to crystal stability prediction. Note: DeNS did not provide additional benefit on top of OMat24 pretraining."
+        }
+      ]
+    }
+  },
+  "Q14": {
+    "type": "A",
+    "expected_methods": [
+      "Matbench Discovery",
+      "Matbench",
+      "JARVIS-DFT",
+      "Materials Project",
+      "MPtrj",
+      "OQMD",
+      "AFLOW",
+      "Alexandria",
+      "GNoME",
+      "WBM",
+      "OMat24"
+    ],
+    "method_claims": {
+      "Matbench Discovery": [
+        "benchmark evaluating model-guided discovery: train on historical MP data (~154k structures), predict stability of ~215k new structures from WBM dataset",
+        "metric is F1 on correctly identifying thermodynamically stable structures; tests full pipeline including structure relaxation quality",
+        "leaderboard tracks universal MLIPs (MACE, CHGNet, M3GNet, SevenNet, EquiformerV2) and GNN property models across discovery-relevant tasks"
+      ],
+      "Matbench": [
+        "13-task benchmark for inorganic solid-state property prediction spanning 312 to 132,752 samples; properties include formation energy, band gap, bulk/shear moduli, refractive index, and phonon frequency from DFT and experimental sources",
+        "crystal graph neural networks (CGCNN, MEGNet) outperform descriptor-based and AutoML methods on tasks with ≥10,000 samples; smaller datasets favour Automatminer, a fully automated feature-extraction and model-selection pipeline",
+        "uses consistent 5-fold nested cross-validation with MAE (regression) and ROC-AUC (classification) metrics; reference algorithm is Automatminer"
+      ],
+      "JARVIS-DFT": [
+        "NIST database of ~56,000 materials with DFT-computed band structures, elastic constants, piezoelectric tensors, dielectric response, and topological properties",
+        "one of three major open DFT databases alongside Materials Project and OQMD, enabling cross-database validation of property prediction models",
+        "provides training and evaluation data for deep learning models across formation energy, bandgap, DOS, IR spectra, and 2D exfoliation energy prediction tasks"
+      ],
+      "Materials Project": [
+        ">150,000 inorganic compounds with DFT-computed energy, band gap, elastic, magnetic, dielectric properties via GGA/GGA+U",
+        "provides REST API with >10M monthly calls; primary source for training universal MLIPs (M3GNet, CHGNet, MACE-MP)",
+        "reference database for thermodynamic convex hull stability — underpins most MLIP benchmarks for stability prediction"
+      ],
+      "MPtrj": [
+        "Materials Project Trajectory dataset of 1,580,395 DFT single-point calculations from GGA/GGA+U ionic relaxation trajectories, providing energies, forces, stresses, and magnetic moments",
+        "backbone dataset used to train CHGNet and MACE-MP universal potentials; covers 89 elements excluding noble gases and actinoids",
+        "provides comprehensive coverage of diverse chemical space with over 145,000 distinct compounds represented across the trajectory frames"
+      ],
+      "OQMD": [
+        "Open Quantum Materials Database: >1,000,000 DFT structures from ICSD experimental entries and crystal structure prototypes",
+        "uses PBE functional; particularly strong coverage of binary and ternary compounds for phase diagram and stability benchmarking",
+        "frequently used alongside Materials Project for benchmarking stability prediction and formation energy models"
+      ],
+      "AFLOW": [
+        "Automatic Flow database with >625,000 compounds (2015; >3.5M by 2022) covering binary alloys, Heusler intermetallics, and ICSD experimental structures with standardized high-throughput DFT settings (PBE+PAW)",
+        "defines reproducible DFT parameter sets — k-point density, smearing, convergence thresholds, DFT+U for d/f-block elements — ensuring cross-material comparability",
+        "uses standardized Brillouin zone k-point paths for band structure calculations, enabling systematic electronic structure comparison across materials"
+      ],
+      "Alexandria": [
+        "dataset of ~175,000 stable and metastable inorganic crystals (within 100 meV/atom of the convex hull) computed with PBEsol and SCAN functionals using VASP (PAW, forces converged to 5 meV/Å)",
+        "tabulated properties include total energies, volumes, band gaps, total magnetic moments, and stress tensor components from both PBEsol and SCAN, enabling functional-comparison benchmarking",
+        "designed for training ML models for solid-state property prediction; freely available on the Materials Cloud repository as pymatgen-compatible ComputedStructureEntry JSON files"
+      ],
+      "GNoME": [
+        "2.2 million DFT-relaxed crystal structures predicted stable relative to the Materials Project / OQMD / ICSD convex hull; 381,000 lie on the updated hull as newly discovered stable materials — ~10× expansion over all previously known stable crystals",
+        "all calculations use VASP with PAW-PBE functional at 520 eV cutoff, Materials Project workflow DFT+U corrections for select transition metals, and a two-stage relaxation + static calculation protocol",
+        "GNoME ionic-relaxation trajectory data was used to pretrain a NequIP equivariant interatomic potential that achieves zero-shot ionic conductivity prediction on 623 unseen compositions, outperforming M3GNet and CHGNet potentials trained on smaller datasets"
+      ],
+      "WBM": [
+        "189,981 candidate crystal structures generated by iterative chemical-element substitution from 9,524 Materials Project seed compounds, spanning a broad composition space beyond the training distribution",
+        "18,479 structures confirmed on the DFT convex hull (PBE/VASP), achieving a 9.72% discovery success rate; serves as the standard out-of-distribution test set in the Matbench Discovery benchmark (~215k unique-prototype subset used by Riebesell 2025)",
+        "stable compounds are annotated with band gaps, magnetic moments, and hardness; dataset publicly deposited and used to evaluate the generalization of universal MLIPs to unseen chemical space"
+      ],
+      "OMat24": [
+        "~118 million inorganic bulk crystal DFT single-points, relaxations, and AIMD trajectories labeled with energies, forces, and stresses; generated by FAIR (Meta) at a cost of >400 million CPU core hours",
+        "calculations use VASP with GGA-PBE (PBE+U for oxides/fluorides with Co, Cr, Fe, Mn, Mo, Ni, V, W) following Materials Project conventions but with VASP pseudopotential v5.4, introducing ~52 meV/atom mean energy offset vs. MP",
+        "EquiformerV2 models (31M–154M parameters) pre-trained on OMat24 and fine-tuned on MPtrj + sAlexandria achieve F1 = 0.916 on Matbench Discovery — the first model to exceed F1 = 0.9 on that leaderboard"
+      ]
+    },
+    "required_citations": [
+      "Riebesell et al. 2025",
+      "Dunn et al. 2020",
+      "Choudhary et al. 2022",
+      "Jain et al. 2013",
+      "Deng et al. 2023",
+      "Saal et al. 2013",
+      "Calderon et al. 2015",
+      "Schmidt et al. 2022",
+      "Merchant et al. 2023",
+      "Wang et al. 2021",
+      "Barroso-Luque et al. 2024"
+    ],
+    "method_evidence": {
+      "Matbench Discovery": [
+        {
+          "source": "Riebesell et al. 2025",
+          "location": "Verified in prior sessions",
+          "evidence": "Benchmark for crystal stability prediction using WBM test set. Metrics: F1, DAF, MAE on energy above hull."
+        },
+        {
+          "source": "Riebesell et al. 2025",
+          "location": "Verified in prior sessions",
+          "evidence": "Out-of-distribution test: models trained on MP, tested on WBM compounds not in MP training."
+        },
+        {
+          "source": "Riebesell et al. 2025",
+          "location": "Verified in prior sessions",
+          "evidence": "Standardized evaluation protocol enabling apples-to-apples comparison of MLIPs."
+        }
+      ],
+      "Matbench": [
+        {
+          "source": "Dunn et al. 2020",
+          "location": "Verified in prior sessions",
+          "evidence": "13 regression/classification tasks on Materials Project data. Standardized cross-validation splits."
+        },
+        {
+          "source": "Dunn et al. 2020",
+          "location": "Verified in prior sessions",
+          "evidence": "Tasks include formation energy, band gap, elastic moduli, phonon peak frequency."
+        },
+        {
+          "source": "Dunn et al. 2020",
+          "location": "Verified in prior sessions",
+          "evidence": "Leaderboard for comparing ML property prediction models."
+        }
+      ],
+      "OMat24": [
+        {
+          "source": "Barroso-Luque et al. 2024",
+          "location": "pp. 2-3; Table 1",
+          "evidence": "'~118 million structures labeled with total energy, forces and cell stress were calculated with 400M+ core hours of compute.' Includes single-points, relaxations, AIMD."
+        },
+        {
+          "source": "Barroso-Luque et al. 2024",
+          "location": "p.4-5; Fig. 3",
+          "evidence": "VASP GGA-PBE (PBE+U for Co/Cr/Fe/Mn/Mo/Ni/V/W oxides/fluorides). Pseudopotential v5.4. MAE = 52 meV/atom offset vs MP."
+        },
+        {
+          "source": "Barroso-Luque et al. 2024",
+          "location": "Tables 2, 6; pp. 7-9",
+          "evidence": "eqV2 models 31M-153M params. F1 = 0.916 for eqV2-M OMat+MPtrj-sAlex. First to exceed F1 = 0.9 on Matbench Discovery."
+        }
+      ],
+      "GNoME": [
+        {
+          "source": "Merchant et al. 2023",
+          "location": "pp. 1, 3",
+          "evidence": "'2.2 million structures... 381,000 entries on updated convex hull.' 'more than an order of magnitude' expansion over previously known stable crystals."
+        },
+        {
+          "source": "Merchant et al. 2023",
+          "location": "p.9 Methods",
+          "evidence": "'VASP with PBE functional and PAW potentials... consistent with Materials Project workflows.'"
+        },
+        {
+          "source": "Merchant et al. 2023",
+          "location": "p.4",
+          "evidence": "NequIP pretrained on GNoME ionic-relaxation trajectories. Zero-shot ionic conductivity on unseen compositions."
+        }
+      ],
+      "Alexandria": [
+        {
+          "source": "Schmidt et al. 2022",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified. OMat24 paper references ~4.5M PBE materials."
+        },
+        {
+          "source": "Schmidt et al. 2022",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified. OMat24 paper references ~4.5M PBE materials."
+        },
+        {
+          "source": "Schmidt et al. 2022",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified. OMat24 paper references ~4.5M PBE materials."
+        }
+      ],
+      "WBM": [
+        {
+          "source": "Wang et al. 2021",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        },
+        {
+          "source": "Wang et al. 2021",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        },
+        {
+          "source": "Wang et al. 2021",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        }
+      ],
+      "MPtrj": [
+        {
+          "source": "Deng et al. 2023",
+          "location": "p.1032-1033",
+          "evidence": "1,580,395 structures, 145,923 compounds, 89 elements. From Materials Project relaxation trajectories."
+        },
+        {
+          "source": "Deng et al. 2023",
+          "location": "p.1032-1033",
+          "evidence": "1,580,395 structures, 145,923 compounds, 89 elements. From Materials Project relaxation trajectories."
+        },
+        {
+          "source": "Deng et al. 2023",
+          "location": "p.1032-1033",
+          "evidence": "1,580,395 structures, 145,923 compounds, 89 elements. From Materials Project relaxation trajectories."
+        }
+      ],
+      "JARVIS-DFT": [
+        {
+          "source": "Choudhary et al. 2022",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        },
+        {
+          "source": "Choudhary et al. 2022",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        },
+        {
+          "source": "Choudhary et al. 2022",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        }
+      ],
+      "Materials Project": [
+        {
+          "source": "Jain et al. 2013",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        },
+        {
+          "source": "Jain et al. 2013",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        },
+        {
+          "source": "Jain et al. 2013",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        }
+      ],
+      "OQMD": [
+        {
+          "source": "Saal et al. 2013",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        },
+        {
+          "source": "Saal et al. 2013",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        },
+        {
+          "source": "Saal et al. 2013",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        }
+      ],
+      "AFLOW": [
+        {
+          "source": "Calderon et al. 2015",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        },
+        {
+          "source": "Calderon et al. 2015",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        },
+        {
+          "source": "Calderon et al. 2015",
+          "location": "PDF not in folder",
+          "evidence": "Not yet verified."
+        }
+      ]
+    }
+  },
+  "Q15": {
+    "type": "B",
+    "as_of": "2026-02",
+    "sources": {
+      "nguyen2023": {
+        "key": "Nguyen et al. 2023",
+        "title": "Challenges and Opportunities for Machine Learning in Multiscale Computational Modeling",
+        "venue": "ASME J. Comput. Inf. Sci. Eng. 23(6):060808",
+        "doi": "10.1115/1.4062495",
+        "date": "2023-12",
+        "evidence_type": "position_no_experiments"
+      },
+      "van2025": {
+        "key": "Van et al. 2025",
+        "title": "A Survey of AI for Materials Science: Foundation Models, LLM Agents, Datasets, and Tools",
+        "venue": "arXiv:2506.20743",
+        "date": "2025-06-25",
+        "evidence_type": "survey",
+        "note": "journal version ACM Comput. Surv. 10.1145/3822503 appeared 2026-06, after cutoff; cite preprint"
+      },
+      "li2025_ood": {
+        "key": "Li et al. 2025",
+        "title": "Probing out-of-distribution generalization in machine learning for materials",
+        "venue": "Commun. Mater. 6:9",
+        "doi": "10.1038/s43246-024-00731-w",
+        "date": "2025-01-11",
+        "evidence_type": "empirical"
+      },
+      "jakob2025": {
+        "key": "Jakob et al. 2025",
+        "title": "Universally Accurate or Specifically Inadequate? Stress-Testing General Purpose Machine Learning Interatomic Potentials",
+        "venue": "Adv. Intell. Discovery e2500031",
+        "doi": "10.1002/aidi.202500031",
+        "date": "2025-06-12",
+        "evidence_type": "empirical"
+      },
+      "deng2025_softening": {
+        "key": "Deng et al. 2025",
+        "title": "Systematic softening in universal machine learning interatomic potentials",
+        "venue": "npj Comput. Mater. 11:9",
+        "doi": "10.1038/s41524-024-01500-6",
+        "date": "2025-01-10",
+        "evidence_type": "empirical",
+        "note": "not in the source review's bibliography (local id only); not independent of li2025_ood — preprint arXiv:2405.07105 is ref. 39 in Li et al."
+      }
+    },
+    "required_claims": [
+      {
+        "id": "Q15.C1",
+        "text": "Bridging 3+ scales simultaneously remains rare",
+        "coverage": "partial",
+        "sources": [
+          "van2025",
+          "nguyen2023"
+        ],
+        "locations": {
+          "van2025": "Sec. 3.1.6; Sec. 2.6",
+          "nguyen2023": "Sec. 1, para. 3"
+        },
+        "evidence": "van2025: no FM architecture specifically designed for multiscale problems exists; MuMMI cited as the lone example connecting three resolutions (1000 nm / 30 nm CG / all-atom). nguyen2023: hierarchical schemes memory-bound, concurrent schemes compute-bound, both limiting scalability.",
+        "caveat": "Neither source states rarity as a counted fact; they state absence of dedicated architectures and the mechanism making coupling costly.",
+        "flag": "verify — negative existence claim, source literature cutoff ~mid-2025"
+      },
+      {
+        "id": "Q15.C2",
+        "text": "Labeled multiscale datasets are expensive and scarce",
+        "coverage": "full",
+        "sources": [
+          "nguyen2023",
+          "van2025"
+        ],
+        "locations": {
+          "nguyen2023": "Sec. 3.1; Conclusion",
+          "van2025": "Sec. 3.1.6; Sec. 4.1.1 incl. Table 3"
+        },
+        "evidence": "nguyen2023: experimental data collection expensive and tedious, synthetic data computationally demanding, scarcity causes overfitting; named first pressing issue. van2025: multiscale datasets not yet well established; Table 3 shows datasets skewed to inorganic atomic-scale, gap at meso/macro and for polymers/composites."
+      },
+      {
+        "id": "Q15.C3a",
+        "text": "MLIP/model transferability across composition and phase space",
+        "coverage": "full",
+        "sources": [
+          "li2025_ood",
+          "jakob2025"
+        ],
+        "locations": {
+          "li2025_ood": "Figs. 1–2",
+          "jakob2025": "Sec. 2.1–2.2"
+        },
+        "evidence": "li2025_ood: leave-one-element/group/period-out over 700 tasks; 85% of leave-one-element-out tasks R²>0.95 (ALIGNN), failures on H, F, O. jakob2025: 100 target compositions, 41826 host structures, 161273 trial structures; convex-hull and polymorph ordering largely preserved."
+      },
+      {
+        "id": "Q15.C3b",
+        "text": "MLIP transferability across temperature and pressure",
+        "coverage": "asserted_only",
+        "sources": [
+          "van2025",
+          "jakob2025"
+        ],
+        "locations": {
+          "van2025": "Sec. 5.2; Sec. 2.3",
+          "jakob2025": "Sec. 2.3, closing"
+        },
+        "evidence": "van2025: materials behave differently at extreme temperature/pressure; current models focus on equilibrium properties, temperature-dependent ones less explored — stated, not measured. jakob2025: flags need for high-pressure-stable general purpose MLIPs as open direction.",
+        "caveat": "No source in this set benchmarks temperature as a generalization axis. Deng uses 1000 K MD only as a sampling device."
+      },
+      {
+        "id": "Q15.C4",
+        "text": "Model interpretability (\"black box\")",
+        "coverage": "full",
+        "sources": [
+          "nguyen2023",
+          "van2025"
+        ],
+        "locations": {
+          "nguyen2023": "Sec. 3.3; Abstract; Conclusion",
+          "van2025": "Sec. 5.2"
+        },
+        "evidence": "nguyen2023: black-box nature undermines trustworthiness; physics-naïve architectures achieve high accuracy yet fail to capture physical laws. van2025: interpretability degrades with model scale; generative models produce syntactically valid but physically implausible outputs.",
+        "distractor_note": "li2025_ood Fig. 1b / Methods uses SHAP and UMAP+KDE as diagnostics, not as an unsolved barrier. An answer claiming these solve interpretability is wrong."
+      },
+      {
+        "id": "Q15.C6a",
+        "text": "Generalizing universal MLIPs to surfaces and out-of-distribution systems",
+        "coverage": "full",
+        "sources": [
+          "deng2025_softening",
+          "jakob2025",
+          "li2025_ood",
+          "van2025"
+        ],
+        "locations": {
+          "deng2025_softening": "Results: Surface energies, Defect energies, Ion migration, Phonons; Fig. 5b",
+          "jakob2025": "Sec. 2.2–2.4; Figs. 4–6",
+          "li2025_ood": "whole paper",
+          "van2025": "Sec. 5.2"
+        },
+        "evidence": "deng2025_softening: 147 surfaces / 29 systems, 470 Mg migration paths / 110 structures; softening scale <1 for >90% of 1000 WBM compounds. jakob2025: false-positive rates below hull 56% (M3GNet) / 30% (MACE-MP-0) vs 7% for DFT; ΔE_GS RMSE 175 / 117 meV/atom. li2025_ood: 92% of the '≥5 elements' test set inside the representational training domain."
+      },
+      {
+        "id": "Q15.C6b",
+        "text": "Generalizing universal MLIPs to interfaces and grain boundaries",
+        "coverage": "asserted_only",
+        "sources": [
+          "van2025"
+        ],
+        "locations": {
+          "van2025": "Sec. 2.6"
+        },
+        "evidence": "van2025: extension to grain boundaries, sintering, fracture evolution and large-scale failure remains underexplored.",
+        "caveat": "No empirical source in this set tests interfaces. Do not merge with C6a."
+      },
+      {
+        "id": "Q15.C7",
+        "text": "OOD error is systematic bias, not noise, and traces to training sets biased toward near-equilibrium low-energy configurations",
+        "coverage": "full",
+        "sources": [
+          "deng2025_softening",
+          "jakob2025",
+          "li2025_ood"
+        ],
+        "independence": "deng2025_softening and jakob2025 do not cite each other — strongest convergence in the set",
+        "evidence": "deng2025_softening: PES softening from underpredicted curvature, relaxation trajectories near local minima. jakob2025: over-stabilization of metastable minima growing with ΔE_GS. li2025_ood: H/F/O formation energies overpredicted by all models, removable by linear correction."
+      },
+      {
+        "id": "Q15.C8",
+        "text": "Multi-model ensembles underestimate uncertainty because uMLIP errors correlate with each other more than with DFT",
+        "coverage": "full",
+        "sources": [
+          "jakob2025"
+        ],
+        "evidence": "Wasserstein distance 0.04 between M3GNet and MACE-MP-0 vs 0.12 / 0.09 to DFT, attributed to overlapping training sets."
+      },
+      {
+        "id": "Q15.C9",
+        "text": "Evaluation protocols are inadequate: single-point energy/force metrics miss workflow-level failures",
+        "coverage": "full",
+        "sources": [
+          "jakob2025"
+        ],
+        "evidence": "First end-to-end evaluation of MLIPs in CSP; reliability guideline ΔE_GS < 1.80 eV/atom from 91184 matching vs 41170 diverging trajectories."
+      }
+    ],
+    "required_citations": [
+      "nguyen2023",
+      "van2025",
+      "li2025_ood",
+      "jakob2025",
+      "deng2025_softening"
+    ]
+  },
+  "Q16": {
+    "type": "B",
+    "as_of": "2026-02",
+    "sources": {
+      "batzner2022": {
+        "key": "Batzner et al. 2022",
+        "title": "E(3)-equivariant graph neural networks for data-efficient and accurate interatomic potentials",
+        "venue": "Nat. Commun. 13:2453",
+        "doi": "10.1038/s41467-022-29939-5",
+        "date": "2022-05-04",
+        "evidence_type": "empirical",
+        "note": "Only source in the set with a controlled invariant-vs-equivariant ablation inside one architecture (l>0 switched off)."
+      },
+      "batatia2022": {
+        "key": "Batatia et al. 2022",
+        "title": "MACE: Higher Order Equivariant Message Passing Neural Networks for Fast and Accurate Force Fields",
+        "venue": "Adv. Neural Inf. Process. Syst. 35 (NeurIPS 2022); arXiv:2206.07697",
+        "doi": null,
+        "date": "2022-12",
+        "evidence_type": "empirical",
+        "note": "DOI not assigned in proceedings entry; cite arXiv id."
+      },
+      "park2024": {
+        "key": "Park et al. 2024",
+        "title": "Scalable Parallel Algorithm for Graph Neural Network Interatomic Potentials in Molecular Dynamics Simulations",
+        "venue": "J. Chem. Theory Comput. 20:4857-4868; arXiv:2402.03789",
+        "doi": null,
+        "date": "2024-02-06",
+        "evidence_type": "empirical",
+        "note": "DOI not verified. Systems paper: restates the accuracy/data-efficiency claims as background citing batzner2022, contributes only cost/parallelism evidence."
+      },
+      "bigi2026": {
+        "key": "Bigi et al. 2026",
+        "title": "Pushing the limits of unconstrained machine-learned interatomic potentials",
+        "venue": "arXiv:2601.16195",
+        "doi": null,
+        "date": "2026-01",
+        "evidence_type": "empirical",
+        "note": "Journal version Mach. Learn.: Sci. Technol. doi 10.1088/2632-2153/ae6417 appeared 2026-06, after cutoff; cite preprint. Required only for the regime-dependence claim C11."
+      }
+    },
+    "required_claims": [
+      {
+        "id": "Q16.C1",
+        "text": "Equivariant GNN-IPs carry l>0 geometric tensor features built from relative position vectors; switching off all l>0 interactions reduces the architecture to a conventional invariant GNN-IP",
+        "coverage": "full",
+        "sources": [
+          "batzner2022",
+          "batatia2022"
+        ],
+        "locations": {
+          "batzner2022": "Results, Neural equivariant interatomic potentials; Data efficiency, para. 1",
+          "batatia2022": "Sec. 2.2"
+        },
+        "evidence": "batzner2022: invariant GNN-IPs operate on interatomic distances so internal features are scalars; NequIP uses relative position vectors with features spanning scalars, vectors and higher-order tensors, combined via Clebsch-Gordan tensor product with radial x spherical-harmonic filters. States that omitting everything beyond the 0 (x) 0 -> 0 interaction yields a SchNet-style invariant GNN-IP. batatia2022: L=0 features are invariant scalars, L>0 equivariant; SchNet and DimeNet transform with the identity matrix.",
+        "caveat": "This is the definitional bridge that licenses the l=0 arm as a proxy for 'vanilla GNN'. Any answer comparing equivariant to vanilla GNNs must anchor the comparison here or it is not architecture-controlled."
+      },
+      {
+        "id": "Q16.C2",
+        "text": "Within one architecture, the accuracy gain is a step change at the onset of equivariance (l=0 to l=1), with diminishing returns for higher l",
+        "coverage": "full",
+        "sources": [
+          "batzner2022"
+        ],
+        "locations": {
+          "batzner2022": "Table 2 (revised MD-17); MD-17 small molecule dynamics, closing para."
+        },
+        "evidence": "revMD-17, 1000 configurations, NequIP at l=0/1/2/3. Aspirin forces 42.2 / 12.6 / 8.5 / 8.2 meV/A, energy 25.2 / 3.8 / 2.4 / 2.3 meV. Naphthalene forces 20.6 / 2.1 / 1.4 / 1.3. Toluene forces 26.6 / 2.6 / 1.8 / 1.6. Paper's own reading: the l=0 to l=1 step highlights the crucial role of equivariance; beyond l=1 the improvement is consistent but small.",
+        "caveat": "The l=0 arm is an ablation under hyperparameters chosen for the equivariant setting, not a tuned invariant baseline. Its revMD-17 aspirin energy of 25.2 meV sits far above ACE 6.1 and FCHL19 6.2 on the same data.",
+        "distractor_note": "Table 1 comparators PaiNN, NewtonNet, GemNet and UNiTE are themselves equivariant or directional; citing those rows as invariant-vs-equivariant evidence is wrong. UNiTE also beats NequIP on original MD-17 aspirin forces (6.8 vs 8.0), so 'outperforms all other methods' is overstated."
+      },
+      {
+        "id": "Q16.C3",
+        "text": "Equivariance improves sample efficiency by changing the exponent of the learning-curve power law, not merely shifting the curve",
+        "coverage": "full",
+        "sources": [
+          "batzner2022"
+        ],
+        "locations": {
+          "batzner2022": "Fig. 5; Data efficiency section; SI weight- and feature-controlled variants"
+        },
+        "evidence": "Water dataset (Cheng et al.), identical hyperparameters, training sizes 10-1000, l in {0,1,2,3}. Equivariant networks beat l=0 at every dataset size on force MAE. Log-log slope of the equivariant curves differs in magnitude from l=0, which follows the slope typical of other published methods; raising l beyond 1 shifts the curve without further slope change. SI weight-controlled (l=0 with 512x0e vs l=1 with 64x0o+64x0e+64x1o+64x1e) and feature-controlled variants reproduce the effect, excluding parameter count as the cause.",
+        "regime_scope": "10^1-10^3 training structures; single architecture; single dataset (bulk water)",
+        "distractor_note": "park2024 asserts NequIP data efficiency in its abstract and Sec. 2.2 but only cites batzner2022 for it. An answer sourcing this claim to park2024 is an attribution error, not a factual one."
+      },
+      {
+        "id": "Q16.C4",
+        "text": "Cross-method comparisons put the data-efficiency gap at up to three orders of magnitude in training structures",
+        "coverage": "full",
+        "sources": [
+          "batzner2022"
+        ],
+        "locations": {
+          "batzner2022": "Table 3; Table 4; Liquid water and ice dynamics; Lithium thiophosphate superionic transport"
+        },
+        "evidence": "Water/ice: NequIP on 133 structures vs DeepMD on 133,500 (1000x fewer); forces better on all four subsets (11.9 vs 40.4 meV/A on liquid water), energies worse (1.6-1.7 vs 1.0 meV/molecule), asymmetry explained via the M(3N+1) label count. Cheng water: BPNN on 1303 structures gives approx 120 meV/A force RMSE; NequIP l=2 gives 123.3 at 100 points and 98.3 at 250. LiPS: force MAE 97.8 / 25.8 / 7.7 / 4.7 at 10 / 100 / 1000 / 2500 structures, Li diffusivity 1.25e-5 vs 1.37e-5 cm2/s from AIMD.",
+        "caveat": "Cross-code, unmatched hyperparameters, different training corpora. The abstract's three-orders-of-magnitude figure rests on this tier, not on the controlled ablation in C3.",
+        "flag": "verify — an answer that presents the 1000x figure as the controlled result conflates C3 and C4"
+      },
+      {
+        "id": "Q16.C5",
+        "text": "The learning-curve slope change is not attributable to equivariance alone: increasing message body order produces it with purely invariant messages",
+        "coverage": "full",
+        "sources": [
+          "batatia2022"
+        ],
+        "locations": {
+          "batatia2022": "Fig. 2 (left/center/right); Sec. 5.1, Learning Curves"
+        },
+        "evidence": "rMD17 aspirin, two-layer MACE. Left panel, invariant L=0 with correlation order nu=1/2/3: slopes -0.33 / -0.51 / -0.64. Center, nu=3 fixed with L=0/1/2: -0.64 / -0.63 / -0.64, i.e. equivariance shifts the curve without changing the exponent. Right, nu=1 fixed with L=0/1/2: -0.33 / -0.44 / -0.45, slope change only in the low-body-order regime. Paper states two independent routes to improve invariant two-body MPNNs: higher correlation order or equivariant messages.",
+        "independence": "direct replication of the batzner2022 Fig. 5 protocol; relation to C3 is 'qualifies', not 'contradicts'",
+        "caveat": "C3 remains correct as stated for the two-body architecture Batzner tested. C5 narrows the causal attribution."
+      },
+      {
+        "id": "Q16.C6",
+        "text": "The strong form — that invariant architectures cannot represent directional information — is false; sufficient message body order recovers most of the gap",
+        "coverage": "full",
+        "sources": [
+          "batatia2022"
+        ],
+        "locations": {
+          "batatia2022": "Fig. 2 left; Sec. 5.1; Sec. 5.3.2; Sec. 1"
+        },
+        "evidence": "Invariant MACE at nu=3 reaches performance similar to an accurate two-body equivariant MPNN using only higher-order invariant messages. MACE L=0 often nearly matches or exceeds competitive equivariant models (3BPA 1200 K: L=0 E 37.1 / F 81.6 vs NequIP L=3 38.5 / 76.2). The paper locates the defect in two-body messages being non-universal approximators, citing Pozdnyakov and Ceriotti, not in invariance as such, and states two independent routes to fix it.",
+        "distractor_note": "An answer asserting that invariant models cannot encode directional or many-body information is wrong. The defensible modality is 'two-body invariant messages are incomplete'.",
+        "caveat": "Sec. 5.1 also asserts that equivariant message passing lifts the degeneracy of most structures, but no source remaining in the set tests degeneracy or symmetrically inequivalent configurations empirically."
+      },
+      {
+        "id": "Q16.C9",
+        "text": "Data efficiency here means sample efficiency only; equivariance carries a compute cost that the founding evidence does not quantify",
+        "coverage": "partial",
+        "sources": [
+          "batatia2022",
+          "park2024"
+        ],
+        "locations": {
+          "batatia2022": "Sec. 5.2, Computational Cost; Table 2, Time latency row",
+          "park2024": "Sec. 1; Sec. 3.1; Sec. 4.2"
+        },
+        "evidence": "batatia2022: names the equivariant tensor product as the computational bottleneck of equivariant MPNNs; single-codebase latencies MACE L=0 10.5 ms, L=1 17.5, L=2 24.3 vs NequIP 103.5 and BOTNet 101.2. park2024: message passing extends the receptive field well beyond rc, so communication in spatial decomposition scales with rc times the number of layers; strong-scaling speed-up 13.1-15.4 on 32 GPUs against an ideal 32.",
+        "caveat": "No source in this set gives a controlled compute comparison of equivariant vs invariant at matched accuracy. batzner2022 reports no inference-time or throughput figures at all, so the sample-efficiency result cannot be read as an efficiency result.",
+        "flag": "verify — as of 2026 fused tensor-product kernels (FlashTP, cuEquivariance, OpenEquivariance) have materially changed this cost picture; any cost statement must be dated"
+      },
+      {
+        "id": "Q16.C10",
+        "text": "The claim that deep message passing prevents parallelization is architectural, not fundamental: an adapted spatial-decomposition algorithm retains high weak-scaling efficiency at five layers",
+        "coverage": "full",
+        "sources": [
+          "batatia2022",
+          "park2024"
+        ],
+        "locations": {
+          "batatia2022": "Sec. 5.2, Receptive Field",
+          "park2024": "Fig. 4; Sec. 4.1; Fig. 5; Fig. S1"
+        },
+        "evidence": "batatia2022 asserts that decoupling correlation order from iteration count keeps the receptive field small and the model parallelisable. park2024 restricts inter-processor communication to the original rc by exchanging node features and gradients per layer: five-layer models hold 0.95-1.0 weak-scaling efficiency at 2 GPUs and 0.79-0.84 at 32, against 0.83-0.98 and 0.67-0.83 for two-layer models; efficiency rises slightly with more channels and layers because compute grows faster than communication. Strong-scaling saturation traces to GPU underutilization (Fig. S1), not to communication frequency.",
+        "caveat": "Benchmarked on homogeneous alpha-quartz SiO2 where atoms distribute evenly; park2024 notes heterogeneous systems or more GPUs could raise synchronization cost. Relation to batatia2022 is 'qualifies' — both are correct at different levels (architectural vs algorithmic)."
+      },
+      {
+        "id": "Q16.C11",
+        "text": "The advantage is regime-dependent: at 10^6-10^7 training structures unconstrained architectures match equivariant ones on accuracy, with the residual cost appearing as training epochs rather than as an accuracy ceiling",
+        "coverage": "full",
+        "sources": [
+          "bigi2026"
+        ],
+        "locations": {
+          "bigi2026": "Abstract; Sec. on large-data regime (MPtrj, sAlex, OMat24)"
+        },
+        "evidence": "Fully unconstrained architectures scaled to MPtrj, the subsampled Alexandria dataset and OMat24 reach accuracy on par with state-of-the-art equivariant networks and are efficient at inference, but require more epochs to train from scratch because symmetries and conservation laws must be inferred from data. Pitfalls for structural optimization and lattice dynamics (non-vanishing net force, non-symmetric Jacobian) are correctable in practice.",
+        "regime_scope": "10^6-10^7 training structures; multi-element universal potentials",
+        "caveat": "Does not overturn C2-C4, which hold in the low-data regime. An answer that presents the 2022 data-efficiency result as unconditional is incomplete as of 2026-02.",
+        "flag": "verify — leaderboard positions and model rankings move monthly; do not encode a specific rank"
+      }
+    ],
+    "required_citations": [
+      "batzner2022",
+      "batatia2022",
+      "park2024",
+      "bigi2026"
+    ]
+  },
+  "Q17": {
+    "type": "B",
+    "as_of": "2026-02",
+    "provenance_policy": "All primary sources read in full. No claims carried from Q15. Preprint status accepted as sufficient.",
+    "sources": {
+      "maevskiy2025": {
+        "key": "Maevskiy et al. 2025",
+        "title": "Predicting ionic conductivity in solids from the machine-learned potential energy landscape",
+        "venue": "Phys. Rev. Research 7:023167; preprint arXiv:2411.06804",
+        "doi": "10.1103/PhysRevResearch.7.023167",
+        "date": "2025-05",
+        "evidence_type": "empirical",
+        "verified": "full_text",
+        "note": "Exploratory phase used Constructor Research Platform. Code + predictions public."
+      },
+      "bheemaguli2025": {
+        "key": "Bheemaguli, Xiao & Sai Gautam 2025",
+        "title": "Evaluation of Foundational Machine Learned Interatomic Potentials for Migration Barrier Predictions",
+        "venue": "arXiv:2512.03642 [cond-mat.mtrl-sci]",
+        "date": "2025-12-03",
+        "evidence_type": "empirical_benchmark",
+        "verified": "full_text",
+        "note": "Authors state no prior benchmark of universal potentials for Em existed. Data on GitHub + Zenodo."
+      },
+      "nam2025": {
+        "key": "Nam et al. 2025",
+        "title": "Flow matching for accelerated simulation of atomic transport in crystalline materials",
+        "venue": "Nat. Mach. Intell.; preprint arXiv:2410.01464",
+        "doi": "10.1038/s42256-025-01125-4",
+        "date": "2025-10",
+        "evidence_type": "empirical",
+        "verified": "full_text"
+      },
+      "saxena2023": {
+        "key": "Saxena et al. 2023",
+        "title": "GNN-assisted phase space integration with application to atomistics",
+        "venue": "Mech. Mater. 182:104681",
+        "doi": "10.1016/j.mechmat.2023.104681",
+        "date": "2023-05",
+        "evidence_type": "empirical",
+        "verified": "full_text"
+      },
+      "turchyna2025": {
+        "key": "Turchyna et al. 2025",
+        "title": "Connecting Scales: Learning Dynamics for Efficient Ionic Conductivity Predictions with Graphs",
+        "venue": "ICLR 2025 MLMP workshop",
+        "date": "2025-04",
+        "evidence_type": "workshop_empirical",
+        "verified": "full_text",
+        "note": "Distinct method class: direct GNN regression on force-field evaluations, vs. hand-crafted PES descriptors in maevskiy2025."
+      }
+    },
+    "contrast_sources": {
+      "nan2024": {
+        "key": "Nan et al. 2024",
+        "title": "Coarse-grained molecular dynamic model and wettability simulation of graphite materials",
+        "venue": "J. Appl. Phys. 136:134301",
+        "doi": "10.1063/5.0221791",
+        "date": "2024-10-01",
+        "evidence_type": "no_ml_contrast_case",
+        "verified": "full_text"
+      }
+    },
+    "required_claims": [
+      {
+        "id": "Q17.C1",
+        "text": "Transferability to ionic transport is demonstrated at screening grade but not at quantitative grade, and the gap is measured rather than asserted",
+        "coverage": "full",
+        "sources": [
+          "bheemaguli2025",
+          "maevskiy2025"
+        ],
+        "independence": "different method classes (MLIP-NEB vs PES descriptors), different reference standards (DFT-NEB vs AIMD+experiment), no mutual citation",
+        "locations": {
+          "bheemaguli2025": "Sec. 3.1 Fig. 2; Sec. 3.3 Fig. 4",
+          "maevskiy2025": "Sec. III.A Table I; Sec. III.B; Sec. III.C"
+        },
+        "evidence": "bheemaguli2025: 574 migration paths across layered/Weberite/spinel/olivine/perovskite/NaSICON, Li/Na/Mg/Ca. Classification at 500 meV: Orb-v3 84.84% (487/574), SevenNet 82.93%, MACE-MP-0 79.44%, CHGNet 73.87%, M3GNet 73.52%. But Em MAE 0.310-0.349 eV full set, 0.198-0.257 eV after per-model outlier removal, against a DFT-NEB reference uncertainty of ~60 meV, where 60 meV at 298 K corresponds to an order-of-magnitude change in D. maevskiy2025: 8 of 10 top-ranked structures confirmed superionic at room temperature by AIMD; SevenNet-MD validation gives 55% of top-100 above 0.1 mS/cm vs ~7% (2/29) unbiased — 8-fold enrichment. But 39% of the same Xi-selected set falls below 0.005 mS/cm, which the authors attribute to mechanisms not captured by the FV descriptors.",
+        "flag": "the two sources converge on the same shape of result: reliable ranking, unreliable magnitude"
+      },
+      {
+        "id": "Q17.C2",
+        "text": "The magnitude of the target property is itself a generalization axis: accuracy degrades systematically toward high migration barriers",
+        "coverage": "full",
+        "sources": [
+          "bheemaguli2025"
+        ],
+        "locations": {
+          "bheemaguli2025": "Sec. 3.2 Fig. 3; Sec. 3.1"
+        },
+        "evidence": "Seven equal-size Em bins over 574 paths. Fraction within 0.1 eV in highest bin (~1.31-2.50 eV): Orb-v3 20.7%, MACE-MP-0 18.3%, SevenNet 14.6%, M3GNet 6.1%, CHGNet 3.7%. Lowest bin (~0.0025-0.25 eV): all above 50% (CHGNet 59.8% highest). Compounding directional bias: CHGNet and M3GNet underestimate Em in 73.1% and 78.2% of predictions (420/154 and 449/125 under/over); MACE-MP-0, SevenNet, Orb-v3 balanced (299/275, 244/330, 242/332). Authors frame this as the specialized-vs-generalized trade-off: simpler graph models peak on low Em, complex models sacrifice peak performance for range.",
+        "flag": "distinct from composition and temperature axes; means benchmark-average MAE conceals where the method actually fails"
+      },
+      {
+        "id": "Q17.C3",
+        "text": "Reported accuracy can be decoupled from the underlying physics: good property predictions do not arise from good structural predictions, and good metrics do not require the physical input",
+        "coverage": "full",
+        "sources": [
+          "bheemaguli2025",
+          "turchyna2025"
+        ],
+        "independence": "different mechanisms, different method classes, no mutual citation",
+        "locations": {
+          "bheemaguli2025": "Sec. 3.5 Fig. 6; Sec. 4",
+          "turchyna2025": "Sec. 3; Sec. 4; Fig. 2a vs 2b"
+        },
+        "evidence": "bheemaguli2025: no positive correlation between Em accuracy and local-geometry accuracy, and an inverse relationship — best geometry predictions coincide with worst Em predictions. Bin 5 geometry success 66.7/75.0/66.7/66.7/58.3%; Em success 16.7/0/16.7/8.3/0%. Only two models achieve >0.5 on both metrics, and only in bin 1. Proposed mechanism: flat PES at low Em tolerates geometry error; deep minima at high Em amplify it. turchyna2025: random node vectors match true SevenNet accelerations at baseline capacity (R² ~0.5); restricting hidden size to 3/5 and increasing samplings 5x recovers force-field dependence at half the accuracy (R² 0.249 vs 0.058 random).",
+        "flag": "strongest convergent claim — two independent demonstrations that a headline metric is not evidence the model uses the physics it is nominally given"
+      },
+      {
+        "id": "Q17.C4",
+        "text": "Temperature is a demonstrated generalization failure axis for generative dynamics surrogates, with opposite-direction failure for structural and transport observables",
+        "coverage": "full",
+        "sources": [
+          "nam2025"
+        ],
+        "locations": {
+          "nam2025": "Sec. II.D Fig. 3c; Extended Data Fig. 5; Sec. III"
+        },
+        "evidence": "Below the training temperature range LiFlow D* decreases much more slowly than the fine-tuned-MLIP reference — fictitious diffusion on extrapolation, attributed to training predominantly on larger Li displacements at higher T. Second mode: collapse toward non-diffusive displacements when hopping is rare (gamma-LPS, low T), underestimating D*. Structural features fail in the opposite direction: PMFs accurate at low T, noisier and free-energy-smoothed at high T. Authors state the model lacks the broad generalizability of universal MLIPs.",
+        "flag": "cross-reference — supplies the temperature benchmark Q15.C3b lacked"
+      },
+      {
+        "id": "Q17.C5",
+        "text": "Demonstrated generality is bounded by the ansatz, not by data volume: structural assumptions exclude whole classes of observable that no additional training removes",
+        "coverage": "full",
+        "sources": [
+          "saxena2023"
+        ],
+        "contrast": [
+          "nan2024"
+        ],
+        "locations": {
+          "saxena2023": "Sec. 2 Eq. (3); Sec. 5.1 discussion",
+          "nan2024": "Sec. II.A; Sec. III.A"
+        },
+        "evidence": "saxena2023: interatomic independence (Sigma_ij = 0), Einstein-solid approximation, quasistatic limit with vanishing mean and thermal momenta; authors state correlations responsible for nonequilibrium irreversible thermal transport must be modelled separately — transport excluded by construction, not merely untested. Contrast case nan2024 (no ML): T_CG = n³·T_AA makes temperature a bookkeeping quantity (11,200 / 37,800 / 89,600 K nominal for a 1400 K target), so transition temperature is not an observable; n³:1 beads carry no charge, so conductivity is not representable; hard ceiling n<=4 at 5% bond-length error.",
+        "caveat": "The generalization across ML and non-ML cases is ours; each source states only its own constraint.",
+        "flag": "distinguishes ansatz-limited from data-limited failure — a different mechanism from the training-distribution explanations in Q15.C7"
+      },
+      {
+        "id": "Q17.C6",
+        "text": "Where the reference standard is itself a foundational MLIP, its error on the target property is independently measurable — and experimental anchoring, where it exists, is the exception rather than the norm",
+        "coverage": "full",
+        "sources": [
+          "nam2025",
+          "bheemaguli2025",
+          "maevskiy2025",
+          "turchyna2025"
+        ],
+        "independence": "bheemaguli2025 independently quantifies MACE-MP-0 and SevenNet error on Em; nam2025 trains on MACE-MP-0 trajectories; turchyna2025 trains on SevenNet MD; no mutual citation among the three",
+        "locations": {
+          "nam2025": "Sec. IV.B; Sec. III",
+          "bheemaguli2025": "Sec. 3.1",
+          "maevskiy2025": "Sec. III.A; Appendix A Fig. 6",
+          "turchyna2025": "Sec. 2"
+        },
+        "evidence": "nam2025 trains on MACE-MP-0 small NVT trajectories, states accuracy inherently limited by the reference dynamics. turchyna2025 trains on SevenNet universal-potential MD at 1000 K. bheemaguli2025 measures those same models against DFT-NEB: MACE-MP-0 0.310 eV, SevenNet 0.344 eV MAE. maevskiy2025 is the only source in the set with an experimental anchor: Li7P3S11 gives E_A = 249 +/- 18 meV and room-temperature conductivity 7.9 +/- 3.7 mS/cm, against experimental values of E_A = 295 meV / 8.3 mS/cm (Busche) and E_A = 124 meV / 3.2 mS/cm (Mizuno). It also uses a three-tier reference chain: M3GNet for descriptors, SevenNet MD for scale-up, AIMD for final validation, with AIMD-vs-SevenNet MSD slopes compared directly.",
+        "caveat": "Error propagation from uMLIP reference into surrogate is not quantified by any source."
+      },
+      {
+        "id": "Q17.C7",
+        "text": "One response to the transferability limit is architectural avoidance: designing the method so that the model is queried only on configurations close to its training distribution, rather than improving generalization",
+        "coverage": "full",
+        "sources": [
+          "maevskiy2025"
+        ],
+        "locations": {
+          "maevskiy2025": "Abstract; Sec. I final paragraphs; Sec. II.A opening; Appendix C"
+        },
+        "evidence": "Stated design principle: generalization error of the ML-IAP is assumed reduced when the system under study differs from the closest training object by only the coordinates of a single atom, rather than by all atomic positions. Hence the frozen-framework approximation — one mobile ion on a grid, remaining atoms fixed — with grid step <=0.25 A and exclusion of sites within R_min = 1.2 A of other atoms to avoid unphysical configurations. Abstract frames the method as requiring minimal generalization capabilities. Authors contrast this explicitly with active learning, which reduces generalization error but sacrifices the efficiency gained by replacing DFT. Two consequences: (i) hand-crafted Xi outperforms trained multivariate models — logistic regression with L1/L2 and CatBoost on PES descriptors, matminer descriptors, and both combined, none outperform Xi; (ii) the method generalizes to a chemical family absent from tuning data — hydroborates dominate the top of the Xi-ranked list although neither Kahle2020 nor Laskowski2023 contains positively labelled hydroborate electrolytes. Cost: 5997 structures in 7 days on one machine, versus the same time for ML-driven MD on 100 materials; ~50x faster than MLIP-MD, >=3000x than AIMD.",
+        "caveat": "Authors acknowledge the descriptors cannot capture the full complexity of the dynamical effects defining ionic conductivity; the 39% low-conductivity fraction in C1 is the visible cost of the static approximation.",
+        "flag": "novel claim type — about how the field responds to the transferability limit, not about the limit itself. Places maevskiy2025 and nam2025 as opposite strategies: avoid the OOD regime vs. train a surrogate that enters it."
+      }
+    ],
+    "required_citations": [
+      "maevskiy2025",
+      "bheemaguli2025",
+      "nam2025",
+      "saxena2023",
+      "turchyna2025"
+    ]
+  },
+  "Q18": {
+    "type": "B",
+    "as_of": "2026-02",
+    "sources": {
+      "jacobs2025": {
+        "key": "Jacobs et al. 2025",
+        "title": "A practical guide to machine learning interatomic potentials - Status and future",
+        "venue": "Curr. Opin. Solid State Mater. Sci. 35:101214",
+        "doi": "10.1016/j.cossms.2025.101214",
+        "date": "2025-02-26",
+        "evidence_type": "review",
+        "note": "Accepted 2025-01-13, online 2025-02-26. Keeps mathematics and formalism to a minimum by its own statement: strong for taxonomy, weak for derivations. Used here only where it speaks in its own voice; claims resting on results it merely reports have been removed."
+      },
+      "geiger2022": {
+        "key": "Geiger & Smidt 2022",
+        "title": "e3nn: Euclidean Neural Networks",
+        "venue": "arXiv:2207.09453v1",
+        "date": "2022-07-18",
+        "evidence_type": "framework_technical_report",
+        "note": "Self-described as a draft. Body text dated January 2021, arXiv posting 2022-07-18; use the posting date for cutoff. Only source in the set that derives the equivariance machinery rather than naming it."
+      },
+      "gilmer2017": {
+        "key": "Gilmer et al. 2017",
+        "title": "Neural Message Passing for Quantum Chemistry",
+        "venue": "ICML 2017, PMLR 70",
+        "date": "2017-08",
+        "evidence_type": "framework_empirical",
+        "note": "Domain is molecular property regression on QM9, not interatomic potentials. All empirical results superseded; cite for mechanism and for the size-generalization problem statement only."
+      },
+      "elhag2025": {
+        "key": "Elhag et al. 2025",
+        "title": "Learning Inter-Atomic Potentials without Explicit Equivariance (TransIP)",
+        "venue": "arXiv:2510.00027",
+        "date": "2025-09",
+        "evidence_type": "empirical",
+        "verification": "abstract_and_conclusion",
+        "note": "NOT read in full. Abstract, conclusion and author list verified. Sufficient for the mechanism-existence claim Q18.C7, where the abstract IS the claim. Do not cite for internal detail beyond the reported 40-60% improvement over a data-augmentation baseline on OMol25."
+      },
+      "sanocki2025": {
+        "key": "Sanocki & Zavadlav 2025",
+        "title": "Generalization of Long-Range Machine Learning Potentials in Complex Chemical Spaces",
+        "venue": "arXiv:2512.10989",
+        "date": "2025-12-08",
+        "evidence_type": "empirical",
+        "verification": "abstract_only",
+        "note": "NOT read in full; abstract verified. CITE THE PREPRINT. The journal version (Digital Discovery, 10.1039/D5DD00570A) was accepted 2026-04 and published 2026-05, i.e. after cutoff - same preprint/journal split as van2025 in Q15. Supplies the only primary out-of-distribution transfer evidence in the set."
+      }
+    },
+    "required_claims": [
+      {
+        "id": "Q18.C1",
+        "text": "Permutation invariance is obtained in two places: order-independent aggregation over a neighbourhood, and a readout acting on the set of node states",
+        "coverage": "full",
+        "sources": [
+          "gilmer2017",
+          "jacobs2025"
+        ],
+        "locations": {
+          "gilmer2017": "Sec. 2, Eq. 1 and prose following Eq. 3; Sec. 1 para. 3; Sec. 3 para. 5; Sec. 5.4",
+          "jacobs2025": "Sec. 4.3 para. 1"
+        },
+        "evidence": "gilmer2017: the message to node v is a sum over neighbours N(v) (Eq. 1); the readout R operates on the set of node states and must be invariant to permutations of those states in order for the MPNN to be invariant to graph isomorphism; Sec. 5.4 shows the tower-mixing step preserves node-permutation invariance; Sec. 3 contrasts Behler-Parrinello representations, described as manifestly isomorphism-invariant, with the Coulomb matrix, where the invariance must instead be learned through dataset augmentation. jacobs2025 names permutations, translation and rotation as the symmetries an atomic environment featurization must respect.",
+        "caveat": "An answer attributing permutation invariance to message-passing aggregation ALONE is incomplete: aggregation carries local ordering, the readout carries global node ordering.",
+        "distractor_note": "geiger2022 Sec. 7.4 (ReducedTensorProduct, index formulas such as 'ijkl = jikl = klij') concerns permutation of tensor indices within one geometric object, NOT permutation of atoms. High lexical overlap, null semantic match. Citing geiger2022 Sec. 7.4 here is wrong."
+      },
+      {
+        "id": "Q18.C2",
+        "text": "Translation invariance is obtained by operating on relative interatomic position vectors rather than absolute coordinates",
+        "coverage": "full",
+        "sources": [
+          "geiger2022",
+          "jacobs2025"
+        ],
+        "locations": {
+          "geiger2022": "Sec. 8, Eq. 27 line 2; Sec. 8 code listing line 41",
+          "jacobs2025": "Sec. 4.3 para. 1"
+        },
+        "evidence": "geiger2022 Eq. 27 states P({x + a}) = P({x}) explicitly, and the accompanying module evaluates spherical harmonics on pos[e_src] - pos[e_dst], i.e. on relative position vectors. jacobs2025 writes the local atomic environment as densities over neighbour positions relative to a target atom.",
+        "caveat": "gilmer2017 Sec. 6 uses pairwise Euclidean distances, which does confer translation invariance, but the paper never states this as a rationale - the binning is justified by inspecting a histogram and the bins are hand-chosen. Cite gilmer2017 for mechanism only, never for justification."
+      },
+      {
+        "id": "Q18.C3a",
+        "text": "One rotational treatment builds scalar invariants from radial and angular basis functions and feeds only scalars to the model",
+        "coverage": "full",
+        "sources": [
+          "jacobs2025",
+          "geiger2022"
+        ],
+        "locations": {
+          "jacobs2025": "Sec. 4.3 paras. 2-3",
+          "geiger2022": "Sec. 1 paras. 2-3; Sec. 2 paras. 2-4"
+        },
+        "evidence": "jacobs2025: the local atomic environment is written as a set of densities and expanded in a basis of radial and angular functions (Bessel and spherical harmonics respectively); tensor products over the target atom and its neighbours give values covariant with symmetry operations, and it is common to retain only the scalar-covariant (invariant) features, which can then be used in almost any continuously differentiable ML model. geiger2022 identifies Behler-Parrinello symmetry functions, ACE and SOAP as invariant representations of local atomic environments, and DimeNet as pre-computing triplet angles into scalars.",
+        "caveat": "geiger2022 presents this family as the baseline it argues AGAINST, not as its own mechanism; direction of citation matters. Neither verified source establishes what geometric information is SUFFICIENT - the universality result for distances, angles and dihedrals (GemNet, NeurIPS 2021) is not in this set, so the claim is scoreable at the level of 'this family exists and works this way' only."
+      },
+      {
+        "id": "Q18.C3b",
+        "text": "The other rotational treatment carries geometric tensor features of order l >= 1 through the network, constraining every operation to be equivariant",
+        "coverage": "full",
+        "sources": [
+          "geiger2022",
+          "jacobs2025"
+        ],
+        "locations": {
+          "geiger2022": "Sec. 4.2; Sec. 4.3; Sec. 4.6; Sec. 6.1 Eq. 6; Sec. 7 Eqs. 15-16; Sec. 8 Eq. 27",
+          "jacobs2025": "Sec. 4.4 para. 3; Sec. 4.5 para. 3"
+        },
+        "evidence": "geiger2022: all data in the network is typed by how it transforms under the Euclidean group, using irreps of O(3), where l=0 is scalars, l=1 vectors and l=2 the symmetric traceless rank-2 part; Sec. 4.6 defines equivariance and proves that the composition of equivariant functions is equivariant, so constraining each component guarantees whole-network equivariance; spherical harmonics are equivariant with respect to the irrep of matching order (Eq. 6); the tensor product is bilinear and equivariant with selection rules on l and parity (Eq. 16); Eq. 27 states rotation, translation and inversion equivariance together. jacobs2025: recent GNNs such as NequIP, MACE and TeaNet work with highly expressive equivariant tensor representations and operate on them so as to preserve the proper symmetries, and in equivariant networks the additional neighbour attributes are vectors and tensors, giving an atom an environmentally dependent non-spherical character.",
+        "independence": "geiger2022 and jacobs2025 are independent for the mechanism statement."
+      },
+      {
+        "id": "Q18.C4",
+        "text": "Locality is imposed by a finite interaction cutoff together with decomposition of total energy into per-atom contributions over local environments",
+        "coverage": "full",
+        "sources": [
+          "jacobs2025"
+        ],
+        "locations": {
+          "jacobs2025": "Sec. 4.1; Sec. 4.3 para. 2; Sec. 4.5 para. 1; Sec. 9.1 para. 1; Sec. 4.4 final para."
+        },
+        "evidence": "jacobs2025: the local environment of every atom is represented by an atomic environment featurization; each atom is assigned an energy determined by its type and its local environment; explicit AEFs describe atomic energy through interaction with all neighbours within a cutoff distance; standard MLIPs learn local descriptors for environments encompassing a radius of roughly 5-10 Angstrom, becoming much slower for longer ranges.",
+        "caveat": "Locality and message passing are in tension within the same source. jacobs2025 Sec. 4.4 notes that multilayer GNNs effectively couple atoms 3-4 nm apart, much longer than the ~1 nm or less of direct physical interaction in PBPs and explicit AEF MLIPs, which can cause significant memory and parallelization issues - motivating Allegro, which forgoes message passing on the graph altogether, and MACE, whose high body-order local features make two hops sufficient."
+      },
+      {
+        "id": "Q18.C5",
+        "text": "Total energy is constructed as a sum of per-atom contributions, and the training loss must contain a term depending on that sum",
+        "coverage": "partial",
+        "sources": [
+          "jacobs2025"
+        ],
+        "locations": {
+          "jacobs2025": "Sec. 3 para. 1; Sec. 4.3 para. 2; Fig. 1; Fig. 2"
+        },
+        "evidence": "jacobs2025: an MLIP maps an atomic configuration to a total energy for that set of atoms; each training energy is a total energy for a whole molecule or crystal unit cell because almost no ab initio method allows easy formal decomposition of total energy into per-atom values, so the fitting loss typically must contain a term depending on the sum of energies of all atoms in each configuration; Figs. 1 and 2 show the summation explicitly.",
+        "caveat": "TERMINOLOGY GAP. No verified source in this set uses the term 'size extensivity' or states it as a design principle - jacobs2025 describes the summed structure without naming the property. The claim is worded to what is actually supported. Resolve by either (a) rewording the question from 'size extensivity' to 'per-atom energy decomposition', or (b) adding Behler, Chem. Rev. 121:10037 (2021), ref. [2] of jacobs2025, as a naming source after reading it.",
+        "distractor_note": "Do NOT cite gilmer2017 for this claim. Summed readouts appear in models it surveys (DTNN, Interaction Networks, GG-NN Eq. 4), but its own best variant uses set2set, chosen in Sec. 5.3 on the reasoning that it is more expressive than simply summing the final node states, and all 13 QM9 targets are normalized to mean 0 and variance 1 in Sec. 7. Its headline result is structurally non-additive.",
+        "flag": "coverage capped at partial until the terminology gap is resolved"
+      },
+      {
+        "id": "Q18.C7",
+        "text": "Symmetry can also be acquired non-architecturally, by training a generic non-equivariant model toward equivariance through a latent-space objective",
+        "coverage": "full",
+        "sources": [
+          "elhag2025"
+        ],
+        "locations": {
+          "elhag2025": "Abstract; Conclusion"
+        },
+        "evidence": "elhag2025: state-of-the-art models enforce roto-translational symmetries through equivariant architectures, described as a hard-wired inductive bias that can reduce flexibility, computational efficiency and scalability; TransIP instead guides a generic non-equivariant Transformer to learn SO(3)-equivariance by optimizing its representations in the embedding space, attaining performance comparable to equivariant baselines on OMol25 and a 40-60% improvement over a data-augmentation baseline across dataset sizes.",
+        "caveat": "Single-source claim, verified at abstract and conclusion level only. Related mechanisms in the same family (frame averaging, local-frame architectures) are NOT verified and must not be scored."
+      },
+      {
+        "id": "Q18.C11",
+        "text": "Generalization to system sizes beyond the training distribution remains an open problem with the symmetry constraints already in place",
+        "coverage": "full",
+        "sources": [
+          "gilmer2017",
+          "jacobs2025"
+        ],
+        "locations": {
+          "gilmer2017": "Sec. 9 paras. 2-3",
+          "jacobs2025": "Sec. 5 paras. 9-10; Sec. 7.5.3"
+        },
+        "evidence": "gilmer2017 names designing MPNNs that generalize to larger graphs than those in training as an important future direction, and gives two specific reasons why spatial information makes this harder: the pairwise distance distribution depends heavily on the number of atoms, and the most successful use of spatial information creates a fully connected graph in which the number of incoming messages also depends on the number of nodes; it proposes attention over incoming message vectors as a possible remedy. jacobs2025: the true domain of applicability of U-MLIPs is quite uncertain, with areas of major weakness that cannot easily be predicted in advance - a U-MLIP might give excellent diffusivities for 95% of materials and be quite far off for 5%.",
+        "caveat": "gilmer2017 is a 2017 molecular-property paper, not an MLIP paper, and its models are permutation-invariant and distance-based yet still fail this transfer - which is precisely why it is load-bearing. It does not test per-atom-energy MLIP architectures.",
+        "distractor_note": "An answer asserting that symmetry constraints deliver size transfer is wrong. jacobs2025 Sec. 7.5.3 lists an architecture that cannot capture the essential symmetries and physics as only ONE of two compounding causes of poor transferability; the other is training data that is not evenly distributed in structural or chemical space."
+      },
+      {
+        "id": "Q18.C12",
+        "text": "The locality constraint fails where the physics is non-local, requiring explicit long-range electrostatic or dispersion terms, and its validity is condition-dependent",
+        "coverage": "full",
+        "sources": [
+          "jacobs2025"
+        ],
+        "locations": {
+          "jacobs2025": "Sec. 9.1 (all paras.); Fig. 8"
+        },
+        "evidence": "jacobs2025 describes two strategies. First, implicit renormalization of long-range effects into short-range interactions, which works for homogeneous condensed-phase systems with strong screening; it reports Ceder et al.'s analysis that this success rests on local charge neutrality, which correlates with lower-energy states, while higher-energy states with weaker local charge neutrality have electrostatic interactions that are not well represented by short-range terms - so researchers should be very careful about using only short-range interactions for simulations exploring higher-energy states. Second, explicit long-range terms: Coulomb's law via maximally localized Wannier centres (DeepPot, SCFNN), and DFT-D3 vdW plus electrostatic corrections as explicit energy terms (AIMNet2, MACE-MP0, SO3LR). Fig. 8 decomposes total potential energy into local, dispersion, electrostatic and induction contributions.",
+        "caveat": "This is the boundary condition on Q18.C4 and Q18.C5: the locality ansatz is condition-dependent, not universal. An answer stating locality and per-atom decomposition as mechanisms without stating their failure regime is incomplete."
+      },
+      {
+        "id": "Q18.C16",
+        "text": "Relaxing strict locality through explicit long-range corrections improves transferability to out-of-distribution chemical space, not merely in-distribution accuracy",
+        "coverage": "full",
+        "sources": [
+          "sanocki2025"
+        ],
+        "locations": {
+          "sanocki2025": "Abstract"
+        },
+        "evidence": "sanocki2025: the vastness of chemical space makes generalization a central challenge for MLIPs, whose usefulness is often limited by poor transferability to out-of-distribution samples; a systematic evaluation of MLIP architectures with long-range corrections across diverse chemical spaces finds such schemes essential not only for improving in-distribution performance but, more importantly, for enabling significant gains in transferability to unseen regions of chemical space.",
+        "caveat": "Verified at abstract level only; do not score internal quantitative detail. This is the ONLY claim in the set giving directional evidence that a constraint choice measurably improves out-of-distribution transfer, which is the second half of the question. Its direction is notable: the gain comes from RELAXING locality, not from adding a symmetry constraint.",
+        "flag": "Newest verified source in the set (2025-12). Carries the item's recency signal jointly with Q18.C7."
+      }
+    ],
+    "required_citations": [
+      "jacobs2025",
+      "geiger2022",
+      "gilmer2017",
+      "elhag2025",
+      "sanocki2025"
+    ]
+  }
+}
