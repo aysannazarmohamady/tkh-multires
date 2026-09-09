@@ -200,3 +200,112 @@ confirming the real embeddings are a meaningfully more independent signal
 than TF-IDF, which is why the repo uses them (via the Space) as the
 preferred path, with TF-IDF kept only as an offline fallback for
 environments without Hugging Face access.
+
+## T2 — Second external review of the implemented method
+
+**Context:** After committing `src/method.py`, I had it reviewed again
+(independently of my earlier design self-review) — this time checking the
+actual running code and outputs, not just the design in `report.md`.
+
+**What was found and what I directed Claude to verify and fix:**
+1. `attach_leftover_nodes()` assigned all 580 `cited_work` nodes via the
+   `cites` relation — the same relation reserved as T6's independent
+   coherence probe, reopening the circularity issue we thought we'd closed.
+2. The level-extraction docstring claimed "geometric" spacing but the code
+   used `np.linspace` (linear), producing a degenerate cluster-count ladder
+   (14 → 356 → 660 → 702) with no usable intermediate level.
+3. Level 0's top 2 clusters (of 13-14) held 75% of all nodes — inside the
+   P2 count budget but not a useful coarse overview in practice.
+4. Loading precomputed embeddings required an exact edge-id-set match, so
+   only the exact snapshot the HF Space was run on worked; earlier
+   snapshots raised `ValueError`, which would have forced a fresh Space run
+   per snapshot in T3.
+5. Two numeric errors in `report.md` (`m ≈ 653` vs actual 702; "8 relation
+   types" vs actual 9) and a stale "placeholder" comment in
+   `requirements.txt`, plus unused dependencies (`networkx`, `pandas`)
+   listed there.
+
+**What Claude did:**
+- Independently reproduced every claim above against the real code and data
+  before changing anything (e.g. recomputed the 75% concentration and the
+  364/1839 unassigned-node count at the 2020 cutoff, both matched exactly).
+- Added a `provenance` field per node (`primary` / `claims` / `cites`) so T6
+  can filter out `cites`-attached nodes from the coherence probe, with
+  `claims` attempted first to minimize how many nodes are excluded.
+- Rewrote level extraction to target geometrically-spaced cluster *counts*
+  directly (fixing both the docstring mismatch and the degenerate ladder in
+  one change).
+- Compared average/complete/ward linkage empirically (top-2 concentration:
+  75% / 47.7% / 46.6%) and switched the default to `complete`, rejecting
+  `ward` despite similar numbers because it isn't mathematically valid for
+  a non-Euclidean distance.
+- Relaxed the embeddings loader to require the current snapshot's edges to
+  be a subset of the embeddings file's coverage, rather than an exact
+  match, removing the need to re-run the Space per snapshot.
+- Fixed the two numeric errors in `report.md`, rewrote `requirements.txt`
+  to list only what `src/` actually imports, pinned to the versions
+  actually used, and removed the stale comment.
+
+**What I verified myself:** re-ran `src/method.py` on the 2026 snapshot
+after all fixes and confirmed the new cluster-count ladder (13 → 49 → 186 →
+702), the reduced top-2 concentration (47.7% with complete linkage), and
+that the 2020 snapshot now runs against the 2026 embeddings file without
+error, before accepting the fixes as complete.
+
+## T6 — Third review round: coherence probe was undefined, not just leaky
+
+**Context:** After the provenance fix in the second review round, I asked
+for a third check specifically on whether the planned T6 coherence probe
+("do co-clustered nodes cite each other more than chance") was actually
+computable once `cites`-provenance nodes were filtered out.
+
+**What was found:** every `cites` edge has exactly one `article` and the
+rest `cited_work` members (verified: all 37 edges). Once `cited_work` is
+excluded (its provenance is always `cites`), no pair of remaining nodes
+ever co-occurs in a `cites` edge — the probe as originally planned would be
+undefined, not merely zero.
+
+**The fix (bibliographic coupling) and its script (`coherence_probe.py`)
+were written by Claude Opus** (a separate model/session from the one doing
+this implementation work), given the same problem description (the
+undefined-probe issue above): compare articles' reference sets (Jaccard)
+instead of raw node co-citation; permutation null (10,000 reps) preserving
+cluster sizes and each article's reference-set size; an `assert` that every
+article used is `provenance == "primary"`, so a future regression fails
+loudly instead of silently.
+
+**What I verified myself before accepting it:**
+- Confirmed the cites-edge structure claim directly against the data (37/37
+  edges match the 1-article-plus-cited_work pattern).
+- Ran the provided script against our own `outputs/hierarchy_2020.json`,
+  `hierarchy_2024.json`, and `hierarchy.json` (2026) and reproduced the
+  externally-reported table exactly (2026: z=-0.23, p=0.56; 2024: z=1.52,
+  p=0.076; 2020: undefined, 0 within-cluster article pairs) before writing
+  any of it into `report.md`.
+- Separately checked a number claimed by Claude Opus during its review
+  ("122 duplicate `cited_work` entities") and could not reproduce it under
+  several reasonable normalizations (0 with simple normalization, 16 with
+  alphanumeric-only). Followed up and learned the "122" was actually
+  counting something else (surface-form occurrences across multiple `cites`
+  edges — the coupling signal itself, not duplicates). Used my own directly
+  verified numbers instead of the unverified claim.
+- Confirmed the dead `target_mid` variable in
+  `find_threshold_for_cluster_range` was unused and removed it.
+- Re-ran `src/method.py` on 2020, 2022, and 2024 (in addition to 2026) to
+  get real per-snapshot unassigned-node counts and level-0 concentration
+  numbers for the README, rather than only reporting the 2026 figures.
+
+**What I accepted as-is:** the coherence probe's statistical design
+(Jaccard-based bibliographic coupling, the specific permutation null) was
+used as provided, since it is a standard bibliometric technique and its
+logic (compare within- vs between-cluster average Jaccard, permute cluster
+labels for the null) was straightforward to check by reading the script.
+
+**Honest result:** the probe returns a null result (no significant
+coherence signal detected at 2024 or 2026, undefined at 2020). This is
+reported as-is in `report.md` rather than adjusted or hidden, along with an
+explicit note that a 9-37-article probe is underpowered and should not be
+the only coherence evidence — three additional, cheaper probes are planned
+(blind LLM intruder test, `authored_by` co-membership, and quantifying the
+TF-IDF/embedding correlation as an independence upper bound) but not yet
+implemented.
