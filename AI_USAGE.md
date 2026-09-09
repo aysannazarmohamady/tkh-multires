@@ -377,3 +377,49 @@ noise-robustness mechanism, and is measurably not better than no
 regularization under noise) is written directly into both `report.md` and
 `outputs/temporal_events.json` as a reliability-ceiling caveat, not only
 in this log.
+
+## T2 fix + T4 implementation: external review round 4
+
+**Tool:** Claude (Anthropic), directed by an external "assignor"-style
+review.
+
+**What the review found and what I directed Claude to verify:**
+1. Claimed `alpha=0.5` was not actually balanced: `s_struct` mean 0.0044
+   (zero for 96.7% of pairs) vs `s_sem` mean 0.300, with the structural
+   term supplying only 4.7% of combined-similarity variance. Had Claude
+   recompute this directly against our data before accepting it — it
+   matched exactly (var 0.000268 vs 0.005472, share 4.66%).
+2. Proposed `authored_by` and `evaluated_on` as two new independent
+   coherence probes. I had Claude check this against `src/method.py`'s
+   actual `EXCLUDED_FROM_CLUSTERING`/`HELD_OUT_FOR_COHERENCE` sets before
+   accepting it — both relations are already used to drive clustering
+   itself, so this suggestion was **rejected** as circular (the same
+   mistake caught and fixed for `authored_by` in an earlier round).
+3. Provided a detailed, well-specified design for T4 (hyperedge collapse
+   as a genuine coarsening operator: internal / arity-2 / arity>=3-kept-
+   as-hyperedge, with multiplicity vectors and a clique-expansion mode for
+   projection-loss comparison).
+4. Also reported level-0 node-cluster sizes and finest-level cluster count
+   (557, not one-per-node) for our actual 2026 output — both confirmed
+   exactly before use.
+5. Claimed `requirements.txt` still says "placeholder" — checked our
+   actual file and found this claim stale (already fixed in an earlier
+   round); the reviewer was working from an outdated repo snapshot.
+
+**What Claude implemented, that I verified:**
+- Rank-normalization (`scipy.stats.rankdata`) of both signals before
+  combining in `combined_distance_matrix`.
+- After implementing, had Claude re-measure the structural variance share:
+  it rose to 8.7%, not ~50%. Rather than presenting the fix as fully
+  solving the balance problem, documented this honestly as a genuine,
+  only-partially-fixable data property (96.7% exact zeros are inherently
+  low-variance under any monotonic transform).
+- `src/hyperedge_collapse.py` implementing the reviewer's T4 design.
+- Hand-verified one real hyperedge (`h_00050`, arity 20) through the
+  collapse logic myself before accepting the implementation: confirmed its
+  18/1/1 member-to-supernode split matched the output's multiplicity
+  vector exactly, and that the aggregated weight (0.5 + 0.5 = 1.0 from two
+  contributing edges) was correct.
+- Re-ran the full 4-snapshot pipeline after the rank-normalization change
+  and confirmed node-level laminarity still passes on all snapshots before
+  accepting the change as safe.
