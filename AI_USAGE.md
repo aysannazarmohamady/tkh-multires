@@ -125,3 +125,78 @@ known properties of hierarchical agglomerative clustering, not yet confirmed
 by running the actual implementation on our data. That confirmation is the
 next step before treating any of these guarantees as established for this
 project specifically.
+
+## T2 — Self-review of Deliverable 0 and fixes
+
+**Context:** After drafting Deliverable 0, I conducted my own review of the
+design before allowing any implementation to proceed, checking the proposed
+similarity function and node-assignment rule against the actual dataset
+rather than accepting them on paper.
+
+**What I found and brought to Claude to verify and fix:**
+1. The similarity formula `sim = s_struct^α · s_sem^(1-α)` (geometric mean)
+   is degenerate on this dataset: only ~2% of hyperedge pairs share any
+   member node, so `s_struct = 0` for ~98% of pairs, which zeroes out the
+   entire similarity for any `α > 0`.
+2. 87.8% of nodes have degree 1, making the "largest share of incident
+   hyperedges" node-assignment rule trivial (vacuous) for most of the graph.
+3. The coherence-circularity hazard (task §T6, the highest-weighted
+   criterion) was left unaddressed in the frozen Deliverable 0.
+4. The provided `questions.csv` / `ground_truth.json` extrinsic-evaluation
+   data had not been copied into the repo or used at all.
+5. `requirements.txt` needed to be confirmed present in the actual repo.
+
+**What Claude did:**
+- Independently recomputed each of the above directly against
+  `data/tkh_collection10.json` to confirm the figures (2.03% nonzero
+  Jaccard pairs; 87.8% degree-1 nodes; 277 duplicate surface forms found
+  as a related issue) before accepting any of them as real.
+- Rewrote the Deliverable 0 similarity function to an arithmetic-mean
+  combination (fixing point 1), added an explicit note on why the
+  node-assignment rule is trivial for degree-1 nodes rather than treating
+  it as a hidden flaw (point 2), and designed a concrete fix for point 3
+  (holding out the `cites` relation type as an independent structural
+  signal for T6 coherence measurement, and excluding the near-degenerate
+  `claims` relation type from clustering entirely).
+- Extended `src/load_graph.py` to report degree distribution, singleton
+  fraction, duplicate surface forms, and growth-by-type, so these
+  properties are visible from T1 output going forward rather than only
+  discovered by manual audit.
+
+**What I verified myself after the fix:** re-ran the updated `load_graph.py`
+in Colab and confirmed the reported `singleton_fraction` (0.878) and the
+duplicate surface form example (`"graph neural networks"`, 4 ids) matched
+what I had found in my own review, before accepting the fix as correct.
+
+## T2 — Real semantic embeddings via a Hugging Face Space
+
+**Context:** After implementing the method with the offline TF-IDF fallback,
+I checked the correlation between the structural and semantic similarity
+signals and found it was 0.691 — high enough to undermine the claim that
+combining them adds real independent information (see the P3 discussion in
+`report.md`). I have my own Hugging Face account, so I decided to compute
+real sentence-transformer embeddings there instead of relying on the offline
+TF-IDF fallback.
+
+**What Claude helped with:**
+- Wrote `compute_embeddings_hf.py` (a standalone script) and
+  `hf_space/app.py` (a Gradio app for the same computation, deployed as a
+  Hugging Face Space), both using the exact same hyperedge filtering as
+  `src/method.py` (excludes `claims`, holds out `cites`) so the embeddings
+  line up with what the main pipeline expects.
+- Debugged a ZeroGPU startup error on the Space ("No @spaces.GPU function
+  detected") by adding a guarded `@spaces.GPU` decorator that no-ops outside
+  a ZeroGPU environment.
+- Extended `src/method.py` with `semantic_similarity_from_embeddings()` and
+  `--embeddings-path` / `--embeddings-order` CLI options, so it can consume
+  the Space's output instead of TF-IDF, with an explicit error if the edge
+  id sets don't match (rather than silently misaligning rows).
+
+**What I verified myself:** after running the Space on
+`data/tkh_collection10.json` (cutoff 2026) and downloading its two output
+files, I had Claude recompute the structural/semantic correlation with the
+real embeddings in place of TF-IDF. It dropped from 0.691 to 0.307,
+confirming the real embeddings are a meaningfully more independent signal
+than TF-IDF, which is why the repo uses them (via the Space) as the
+preferred path, with TF-IDF kept only as an offline fallback for
+environments without Hugging Face access.
