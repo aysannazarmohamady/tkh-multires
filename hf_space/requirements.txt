@@ -1,0 +1,3 @@
+gradio
+sentence-transformers
+numpy
