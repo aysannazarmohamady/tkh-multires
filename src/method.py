@@ -35,6 +35,7 @@ from pathlib import Path
 import numpy as np
 from scipy.cluster.hierarchy import linkage, fcluster
 from scipy.spatial.distance import squareform
+from scipy.stats import rankdata
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -139,10 +140,35 @@ def semantic_similarity_from_embeddings(edges: list, embeddings_path: str, order
 
 
 def combined_distance_matrix(s_struct: np.ndarray, s_sem: np.ndarray, alpha: float) -> np.ndarray:
-    """sim = alpha * s_struct + (1-alpha) * s_sem (arithmetic mean, see
-    report.md for why this replaced an earlier, degenerate geometric mean).
-    Returns a distance matrix d = 1 - sim, diagonal forced to 0."""
-    sim = alpha * s_struct + (1 - alpha) * s_sem
+    """sim = alpha * s_struct_norm + (1-alpha) * s_sem_norm (arithmetic mean
+    of RANK-NORMALIZED signals), returns distance d = 1 - sim.
+
+    Correction (found by external review, verified against our data): the
+    raw signals live on very different scales — s_struct has mean 0.0044
+    (nonzero on only 3.3% of pairs) while s_sem has mean 0.300. At
+    alpha=0.5 on the raw values, the structural term supplied only 4.7% of
+    the combined similarity's variance (confirmed: var=0.000268 vs
+    0.005472) — the method was effectively ~95% semantic despite alpha=0.5
+    being presented as a balanced reconciliation. We rank-normalize each
+    signal to [0,1] over its own upper-triangle BEFORE mixing, so alpha
+    actually controls the structure/semantics balance as claimed, rather
+    than being dominated by whichever raw signal happens to have larger
+    variance.
+    """
+    def rank_normalize(matrix):
+        iu = np.triu_indices_from(matrix, k=1)
+        vals = matrix[iu]
+        ranks = rankdata(vals, method="average") / len(vals)
+        out = np.zeros_like(matrix)
+        out[iu] = ranks
+        out = out + out.T
+        np.fill_diagonal(out, 1.0)
+        return out
+
+    s_struct_norm = rank_normalize(s_struct)
+    s_sem_norm = rank_normalize(s_sem)
+
+    sim = alpha * s_struct_norm + (1 - alpha) * s_sem_norm
     dist = 1 - sim
     np.fill_diagonal(dist, 0.0)
     # Numerical safety: symmetrize and clip tiny negative values from float error.
