@@ -104,23 +104,35 @@ def semantic_similarity_matrix(edges: list, node_lookup: dict) -> np.ndarray:
 
 def semantic_similarity_from_embeddings(edges: list, embeddings_path: str, order_path: str) -> np.ndarray:
     """Load precomputed sentence-transformer embeddings (produced by
-    compute_embeddings_hf.py on a machine with internet access to
-    huggingface.co) and return their pairwise cosine similarity, reordered
-    to match `edges`'s current order exactly. Raises if the edge id sets
-    don't match, rather than silently misaligning rows."""
+    compute_embeddings_hf.py / the HF Space on a machine with internet
+    access) and return their pairwise cosine similarity, reordered to match
+    `edges`'s current order exactly.
+
+    Correction (found by external review): an earlier version required the
+    embedding file's edge id set to *exactly* match the current snapshot's
+    edge set, which meant every snapshot needed its own Space run (a real
+    reproducibility risk, and one earlier snapshots silently failed
+    without). A hyperedge's embedding only depends on its own members'
+    surface forms, which don't change across snapshots, so an embeddings
+    file computed once on the full (2026) edge set is valid for any earlier
+    cutoff too — we only need `edges`'s ids to be a SUBSET of the saved
+    order, not an exact match, and we select the needed rows by id.
+    """
     embeddings = np.load(embeddings_path)
     with open(order_path) as f:
         saved_order = json.load(f)
 
     saved_index = {eid: i for i, eid in enumerate(saved_order)}
     current_ids = [e["id"] for e in edges]
-    if set(current_ids) != set(saved_order):
-        missing = set(current_ids) - set(saved_order)
-        extra = set(saved_order) - set(current_ids)
+    missing = [eid for eid in current_ids if eid not in saved_index]
+    if missing:
         raise ValueError(
-            f"Embedding file's edge ids don't match the current clustering "
-            f"edge set (missing {len(missing)}, extra {len(extra)}). "
-            f"Re-run compute_embeddings_hf.py with the same --cutoff."
+            f"{len(missing)} clustering edge id(s) are not present in the "
+            f"embeddings file (e.g. {missing[:3]}). The embeddings file must "
+            f"be computed on a snapshot that is a superset of the current "
+            f"one (e.g. the full/2026 snapshot covers all earlier cutoffs); "
+            f"re-run compute_embeddings_hf.py / the HF Space on a broader "
+            f"cutoff if this snapshot introduces edges the file doesn't have."
         )
     reordered = np.stack([embeddings[saved_index[eid]] for eid in current_ids])
     return cosine_similarity(reordered)
@@ -138,18 +150,44 @@ def combined_distance_matrix(s_struct: np.ndarray, s_sem: np.ndarray, alpha: flo
     return dist
 
 
-def build_dendrogram(dist_matrix: np.ndarray):
-    """Average-linkage HAC. Returns the scipy linkage matrix Z."""
+def build_dendrogram(dist_matrix: np.ndarray, method: str = "average"):
+    """HAC with a configurable linkage method. Returns the scipy linkage
+    matrix Z. Default is average-linkage; see report.md for a comparison
+    against complete/ward, which were found to produce more balanced level-0
+    clusters on this dataset (average-linkage's tendency to chain produced
+    two dominant clusters holding 75% of all nodes)."""
     condensed = squareform(dist_matrix, checks=False)
-    Z = linkage(condensed, method="average")
+    Z = linkage(condensed, method=method)
     return Z
 
 
+def find_threshold_for_target_k(Z, target_k: int, tolerance: float = 0.2):
+    """Binary-search a cut height (criterion='distance') for a threshold
+    producing a cluster count within `tolerance` (relative) of `target_k`.
+    Returns the closest achieved (threshold, k) if the exact target is
+    unreachable (dendrograms can jump cluster counts at a single merge)."""
+    heights = Z[:, 2]
+    lo, hi = 0.0, float(heights.max()) if len(heights) else 1.0
+    best_t, best_k, best_gap = None, None, float("inf")
+    for _ in range(60):
+        t = (lo + hi) / 2
+        labels = fcluster(Z, t, criterion="distance")
+        k = len(set(labels))
+        gap = abs(k - target_k)
+        if gap < best_gap:
+            best_gap, best_t, best_k = gap, t, k
+        if k > target_k:
+            lo = t
+        elif k < target_k:
+            hi = t
+        else:
+            break
+    return best_t, best_k
+
+
 def find_threshold_for_cluster_range(Z, target_min: int, target_max: int, n_edges: int):
-    """Binary-search cut heights (criterion='distance') for a threshold
-    producing a cluster count in [target_min, target_max]. Not guaranteed to
-    exist (P2 is best-effort, per report.md) — returns the closest achieved
-    count if the exact range is unreachable."""
+    """As find_threshold_for_target_k, but for a [target_min, target_max]
+    range rather than a single value (used only for level 0's P2 budget)."""
     heights = Z[:, 2]
     lo, hi = 0.0, float(heights.max()) if len(heights) else 1.0
     best_t, best_k, best_gap = None, None, float("inf")
@@ -171,17 +209,37 @@ def find_threshold_for_cluster_range(Z, target_min: int, target_max: int, n_edge
 
 def extract_levels(Z, n_edges: int, level0_range=(10, 15), n_levels: int = 4):
     """Cut the dendrogram at `n_levels` heights, coarsest first, finest last
-    (finest = every hyperedge its own cluster, i.e. threshold 0). Level 0's
-    threshold is searched to land in `level0_range` per P2; intermediate
-    levels are spaced geometrically between level 0's threshold and 0."""
+    (finest = every hyperedge its own cluster).
+
+    Level 0's threshold is searched to land in `level0_range` per P2.
+    Intermediate levels' *target cluster counts* (not thresholds) are
+    spaced geometrically between level 0's count and n_edges, then each
+    target count is independently searched for via
+    `find_threshold_for_target_k`.
+
+    Correction (found by external review): an earlier version spaced the
+    *thresholds* linearly (`np.linspace` on height, despite a docstring that
+    claimed "geometrically"), which produced a degenerate ladder in
+    practice (e.g. 14 -> 356 -> 660 -> 702 clusters on the full snapshot) —
+    almost all of the "coarsening" happened in one big jump, leaving no
+    usable intermediate level for drill-down. Targeting cluster *counts*
+    geometrically and searching each one directly fixes both the
+    docstring/code mismatch and the degenerate ladder.
+    """
     t0, k0 = find_threshold_for_cluster_range(Z, *level0_range, n_edges)
-    thresholds = list(np.linspace(t0, 0, n_levels))
-    thresholds[-1] = -1e-9  # ensure strictly below all merge heights -> singletons
+    target_ks = np.geomspace(max(k0, 2), n_edges, n_levels).round().astype(int)
+    target_ks[0] = k0  # keep level 0 exactly what the P2 search found
+    target_ks[-1] = n_edges  # finest level: every hyperedge its own cluster
+
     levels = []
-    for t in thresholds:
-        labels = fcluster(Z, max(t, 0), criterion="distance") if t >= 0 else np.arange(1, n_edges + 1)
+    for i, k in enumerate(target_ks):
+        if i == len(target_ks) - 1:
+            labels = np.arange(1, n_edges + 1)
+        else:
+            t, achieved_k = find_threshold_for_target_k(Z, int(k))
+            labels = fcluster(Z, t, criterion="distance")
         levels.append(labels)
-    return thresholds, levels, k0
+    return target_ks, levels, k0
 
 
 def verify_laminar(levels: list) -> bool:
@@ -222,7 +280,8 @@ def assign_nodes(nodes: list, edges: list, levels: list) -> dict:
     return assignment
 
 
-def attach_leftover_nodes(nodes: list, all_edges: list, assignment: dict, n_levels: int) -> dict:
+def attach_leftover_nodes(nodes: list, all_edges: list, assignment: dict,
+                           provenance: dict, n_levels: int) -> dict:
     """Second pass, run only after primary clustering + assignment.
 
     Some node types (`claim`, `cited_work` in this dataset) appear *only* in
@@ -232,46 +291,56 @@ def attach_leftover_nodes(nodes: list, all_edges: list, assignment: dict, n_leve
     already-assigned node it shares an EXCLUDED_FROM_CLUSTERING or
     HELD_OUT_FOR_COHERENCE hyperedge with (majority vote if more than one
     candidate, at every level, same top-down restriction as the primary
-    assignment). This uses those relation types only to propagate an
-    existing assignment, never to compute similarity or drive clustering, so
-    it does not reopen the coherence-circularity or degenerate-edge issues
-    that excluding them was meant to fix.
+    assignment).
+
+    IMPORTANT (fix for a circularity leak found by external review): a node
+    attached via a `cites` edge must NOT be treated as independent evidence
+    when `cites` is later used as the T6 coherence probe — that would test
+    the clustering against the very relation that placed the node there.
+    `provenance[node_id]` is set to "cites" or "claims" for attached nodes
+    (or left as "primary" for nodes assigned by `assign_nodes`), and T6 must
+    filter out `provenance == "cites"` nodes before running the coherence
+    check.
     """
-    leftover_edges = [e for e in all_edges if e["relation_type"] in
-                       (EXCLUDED_FROM_CLUSTERING | HELD_OUT_FOR_COHERENCE)]
+    leftover_edges_by_relation = {
+        rel: [e for e in all_edges if e["relation_type"] == rel]
+        for rel in (EXCLUDED_FROM_CLUSTERING | HELD_OUT_FOR_COHERENCE)
+    }
 
     unassigned = [n["id"] for n in nodes if assignment.get(n["id"], [None])[0] is None]
     unassigned_set = set(unassigned)
 
-    # For each leftover edge, find members that already have an assignment.
-    neighbor_assignments = defaultdict(list)  # node_id -> list of assigned neighbor node_ids
-    for e in leftover_edges:
-        members = e["members"]
-        assigned_members = [m for m in members if m not in unassigned_set and m in assignment]
-        for m in members:
-            if m in unassigned_set:
-                neighbor_assignments[m].extend(assigned_members)
-
     attached, still_unassigned = 0, 0
-    for nid in unassigned:
-        neighbors = neighbor_assignments.get(nid, [])
-        if not neighbors:
-            still_unassigned += 1
-            continue
-        # Majority vote per level among assigned neighbors' assignments.
-        per_level = []
-        for lvl in range(n_levels):
-            votes = Counter(assignment[n][lvl] for n in neighbors if assignment[n][lvl] is not None)
-            if votes:
-                per_level.append(votes.most_common(1)[0][0])
-            else:
-                per_level.append(None)
-        assignment[nid] = per_level
-        attached += 1
+    # Process `claims` before `cites`: prefer the non-probe relation when a
+    # node happens to have both available, to minimize how many nodes end up
+    # excluded from the coherence probe.
+    for rel in ["claims", "cites"]:
+        edges_for_rel = leftover_edges_by_relation.get(rel, [])
+        neighbor_assignments = defaultdict(list)
+        for e in edges_for_rel:
+            members = e["members"]
+            assigned_members = [m for m in members if m not in unassigned_set and m in assignment]
+            for m in members:
+                if m in unassigned_set:
+                    neighbor_assignments[m].extend(assigned_members)
 
+        for nid in list(unassigned_set):
+            neighbors = neighbor_assignments.get(nid, [])
+            if not neighbors:
+                continue
+            per_level = []
+            for lvl in range(n_levels):
+                votes = Counter(assignment[n][lvl] for n in neighbors if assignment[n][lvl] is not None)
+                per_level.append(votes.most_common(1)[0][0] if votes else None)
+            assignment[nid] = per_level
+            provenance[nid] = rel
+            unassigned_set.discard(nid)
+            attached += 1
+
+    still_unassigned = len(unassigned_set)
     print(f"Post-hoc attachment: {attached} nodes attached via held-out/excluded "
           f"relations, {still_unassigned} still fully isolated.")
-    return assignment
+    return assignment, provenance
 
 
 def main():
@@ -279,6 +348,12 @@ def main():
     parser.add_argument("--data", default="data/tkh_collection10.json")
     parser.add_argument("--cutoff", type=int, default=None, help="Snapshot cutoff year; omit for full dataset")
     parser.add_argument("--alpha", type=float, default=0.5)
+    parser.add_argument("--linkage", default="complete", choices=["average", "complete", "ward"],
+                         help="complete is the default: average-linkage was found to chain "
+                              "into two dominant clusters (75%% of all nodes) on this dataset; "
+                              "ward gave similarly balanced results but is only mathematically "
+                              "valid for Euclidean distances, which our combined structural+"
+                              "semantic distance is not, so it was rejected despite good numbers")
     parser.add_argument("--out", default="outputs/hierarchy.json")
     parser.add_argument("--embeddings-path", default=None,
                          help="Path to precomputed embeddings .npy from compute_embeddings_hf.py; if omitted, falls back to TF-IDF")
@@ -307,17 +382,19 @@ def main():
         s_sem = semantic_similarity_matrix(edges, node_lookup)
 
     dist = combined_distance_matrix(s_struct, s_sem, args.alpha)
-    Z = build_dendrogram(dist)
+    Z = build_dendrogram(dist, method=args.linkage)
 
     thresholds, levels, k0 = extract_levels(Z, len(edges))
-    print(f"Level cluster counts (coarse->fine): {[len(set(l)) for l in levels]}")
+    print(f"Level cluster counts (coarse->fine, target vs achieved): "
+          f"targets={list(thresholds)}, achieved={[len(set(l)) for l in levels]}")
     print(f"Level 0 target 10-15, achieved: {k0}")
 
     laminar_ok = verify_laminar(levels)
     print(f"Laminar refinement check (empirical): {'PASS' if laminar_ok else 'FAIL'}")
 
     assignment = assign_nodes(nodes, edges, levels)
-    assigned = sum(1 for v in assignment.values() if v[0] is not None)
+    provenance = {nid: "primary" for nid, v in assignment.items() if v[0] is not None}
+    assigned = len(provenance)
     print(f"Nodes assigned by primary clustering: {assigned}/{len(nodes)} "
           f"({len(nodes) - assigned} have no incident clustering edge)")
 
@@ -325,9 +402,14 @@ def main():
         e for e in data["hyperedges"]
         if (args.cutoff is None or (e.get("year") is not None and e["year"] <= args.cutoff))
     ]
-    assignment = attach_leftover_nodes(nodes, all_edges_for_snapshot, assignment, len(levels))
+    assignment, provenance = attach_leftover_nodes(
+        nodes, all_edges_for_snapshot, assignment, provenance, len(levels)
+    )
     fully_assigned = sum(1 for v in assignment.values() if v[0] is not None)
-    print(f"Nodes assigned after post-hoc attachment: {fully_assigned}/{len(nodes)}")
+    cites_attached = sum(1 for p in provenance.values() if p == "cites")
+    print(f"Nodes assigned after post-hoc attachment: {fully_assigned}/{len(nodes)} "
+          f"({cites_attached} via `cites` — these must be EXCLUDED from the "
+          f"T6 coherence probe, which also uses `cites`)")
 
     Path("outputs").mkdir(exist_ok=True)
     with open(args.out, "w") as f:
@@ -339,6 +421,7 @@ def main():
             "level_cluster_counts": [len(set(l)) for l in levels],
             "laminar_check_passed": laminar_ok,
             "node_assignment": assignment,
+            "node_assignment_provenance": provenance,
         }, f, indent=2)
     print(f"Saved to {args.out}")
 
