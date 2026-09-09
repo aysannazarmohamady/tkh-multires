@@ -244,8 +244,16 @@ def extract_levels(Z, n_edges: int, level0_range=(10, 15), n_levels: int = 4):
 
 def verify_laminar(levels: list) -> bool:
     """Empirical check (not just assumed): for every pair of consecutive
-    levels coarse->fine, each fine cluster must be a subset of exactly one
-    coarse cluster. Returns True if this holds for all consecutive pairs."""
+    HYPEREDGE-cluster levels coarse->fine, each fine cluster must be a
+    subset of exactly one coarse cluster. Returns True if this holds for
+    all consecutive pairs.
+
+    NOTE: this checks the hyperedge dendrogram cuts only. It does NOT check
+    node-level laminarity — see `verify_node_laminar` for that, added after
+    an external review found this distinction matters: the hyperedge-level
+    property holding does not automatically make the node-level assignment
+    laminar too, since attach_leftover_nodes had its own (separate, buggy)
+    logic."""
     for coarse, fine in zip(levels[:-1], levels[1:]):
         fine_to_coarse = {}
         for c_label, f_label in zip(coarse, fine):
@@ -253,6 +261,35 @@ def verify_laminar(levels: list) -> bool:
                 return False
             fine_to_coarse[f_label] = c_label
     return True
+
+
+def verify_node_laminar(assignment: dict) -> tuple[bool, int]:
+    """Empirical check on the actual delivered artifact: for every node,
+    its coarser-level cluster must be consistent with its finer-level
+    cluster (i.e. two nodes sharing a fine cluster must share the same
+    coarse cluster too). Returns (all_pass, n_violating_nodes).
+
+    Added after external review found `attach_leftover_nodes` could violate
+    this even though the primary `assign_nodes` path (and the hyperedge-
+    level check above) did not — P1 is only truly "guaranteed by
+    construction" if this passes on the actual output, not just on the
+    hyperedge dendrogram."""
+    items = [(nid, v) for nid, v in assignment.items() if v[0] is not None]
+    if not items:
+        return True, 0
+    n_levels = len(items[0][1])
+    bad_nodes = set()
+    for lvl in range(n_levels - 1):
+        groups = defaultdict(list)
+        for nid, v in items:
+            groups[v[lvl + 1]].append((nid, v[lvl]))
+        for fine_id, members in groups.items():
+            coarse_ids = {c for _, c in members}
+            if len(coarse_ids) > 1:
+                counts = Counter(c for _, c in members)
+                majority = counts.most_common(1)[0][0]
+                bad_nodes.update(nid for nid, c in members if c != majority)
+    return len(bad_nodes) == 0, len(bad_nodes)
 
 
 def assign_nodes(nodes: list, edges: list, levels: list) -> dict:
@@ -328,10 +365,28 @@ def attach_leftover_nodes(nodes: list, all_edges: list, assignment: dict,
             neighbors = neighbor_assignments.get(nid, [])
             if not neighbors:
                 continue
+            # Top-down restriction (fix for a laminarity bug found by
+            # external review): an earlier version computed an
+            # INDEPENDENT majority vote per level over the same
+            # unrestricted neighbor list, despite a docstring claiming
+            # "same top-down restriction as the primary assignment" — it
+            # wasn't. That let the majority flip between levels for a
+            # node whose neighbors' assignments diverged, producing 10-22
+            # non-laminar node paths in practice (all `cites`-provenance,
+            # confirmed by an empirical node-level check). This now
+            # mirrors assign_nodes exactly: candidate_neighbors shrinks
+            # level by level to only those consistent with the
+            # already-chosen coarser cluster.
+            candidate_neighbors = neighbors
             per_level = []
             for lvl in range(n_levels):
-                votes = Counter(assignment[n][lvl] for n in neighbors if assignment[n][lvl] is not None)
-                per_level.append(votes.most_common(1)[0][0] if votes else None)
+                votes = Counter(assignment[n][lvl] for n in candidate_neighbors if assignment[n][lvl] is not None)
+                if not votes:
+                    per_level.append(per_level[-1] if per_level else None)
+                    continue
+                majority_cluster = votes.most_common(1)[0][0]
+                per_level.append(majority_cluster)
+                candidate_neighbors = [n for n in candidate_neighbors if assignment[n][lvl] == majority_cluster]
             assignment[nid] = per_level
             provenance[nid] = rel
             unassigned_set.discard(nid)
@@ -411,17 +466,26 @@ def main():
           f"({cites_attached} via `cites` — these must be EXCLUDED from the "
           f"T6 coherence probe, which also uses `cites`)")
 
+    node_laminar_ok, n_violations = verify_node_laminar(assignment)
+    print(f"Node-level laminar check (empirical, on the actual delivered "
+          f"assignment): {'PASS' if node_laminar_ok else f'FAIL ({n_violations} violating nodes)'}")
+
     Path("outputs").mkdir(exist_ok=True)
     with open(args.out, "w") as f:
         json.dump({
             "cutoff_year": args.cutoff,
             "alpha": args.alpha,
+            "linkage": args.linkage,
             "n_nodes": len(nodes),
             "n_clustering_edges": len(edges),
             "level_cluster_counts": [len(set(l)) for l in levels],
             "laminar_check_passed": laminar_ok,
+            "node_laminar_check_passed": node_laminar_ok,
+            "node_laminar_violations": n_violations,
             "node_assignment": assignment,
             "node_assignment_provenance": provenance,
+            "edge_ids": [e["id"] for e in edges],
+            "edge_cluster_labels": [[int(x) for x in lvl] for lvl in levels],
         }, f, indent=2)
     print(f"Saved to {args.out}")
 
