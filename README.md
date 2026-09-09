@@ -17,9 +17,14 @@ hyperedge-aware hierarchical clustering with temporal stability tracking.
         (similarity formula, node-assignment note, coherence-circularity
         design decision) — see `AI_USAGE.md`
   - [x] Method implementation (hyperedge clustering + node assignment) —
-        see `src/method.py`; verified on all 4 snapshots. Coverage and
-        level-0 balance vary by snapshot (this is reported honestly, not
-        smoothed over — see `report.md`, "Second/Third review round"):
+        see `src/method.py`; verified on all 4 snapshots. Signals are
+        rank-normalized before combining (fixes an alpha=0.5 scale
+        mismatch that made the method ~95% semantic in practice; rank
+        normalization raises the structural variance share to only 8.7%,
+        an honest, only partially fixable limit given 96.7% of structural
+        pairs are exactly zero — see `report.md`). Coverage and level-0
+        balance vary by snapshot (this is reported honestly, not smoothed
+        over — see `report.md`, "Second/Third review round"):
 
         | cutoff | nodes | fully unassigned | level-0 top-2 concentration |
         |---|---|---|---|
@@ -46,7 +51,12 @@ hyperedge-aware hierarchical clustering with temporal stability tracking.
       regularization (0.273 vs 0.295) — reported honestly as the
       mechanism's real cost/limit, not hidden. `outputs/temporal_events.json`
       states ~0.28-0.30 ARI as the reliability ceiling for any single event.
-- [ ] T4 — Hyper-edge collapse
+- [x] T4 — Hyper-edge collapse — see `src/hyperedge_collapse.py`. Genuine
+      hypergraph-native coarsening (arity>=3 relations kept as hyperedges
+      between super-nodes, not clique-expanded); a `clique_expand=True`
+      mode is also implemented for direct projection-loss comparison
+      (62 native hyperedges -> 83 edges if clique-expanded, see `report.md`).
+      Hand-verified against a real arity-20 hyperedge.
 - [ ] T5 — Labelling with measured faithfulness
 - [ ] T6 — Evaluation
 - [ ] T7 — Write-up
@@ -151,3 +161,13 @@ python src/build_temporal_events.py
 Runs the `lambda=0.2` temporally-regularized chain across all 4 snapshots
 and produces `outputs/temporal_events.json` (persistent cluster identity +
 birth/growth/merge/split/dissolution event log, level 0).
+
+```bash
+python src/hyperedge_collapse.py --hierarchy outputs/hierarchy.json --level 0
+```
+
+Runs T4: collapses all hyperedges (including `claims`/`cites`) according to
+how their endpoints are distributed across level-0 super-nodes, producing
+`outputs/hyperedge_collapse.json` (internal edges + cohesion score per
+cluster, native hypergraph-preserving coarse edges, and a clique-expanded
+version for direct projection-loss comparison).
