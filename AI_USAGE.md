@@ -309,3 +309,71 @@ the only coherence evidence — three additional, cheaper probes are planned
 (blind LLM intruder test, `authored_by` co-membership, and quantifying the
 TF-IDF/embedding correlation as an independence upper bound) but not yet
 implemented.
+
+## T3 — Temporal coupling: mechanism decision and implementation
+
+**Tool:** Claude (Anthropic), with substantial external review input from
+other AI reviewers ("assignor" style reviews) directing the investigation.
+
+**Process (driven mostly by external review, verified/implemented by me and
+Claude together):**
+1. An external review found P1 was actually violated in the delivered
+   output (`attach_leftover_nodes` ran an independent per-level majority
+   vote, not the top-down restriction its own docstring claimed). I had
+   Claude reproduce this exactly against our data (10 violations at 2024,
+   22 at 2026, all `cites`-provenance) before accepting it as real, then
+   fix it and add a new `verify_node_laminar` check that runs on the actual
+   delivered assignment, not just the hyperedge dendrogram.
+2. The same review flagged that `authored_by` (which I had proposed as a
+   second independent coherence probe in an earlier strategy document) is
+   actually one of the 9 relation types driving clustering itself — using
+   it as an "independent" probe would be circular. Confirmed directly
+   against `src/method.py`'s `EXCLUDED_FROM_CLUSTERING`/
+   `HELD_OUT_FOR_COHERENCE` sets. Dropped from the plan.
+3. Directed Claude to actually run (not just reason about) the `alpha`
+   sensitivity test that a review had flagged as unverified: ARI between
+   `alpha=0.3` and `alpha=0.7` on the identical 2026 snapshot (0.213,
+   confirmed), and the `alpha=1.0` collapse to `[1,1,117,702]` (confirmed
+   exactly). This number (0.213) is lower than the worst real
+   cross-snapshot ARI, which is why a stabilization mechanism (not just
+   passive matching) was judged necessary for T3.
+4. Directed the design of a temporal-regularization mechanism (reduce
+   hyperedge distance by `lambda` for pairs that were co-clustered in the
+   previous snapshot) after an external reviewer pointed out that a
+   cheaper baseline (picking the best-matching cut height) barely helped
+   (0.424 -> 0.449), meaning the instability was in dendrogram merge order,
+   not cut height. Had Claude implement `src/temporal_reg.py` and sweep
+   `lambda in {0, 0.1, 0.2, 0.4}`.
+5. **Insisted on the decisive perturbation test before accepting `lambda
+   =0.2`**, specifically because a large ARI gain at near-zero apparent
+   cost is exactly the signature of path-dependent lock-in rather than
+   real stabilization. Had Claude implement and run the actual test (10%
+   hyperedge removal, 5 seeds, comparing `lambda=0` vs `lambda=0.2` under
+   perturbation).
+6. When the result came back (`lambda=0.2`: 0.273 ± 0.079 vs `lambda=0`:
+   0.295 ± 0.061), corrected Claude's initial phrasing ("does not help")
+   to the more precise and honest "is slightly worse" — the point estimate
+   really is lower, even though the difference is within one standard
+   deviation.
+
+**What Claude implemented, that I verified:**
+- `src/temporal_reg.py`: the regularization mechanism and the sweep/
+  perturbation-test harness.
+- `src/build_temporal_events.py`: hyperedge-Jaccard-based matching across
+  snapshots and event classification (continuation/growth/merge/split/
+  birth/dissolution/ambiguous-weak-link), using the `lambda=0.2` chain.
+- I spot-checked 3 events from the 2022 transition by hand (a `continued`
+  event with prev_size==curr_size==4 and overlap exactly 1.0; a `grew`
+  event 19->25 edges at overlap 0.76; an `ambiguous_weak_link` at overlap
+  0.462, just under the 0.5 continuation threshold) and confirmed each
+  made sense given the raw edge-overlap numbers before accepting the
+  event log as sane.
+
+**Honest result carried into the deliverable:** no merges or splits were
+observed in the actual event log on this corpus; this is reported as-is
+rather than tuning thresholds to manufacture some. The perturbation-test
+finding (lambda=0.2 is a tie-break stabilizer for consistent data, not a
+noise-robustness mechanism, and is measurably not better than no
+regularization under noise) is written directly into both `report.md` and
+`outputs/temporal_events.json` as a reliability-ceiling caveat, not only
+in this log.
