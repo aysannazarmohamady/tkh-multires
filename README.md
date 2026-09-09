@@ -5,7 +5,7 @@ hyperedge-aware hierarchical clustering with temporal stability tracking.
 
 ## Status
 
-Work in progress.
+🚧 Work in progress.
 
 ## Task checklist
 
@@ -38,7 +38,14 @@ Work in progress.
         `src/coherence_probe.py` and `report.md`, "Third review round".
         Result: a null result (no significant evidence at 2024 or 2026;
         undefined at 2020 due to too few articles) — reported honestly.
-- [ ] T3 — Temporal coupling
+- [x] T3 — Temporal coupling — see `src/temporal_reg.py` (mechanism +
+      decisive perturbation test) and `src/build_temporal_events.py`
+      (event log). Mechanism: temporal regularization (lambda=0.2) on the
+      hyperedge distance matrix. Real-transition ARI improves 0.424 -> 0.806,
+      but under 10% perturbation it is slightly *worse* than no
+      regularization (0.273 vs 0.295) — reported honestly as the
+      mechanism's real cost/limit, not hidden. `outputs/temporal_events.json`
+      states ~0.28-0.30 ARI as the reliability ceiling for any single event.
 - [ ] T4 — Hyper-edge collapse
 - [ ] T5 — Labelling with measured faithfulness
 - [ ] T6 — Evaluation
@@ -128,3 +135,19 @@ Runs the T6 coherence probe (bibliographic coupling between articles via
 held-out `cites` edges, with a `provenance == "primary"` assertion that
 fails loudly if the independence guarantee is ever broken). Prints one JSON
 result line per snapshot file.
+
+```bash
+python src/temporal_reg.py
+```
+
+Runs the decisive perturbation-robustness test for the T3 stabilization
+mechanism (see `report.md`, "T3 — Temporal coupling") and saves
+`outputs/perturbation_robustness_check.json`.
+
+```bash
+python src/build_temporal_events.py
+```
+
+Runs the `lambda=0.2` temporally-regularized chain across all 4 snapshots
+and produces `outputs/temporal_events.json` (persistent cluster identity +
+birth/growth/merge/split/dissolution event log, level 0).
