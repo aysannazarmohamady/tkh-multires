@@ -6,13 +6,26 @@ sequence of graph states over time, not independent yearly slices — later
 snapshots must contain earlier ones for growth/stability comparisons in T3
 to make sense.
 
+Snapshot membership field, corrected (temporal-leak fix, found by external
+review): nodes are filtered on `first_seen_year` (when the entity actually
+entered THIS corpus), not `year`/`origin_year` (when the entity was
+invented/published in the real world, which can predate its appearance
+here). An earlier version filtered on `year`, which falls back to
+`origin_year` when known — this let entities into a snapshot before the
+corpus itself had any record of them. Concretely: 334 of 1,839 nodes in the
+old H(2020) had `first_seen_year > 2020`, meaning the corpus did not
+actually contain any trace of them until later, even though their
+real-world origin predated 2020. This is exactly the kind of "knowledge
+from the future" leak P6 (temporal honesty) warns against, just at the
+snapshot-construction level rather than the labeling level. Edges are
+filtered on `provenance.article_year` (the year of the article that
+produced the edge) for the same reason, not the edge's own `year` field,
+which can differ from `article_year` for a similar reason.
+
 An edge is only included once ALL of its member nodes are present in the
-snapshot. We considered including an edge whenever its own `year` <= cutoff
-regardless of its members, but that would let a snapshot reference nodes it
-doesn't otherwise contain — inconsistent with treating each snapshot as a
-self-contained hypergraph. This choice is what surfaces `dropped_partial_edges`,
-which turned out to flag a real data issue (see check_data_quality): edge
-years and node years don't always agree.
+snapshot (by `first_seen_year`). This is what surfaces
+`dropped_partial_edges`, a genuine data-quality signal, not merely an
+artifact of the inclusion rule.
 
 Usage:
     python src/load_graph.py --data data/tkh_collection10.json
@@ -33,21 +46,22 @@ def load_tkh(path: str) -> dict:
 
 
 def build_snapshot(data: dict, cutoff_year: int) -> dict:
-    """Return the subset of nodes/edges valid at or before cutoff_year."""
-    nodes = [n for n in data["nodes"] if n.get("year") is not None and n["year"] <= cutoff_year]
+    nodes = [n for n in data["nodes"]
+             if n.get("first_seen_year") is not None and n["first_seen_year"] <= cutoff_year]
     node_ids = {n["id"] for n in nodes}
 
     edges = []
     dropped_partial = 0
     for e in data["hyperedges"]:
-        if e.get("year") is None or e["year"] > cutoff_year:
+        edge_year = e.get("provenance", {}).get("article_year")
+        if edge_year is None or edge_year > cutoff_year:
             continue
         members = e["members"]
         if all(m in node_ids for m in members):
             edges.append(e)
         else:
-            # Edge's own year <= cutoff, but references a node that appears
-            # later (e.g. missing/inconsistent node year). Data-quality flag.
+            # Edge's own article_year <= cutoff, but references a node not
+            # yet first-seen in the corpus at this cutoff. Data-quality flag.
             dropped_partial += 1
 
     return {
@@ -158,24 +172,47 @@ def check_data_quality(data: dict) -> list:
     if dangling:
         issues.append(f"{dangling}/{len(data['hyperedges'])} hyper-edges reference at least one node id not present in the node list.")
 
-    no_year_edges = sum(1 for e in data["hyperedges"] if e.get("year") is None)
+    no_year_edges = sum(1 for e in data["hyperedges"] if e.get("provenance", {}).get("article_year") is None)
     if no_year_edges:
-        issues.append(f"{no_year_edges}/{len(data['hyperedges'])} hyper-edges have no `year` and will be excluded from all snapshots.")
+        issues.append(f"{no_year_edges}/{len(data['hyperedges'])} hyper-edges have no `provenance.article_year` and will be excluded from all snapshots.")
 
-    node_years = {n["id"]: n["year"] for n in data["nodes"] if n.get("year") is not None}
+    # Corrected temporal-leak check (fix found by external review): using
+    # `year`/`origin_year` for snapshot membership let entities into a
+    # snapshot before the corpus itself had any record of them. Quantify
+    # how many nodes this affected, per cutoff, as a permanent record of
+    # the bug's real size rather than fixing it silently.
+    leak_counts = {}
+    for cutoff in (2020, 2022, 2024):
+        leaked = sum(
+            1 for n in data["nodes"]
+            if n.get("year") is not None and n["year"] <= cutoff
+            and n.get("first_seen_year") is not None and n["first_seen_year"] > cutoff
+        )
+        leak_counts[cutoff] = leaked
+    issues.append(
+        f"TEMPORAL LEAK, FOUND AND FIXED: filtering snapshots on `year` "
+        f"(falls back to `origin_year`) instead of `first_seen_year` let "
+        f"nodes into a snapshot before the corpus had any record of them — "
+        f"{leak_counts[2020]} nodes at cutoff=2020, {leak_counts[2022]} at "
+        f"2022, {leak_counts[2024]} at 2024. Snapshots are now built on "
+        f"`first_seen_year` (nodes) and `provenance.article_year` (edges); "
+        f"see the module docstring."
+    )
+
+    node_first_seen = {n["id"]: n["first_seen_year"] for n in data["nodes"] if n.get("first_seen_year") is not None}
     inconsistent = 0
     for e in data["hyperedges"]:
-        member_years = [node_years[m] for m in e["members"] if m in node_years]
-        if member_years and e.get("year") is not None and e["year"] < max(member_years):
+        member_years = [node_first_seen[m] for m in e["members"] if m in node_first_seen]
+        edge_year = e.get("provenance", {}).get("article_year")
+        if member_years and edge_year is not None and edge_year < max(member_years):
             inconsistent += 1
     if inconsistent:
         issues.append(
-            f"{inconsistent}/{len(data['hyperedges'])} hyper-edges have a `year` "
-            f"earlier than the max `year` among their member nodes — edge.year and "
-            f"node.year likely come from different definitions (e.g. article_year vs "
-            f"first_seen_year) and are not mutually consistent. This is why some "
-            f"'dropped_partial_edges' occur at intermediate cutoffs even though the "
-            f"edge's own year is <= cutoff."
+            f"{inconsistent}/{len(data['hyperedges'])} hyper-edges have a "
+            f"`provenance.article_year` earlier than the max `first_seen_year` "
+            f"among their member nodes. This is expected and handled correctly: "
+            f"it is exactly why 'dropped_partial_edges' occurs at intermediate "
+            f"cutoffs even though the edge's own article_year is <= cutoff."
         )
 
     # Duplicate surface forms: the same normalized surface_form appearing
