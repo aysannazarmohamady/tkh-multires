@@ -1,0 +1,403 @@
+{
+  "reliability_note": "Temporal regularization (lambda > 0) was tested and rejected: it did not improve perturbation-robustness (lambda=0 had the highest mean perturbation-ARI of any value tested), and an earlier version's large apparent transition-ARI gain turned out to be circular (the regularizer directly manipulates the same metric used to evaluate it). This log uses lambda=0: identity is tracked via post-hoc hyperedge-Jaccard matching only, not artificially enforced. See outputs/lambda_selection_and_null.json and report.md ('T3 circularity found and fixed') for the full evidence trail. Real cross-snapshot ARI (~0.43-0.53, mean 0.49) is the honest reliability level for events below \u2014 some 'continued' classifications may still reflect an imperfect matching threshold rather than deep conceptual continuity.",
+  "level": 0,
+  "alpha": 0.5,
+  "lambda_sd": 0.0,
+  "continuation_threshold": 0.5,
+  "birth_threshold": 0.1,
+  "events_by_snapshot": {
+    "2020": [
+      {
+        "type": "birth",
+        "persistent_id": "p0",
+        "curr_cluster_label": 2
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p1",
+        "curr_cluster_label": 10
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p2",
+        "curr_cluster_label": 4
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p3",
+        "curr_cluster_label": 13
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p4",
+        "curr_cluster_label": 8
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p5",
+        "curr_cluster_label": 12
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p6",
+        "curr_cluster_label": 1
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p7",
+        "curr_cluster_label": 5
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p8",
+        "curr_cluster_label": 7
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p9",
+        "curr_cluster_label": 6
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p10",
+        "curr_cluster_label": 11
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p11",
+        "curr_cluster_label": 3
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p12",
+        "curr_cluster_label": 9
+      }
+    ],
+    "2022": [
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p13",
+        "closest_prev_persistent_id": "p8",
+        "overlap_jaccard": 0.185
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p1",
+        "prev_size": 7,
+        "curr_size": 7,
+        "overlap_jaccard": 0.556
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p14",
+        "closest_prev_persistent_id": "p4",
+        "overlap_jaccard": 0.455
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p3",
+        "prev_size": 19,
+        "curr_size": 21,
+        "overlap_jaccard": 0.818
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p15",
+        "curr_cluster_label": 3,
+        "size": 7
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p16",
+        "curr_cluster_label": 12,
+        "size": 29
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p10",
+        "prev_size": 23,
+        "curr_size": 24,
+        "overlap_jaccard": 0.958
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p17",
+        "closest_prev_persistent_id": "p4",
+        "overlap_jaccard": 0.172
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p18",
+        "closest_prev_persistent_id": "p12",
+        "overlap_jaccard": 0.222
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p5",
+        "prev_size": 7,
+        "curr_size": 7,
+        "overlap_jaccard": 1.0
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p19",
+        "closest_prev_persistent_id": "p6",
+        "overlap_jaccard": 0.448
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p20",
+        "closest_prev_persistent_id": "p0",
+        "overlap_jaccard": 0.306
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p7",
+        "prev_size": 23,
+        "curr_size": 23,
+        "overlap_jaccard": 1.0
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p9",
+        "prev_size": 10,
+        "curr_size": 8,
+        "overlap_jaccard": 0.8
+      },
+      {
+        "type": "split",
+        "persistent_id": "p6",
+        "into_curr_clusters": [
+          7,
+          5,
+          1
+        ],
+        "shares": {
+          "7": 0.207,
+          "5": 0.448,
+          "1": 0.345
+        }
+      }
+    ],
+    "2024": [
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p21",
+        "closest_prev_persistent_id": "p19",
+        "overlap_jaccard": 0.277
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p22",
+        "closest_prev_persistent_id": "p18",
+        "overlap_jaccard": 0.243
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p23",
+        "closest_prev_persistent_id": "p7",
+        "overlap_jaccard": 0.361
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p24",
+        "curr_cluster_label": 7,
+        "size": 6
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p25",
+        "curr_cluster_label": 3,
+        "size": 20
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p5",
+        "prev_size": 7,
+        "curr_size": 13,
+        "overlap_jaccard": 0.538
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p26",
+        "closest_prev_persistent_id": "p9",
+        "overlap_jaccard": 0.19
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p16",
+        "prev_size": 29,
+        "curr_size": 52,
+        "overlap_jaccard": 0.5
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p17",
+        "prev_size": 46,
+        "curr_size": 71,
+        "overlap_jaccard": 0.539
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p27",
+        "curr_cluster_label": 1,
+        "size": 36
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p20",
+        "prev_size": 29,
+        "curr_size": 17,
+        "overlap_jaccard": 0.586
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p28",
+        "curr_cluster_label": 2,
+        "size": 17
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p10",
+        "prev_size": 24,
+        "curr_size": 22,
+        "overlap_jaccard": 0.917
+      },
+      {
+        "type": "split",
+        "persistent_id": "p13",
+        "into_curr_clusters": [
+          13,
+          8,
+          11
+        ],
+        "shares": {
+          "13": 0.37,
+          "8": 0.222,
+          "11": 0.407
+        }
+      }
+    ],
+    "2026": [
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p29",
+        "closest_prev_persistent_id": "p21",
+        "overlap_jaccard": 0.287
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p22",
+        "prev_size": 111,
+        "curr_size": 83,
+        "overlap_jaccard": 0.565
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p30",
+        "closest_prev_persistent_id": "p22",
+        "overlap_jaccard": 0.238
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p28",
+        "prev_size": 17,
+        "curr_size": 15,
+        "overlap_jaccard": 0.684
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p31",
+        "closest_prev_persistent_id": "p20",
+        "overlap_jaccard": 0.195
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p16",
+        "prev_size": 52,
+        "curr_size": 81,
+        "overlap_jaccard": 0.642
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p32",
+        "closest_prev_persistent_id": "p26",
+        "overlap_jaccard": 0.312
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p17",
+        "prev_size": 71,
+        "curr_size": 71,
+        "overlap_jaccard": 1.0
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p27",
+        "prev_size": 36,
+        "curr_size": 36,
+        "overlap_jaccard": 1.0
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p33",
+        "closest_prev_persistent_id": "p23",
+        "overlap_jaccard": 0.296
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p34",
+        "closest_prev_persistent_id": "p26",
+        "overlap_jaccard": 0.364
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p35",
+        "curr_cluster_label": 13,
+        "size": 27
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p36",
+        "curr_cluster_label": 4,
+        "size": 10
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p37",
+        "closest_prev_persistent_id": "p25",
+        "overlap_jaccard": 0.375
+      },
+      {
+        "type": "split",
+        "persistent_id": "p23",
+        "into_curr_clusters": [
+          6,
+          9,
+          12,
+          14
+        ],
+        "shares": {
+          "6": 0.383,
+          "9": 0.133,
+          "12": 0.35,
+          "14": 0.133
+        }
+      },
+      {
+        "type": "split",
+        "persistent_id": "p26",
+        "into_curr_clusters": [
+          6,
+          2,
+          14
+        ],
+        "shares": {
+          "6": 0.167,
+          "2": 0.357,
+          "14": 0.476
+        }
+      }
+    ]
+  }
+}
