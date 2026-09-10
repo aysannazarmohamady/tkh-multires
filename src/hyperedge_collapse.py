@@ -82,7 +82,7 @@ def collapse_hyperedges(all_edges, node_to_cluster, clique_expand=False):
             continue
 
         weight = 1.0 / (len(sigma) - 1)
-        year = e.get("year")
+        year = e.get("provenance", {}).get("article_year")
 
         if len(sigma) == 2 or clique_expand:
             # arity-2 coarse edges, OR clique-expanded pairs if requested
@@ -139,13 +139,94 @@ def collapse_hyperedges(all_edges, node_to_cluster, clique_expand=False):
     return dict(internal_by_cluster), coarse_edges, cohesion
 
 
+def run_all_levels_and_snapshots(hierarchy_paths: dict, data_path: str) -> dict:
+    """Run collapse for EVERY level of EVERY snapshot, not just level 0 of
+    one snapshot (fix: an earlier version ran once, and nothing downstream
+    read its output — T4 was implemented but unused, i.e. P4 wasn't
+    actually exercised by the method).
+
+    hierarchy_paths: {cutoff_year: hierarchy_json_path}
+    Returns {cutoff_year: {level: {"internal": ..., "coarse_native": ...,
+    "coarse_clique": ..., "cohesion": ...}}}
+    """
+    data = json.load(open(data_path))
+    results = {}
+    for cutoff, hpath in hierarchy_paths.items():
+        hier = json.load(open(hpath))
+        n_levels = len(next(iter(hier["node_assignment"].values())))
+        results[cutoff] = {}
+        for level in range(n_levels):
+            node_to_cluster = {nid: v[level] for nid, v in hier["node_assignment"].items() if v[level] is not None}
+            internal_native, coarse_native, cohesion = collapse_hyperedges(
+                data["hyperedges"], node_to_cluster, clique_expand=False
+            )
+            results[cutoff][level] = {
+                "n_super_nodes_with_internal_edges": len(internal_native),
+                "n_coarse_edges": len(coarse_native),
+                "n_coarse_hyperedges_arity3plus": sum(1 for e in coarse_native if e["arity"] >= 3),
+                "cohesion_by_cluster": cohesion,
+                # Keep the actual coarse edges only for level 0 in the summary
+                # (full detail per level is written to per-snapshot files
+                # separately; this summary is for the cross-level/cross-
+                # snapshot overview).
+            }
+    return results
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--hierarchy", default="outputs/hierarchy.json")
     parser.add_argument("--data", default="data/tkh_collection10.json")
     parser.add_argument("--level", type=int, default=0)
     parser.add_argument("--out", default="outputs/hyperedge_collapse.json")
+    parser.add_argument("--all", action="store_true",
+                         help="Run collapse for every level of every snapshot "
+                              "(2020/2022/2024/2026), not just one level of one file.")
     args = parser.parse_args()
+
+    if args.all:
+        hierarchy_paths = {
+            2020: "outputs/hierarchy_2020.json",
+            2022: "outputs/hierarchy_2022.json",
+            2024: "outputs/hierarchy_2024.json",
+            2026: "outputs/hierarchy.json",
+        }
+        summary = run_all_levels_and_snapshots(hierarchy_paths, args.data)
+        for cutoff, levels in summary.items():
+            for level, info in levels.items():
+                print(f"cutoff={cutoff} level={level}: "
+                      f"{info['n_coarse_edges']} coarse edges "
+                      f"({info['n_coarse_hyperedges_arity3plus']} arity>=3), "
+                      f"{info['n_super_nodes_with_internal_edges']} super-nodes with internal edges")
+
+        # Also write full per-(snapshot, level) collapse detail, one file each,
+        # since T3 matching and any future drill-down need the actual coarse
+        # edges, not just the summary counts.
+        data = json.load(open(args.data))
+        for cutoff, hpath in hierarchy_paths.items():
+            hier = json.load(open(hpath))
+            n_levels = len(next(iter(hier["node_assignment"].values())))
+            for level in range(n_levels):
+                node_to_cluster = {nid: v[level] for nid, v in hier["node_assignment"].items() if v[level] is not None}
+                internal_native, coarse_native, cohesion = collapse_hyperedges(
+                    data["hyperedges"], node_to_cluster, clique_expand=False
+                )
+                out_path = f"outputs/hyperedge_collapse_{cutoff}_level{level}.json"
+                with open(out_path, "w") as f:
+                    json.dump({
+                        "cutoff_year": cutoff, "level": level,
+                        "cohesion_by_cluster": cohesion,
+                        "internal_edges_by_cluster": {str(k): v for k, v in internal_native.items()},
+                        "coarse_edges_native": [
+                            {**e, "super_nodes": list(e["super_nodes"])} for e in coarse_native
+                        ],
+                    }, f, indent=2)
+
+        with open("outputs/hyperedge_collapse_all_summary.json", "w") as f:
+            json.dump(summary, f, indent=2)
+        print("\nSaved per-(snapshot,level) files (outputs/hyperedge_collapse_<year>_level<k>.json) "
+              "and outputs/hyperedge_collapse_all_summary.json")
+        return
 
     hier, data, node_to_cluster = load_hierarchy_and_data(args.hierarchy, args.data, args.level)
 
