@@ -496,3 +496,114 @@ recorded here as a substantive finding, not a footnote — catching this
 kind of circularity in our own instrumentation, not just in an externally
 flagged probe, is exactly the kind of verification habit the task asks
 for.
+
+## T1/T2/T6 — Fourth review round: temporal leak, P3 investigation, sign-error catch
+
+**Tool:** Claude (Anthropic), directed by an external review, with a
+follow-up correction from that same reviewer on their own formula.
+
+**What was found and directed:**
+1. External review found nodes/edges were filtered by `year`/`origin_year`
+   instead of `first_seen_year`/`provenance.article_year` for snapshot
+   construction — a real temporal leak (334/332/143 nodes affected at
+   2020/2022/2024). Had Claude verify this exactly against the data before
+   fixing it in both `load_graph.py` and `method.py`.
+2. Directed an investigation into why level-0 clusters correlate with
+   source article (NMI ~0.5-0.6) more than intended (P3). Had Claude
+   directly verify the review's mechanistic diagnosis (one sample article:
+   38/39 edges shared the same method node) before accepting it.
+3. When excluding `presents` broke the coherence probe's `provenance ==
+   "primary"` assertion (articles could then only reach a cluster via
+   `cites`, reopening circularity), directed a redesign: exclude `presents`
+   from similarity only, add deterministic placement via the presented
+   method's cluster path, and relax the assertion to `!= "cites"` (still
+   sufficient for independence).
+4. **Caught my own sign error**, and had Claude verify it: an initial
+   paper-frequency weighting formula (`1/log(1+n_papers)`) was the
+   reciprocal of what the stated rationale required — it upweighted
+   single-paper hub nodes instead of downweighting them. Directed Claude to
+   test the inverted formula directly (measured: 0.612 with the wrong sign
+   vs 0.566 unweighted vs 0.520 with the corrected sign) before locking in
+   the fix, and to document the error and correction in the report rather
+   than quietly fixing it.
+5. Directed dropping the earlier "NMI < 0.3" target as unjustified, and
+   replacing it with a null-model comparison (permutation test) plus a
+   concrete, interpretable count (clusters where one article dominates
+   >50% of edges), rather than any single arbitrary threshold.
+6. Also asked Claude to check a specific hypothesis for why only 7/52
+   articles used the `presents` fallback (suspected: `attach_leftover_nodes`
+   running before `place_articles_via_presents` and grabbing articles via
+   `claims` first). Had Claude check the actual call order and the actual
+   cause (45 articles are legitimately primary-placed via
+   `proposes_future_work`, unrelated to the suspected ordering bug) before
+   accepting or rejecting the hypothesis — it was not the cause; no
+   reordering was needed.
+
+**What I verified myself (via Claude) before accepting each fix:**
+- The exact leak counts (334/332/143) directly against the raw data.
+- The hub-node mechanism (39 edges, 38 sharing one method node) on a real,
+  named article, not just accepting the general claim.
+- Both the wrong-sign (0.612) and corrected-sign (0.520/0.485 in different
+  measurement contexts) NMI results directly, before choosing which
+  formula to keep.
+- The `place_articles_via_presents`/`attach_leftover_nodes` call order in
+  the actual code, rather than accepting a plausible-sounding hypothesis
+  about it without checking.
+- That `requirements.txt` was already correctly pinned (no "placeholder"
+  text) — a claim repeated across two different review rounds that turned
+  out to be based on a stale copy of the repo both times.
+
+**Honest state at the end of this round:** the coherence-probe result
+changed direction again (from significant to null) as a side effect of
+these fixes, which is recorded plainly rather than reported using an
+earlier, more favorable number. T3's requested refinements (edges-changed
+vs. edges-unchanged ARI split, more perturbation seeds, arity-preserving
+null) and T4's integration into every level/snapshot are explicitly
+recorded as not yet done, to be picked up next.
+
+## T3/T4 — Fifth round: wiring T4 into the pipeline, and a genuinely positive T3 finding
+
+**Tool:** Claude (Anthropic), directed by the same external review's
+remaining action items.
+
+**What was directed:**
+1. Wire T4 into every level of every snapshot (not just one run), and have
+   its output actually consumed downstream (T3's event log), not just
+   computed and left unread.
+2. Re-run the perturbation-robustness test with 20 seeds (not 5), split by
+   whether a node's incident edges were actually touched by the
+   perturbation.
+3. Add a paired statistical test when comparing `lambda_sd` values, rather
+   than comparing raw means.
+4. Replace/supplement the label-shuffle null with an arity-preserving
+   shuffle specifically of the NEW edges introduced at each transition, to
+   directly test whether real corpus growth is more structure-preserving
+   than equivalent-sized random growth.
+
+**What Claude implemented, that I verified:**
+- `src/hyperedge_collapse.py --all`: runs collapse across all 16
+  (snapshot, level) combinations; verified the printed coarse-edge/
+  internal-edge counts scale sensibly with corpus size across snapshots
+  before accepting the output.
+- `src/build_temporal_events.py`: now loads T4's per-cluster cohesion
+  scores and attaches them to birth/split events.
+- `src/temporal_reg.py`: 20-seed changed/unchanged breakdown, Wilcoxon
+  paired test, and the new growth-null. Hit a real bug during this:
+  perturbation removes random raw hyperedges, which can change which rows
+  `merge_evaluated_on_by_article` groups together, producing edge ids the
+  fixed sentence-embeddings file was never computed for. Rather than
+  patch around this narrowly, switched this specific script to TF-IDF
+  (no fixed-vocabulary dependency), documented why, and noted that
+  absolute ARI values from this script aren't directly comparable to the
+  real-embedding numbers reported elsewhere in the report — only the
+  internal real-vs-null comparisons are.
+- Ran the full analysis and read the results directly rather than assuming
+  they'd confirm the existing narrative: the changed/unchanged split was
+  weak (right direction, heavy overlap), the paired lambda test was not
+  significant (consistent with the existing lambda=0 decision), but the
+  growth-null test came back as a genuinely new, positive result — real
+  transitions were clearly more structure-preserving than random growth of
+  the same size at all three transitions (most dramatically at
+  2024->2026: 0.499 observed vs 0.059 null). This was not something we
+  were trying to produce; it's reported because it's what the test
+  actually showed.
