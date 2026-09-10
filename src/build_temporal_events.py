@@ -1,24 +1,34 @@
 """
 T3 — Temporal coupling: persistent cluster identity + event log.
 
-Uses the lambda=0.2 temporally-regularized chain (src/temporal_reg.py) as
-its basis, NOT the plain (lambda=0) hierarchy_*.json files used for T1/T2/T6
-— those remain the verified, unregularized artifacts. T3's identity
-tracking is a distinct, additional layer built on top, and this separation
-is intentional: it keeps the already-verified T2/T6 outputs untouched while
-still giving T3 a more consistent basis to track identity against.
+MECHANISM DECISION (revised after a deeper external review): temporal
+regularization (lambda > 0) was tested and REJECTED. Two independent
+findings ruled it out:
+1. Perturbation-robustness test (10% edge removal, 5 seeds): lambda=0 has
+   the HIGHEST mean perturbation-ARI (0.457) of any value tested
+   (lambda_sd in {0, 0.1, 0.25, 0.5} of the distance distribution's std);
+   every nonzero lambda tested was worse. See
+   `outputs/lambda_selection_and_null.json`.
+2. A circularity problem in how "stability" was being measured: the
+   regularizer subtracts lambda from the distance of hyperedge pairs that
+   were co-clustered in the PREVIOUS snapshot, and stability was then
+   measured as ARI against that same previous snapshot's partition. The
+   mechanism was optimizing the exact metric used to evaluate it, so a
+   large apparent "improvement" (transition ARI 0.42 -> 0.81 in an earlier,
+   buggy version) could not fail to appear regardless of whether it
+   reflected anything real. We caught and neutralized this ourselves before
+   it reached the final report — see report.md, "T3 circularity found and
+   fixed" for the full account, including a null model (shuffled prior
+   labels) that confirms lambda=0 behaves identically whether the prior is
+   real or shuffled, exactly as it should since lambda=0 never reads the
+   prior at all.
 
-Known limitation, stated up front (per external review): the lambda=0.2
-mechanism improves consistency on real snapshot transitions (level-0 ARI
-0.424 -> 0.806) but does NOT improve robustness to noise — under 10%
-hyperedge removal it is slightly WORSE than lambda=0 (0.273 vs 0.295 mean
-ARI, well within one std of each other, so not a large effect, but not an
-improvement either). It stabilizes real transitions by resolving arbitrary
-dendrogram tie-breaks in favor of history; it does not distinguish a
-"correct" history from a noisy one. So an ARI of ~0.28-0.30 (the
-perturbation-test ceiling) is the honest reliability ceiling for any event
-classified below: some fraction of "continuations" are tie-break artifacts
-carried forward, not necessarily real conceptual continuity.
+This module therefore uses `lambda_sd=0` (no regularization): clusters are
+identified purely by post-hoc hyperedge-Jaccard matching across
+independently-clustered snapshots. Identity is TRACKED, not artificially
+enforced. Real transition ARI (0.43-0.53, mean 0.49, with the corrected
+rank-normalized similarity) is reported honestly as the actual level of
+cross-snapshot consistency, not inflated by a circular mechanism.
 
 Matching signal: hyperedge-set Jaccard overlap between a snapshot-t level-0
 cluster and a snapshot-(t+1) level-0 cluster, restricted to hyperedges
@@ -177,10 +187,11 @@ def main():
     data = json.load(open("data/tkh_collection10.json"))
     emb_path = "outputs/semantic_embeddings.npy"
     order_path = "outputs/embedding_edge_order.json"
-    alpha, lam = 0.5, 0.2
+    alpha, lam_sd = 0.5, 0.0
 
-    print(f"Running temporally-regularized chain (alpha={alpha}, lambda={lam})...")
-    chain = run_chain(data, alpha, lam, emb_path, order_path, cutoffs=CUTOFFS)
+    print(f"Running chain (alpha={alpha}, lambda_sd={lam_sd} — no regularization, "
+          f"evidence-based choice; see module docstring)...")
+    chain = run_chain(data, alpha, lam_sd, emb_path, order_path, cutoffs=CUTOFFS)
 
     prev_ids = {}
     next_persistent_id = [0]
@@ -209,16 +220,23 @@ def main():
     with open("outputs/temporal_events.json", "w") as f:
         json.dump({
             "reliability_note": (
-                "Perturbation-robustness test (10% edge removal, 5 seeds) found "
-                "lambda=0.2 does NOT improve, and is slightly worse than lambda=0, "
-                "under noise (mean ARI 0.273 vs 0.295, within 1 std). Treat "
-                "~0.28-0.30 ARI as the honest reliability ceiling for the events "
-                "below: some continuations may be arbitrary dendrogram tie-breaks "
-                "carried forward rather than real conceptual continuity."
+                "Temporal regularization (lambda > 0) was tested and rejected: "
+                "it did not improve perturbation-robustness (lambda=0 had the "
+                "highest mean perturbation-ARI of any value tested), and an "
+                "earlier version's large apparent transition-ARI gain turned out "
+                "to be circular (the regularizer directly manipulates the same "
+                "metric used to evaluate it). This log uses lambda=0: identity "
+                "is tracked via post-hoc hyperedge-Jaccard matching only, not "
+                "artificially enforced. See outputs/lambda_selection_and_null.json "
+                "and report.md ('T3 circularity found and fixed') for the full "
+                "evidence trail. Real cross-snapshot ARI (~0.43-0.53, mean 0.49) "
+                "is the honest reliability level for events below — some "
+                "'continued' classifications may still reflect an imperfect "
+                "matching threshold rather than deep conceptual continuity."
             ),
             "level": 0,
             "alpha": alpha,
-            "lambda": lam,
+            "lambda_sd": lam_sd,
             "continuation_threshold": CONTINUATION_THRESHOLD,
             "birth_threshold": BIRTH_THRESHOLD,
             "events_by_snapshot": all_events,
