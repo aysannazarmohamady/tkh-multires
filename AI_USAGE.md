@@ -423,3 +423,76 @@ review.
 - Re-ran the full 4-snapshot pipeline after the rank-normalization change
   and confirmed node-level laminarity still passes on all snapshots before
   accepting the change as safe.
+
+## T3 — Circularity found in our own stability metric, and the coherence probe result changed
+
+**Tool:** Claude (Anthropic), directed by an external "assignor"-style
+review that caught this.
+
+**What the review found and what I directed Claude to verify:**
+1. Re-running `coherence_probe.py` on our then-current outputs gave
+   significant results (z=2.84/p=0.0068 at 2024; z=2.59/p=0.011 at 2026),
+   contradicting the "null result" `report.md` stated. Had Claude re-run
+   the probe directly — confirmed exactly.
+2. `temporal_reg.run_chain` computed similarity manually on raw matrices,
+   never calling the (already-fixed) `combined_distance_matrix` — meaning
+   every T3 artifact so far was built on the pre-rank-normalization method
+   the report claimed was retired. Confirmed by reading the code directly.
+3. `lambda=0.2` was ~2.5 standard deviations of the actual distance
+   distribution (mean 0.848, sd 0.081) — not a soft prior. Confirmed by
+   direct computation.
+
+**The deeper problem, which I had Claude explain and then we both
+confirmed:** the T3 stability mechanism's headline result (transition ARI
+0.42 -> 0.81) was circular — the regularizer subtracts distance for pairs
+co-clustered at t-1, and stability was measured as ARI against that same
+t-1 partition, so the metric could not fail to improve. This is the same
+class of hazard the task's §6 warns about for the coherence probe,
+occurring instead in our own stability measurement.
+
+**Fix, directed step by step:**
+1. Had Claude fix `run_chain` to call the real `combined_distance_matrix`.
+2. Had Claude re-parameterize lambda in units of the distance
+   distribution's std and sweep `{0, 0.1, 0.25, 0.5}`.
+3. **Insisted the lambda selection use perturbation-ARI, not
+   transition-ARI**, specifically because the regularizer manipulates
+   transition-ARI directly.
+4. **Insisted on adding a null model** (shuffled previous-snapshot labels)
+   with a bootstrap CI, to make the "is this circular" question decidable
+   from the output rather than argued in prose.
+5. Directed that `report.md` state directly that we found and fixed this
+   circularity ourselves, rather than treat it as an embarrassment to
+   minimize.
+
+**What Claude implemented, that I verified:**
+- The corrected `temporal_reg.py` (real `combined_distance_matrix` call,
+  sd-based lambda, null model, bootstrap CI) and updated
+  `build_temporal_events.py` (lambda=0, updated docstring/reliability
+  note).
+- Ran the full sweep myself (via Claude) and confirmed `lambda_sd=0` has
+  the highest perturbation-ARI (0.457) of any value tested — every
+  nonzero value was worse, independently confirming the earlier, cruder
+  perturbation test's direction (0.273 vs 0.295 at the old buggy scale).
+- Confirmed the null model's sanity-check property directly: at
+  `lambda_sd=0`, observed and null (shuffled-label) transition ARIs are
+  numerically identical (`[0.532, 0.510, 0.427]` both), which is exactly
+  the expected behavior since `lambda_sd=0` never reads the prior labels —
+  this is not a coincidence, it's confirmation the null-model code is
+  wired correctly for when it matters at `lambda_sd > 0`.
+- Regenerated `outputs/temporal_events.json` at `lambda_sd=0` and noted
+  the event log is now more varied (splits appear, more ambiguous weak
+  links) than the earlier circular version, consistent with the honest
+  ARI (~0.49) rather than the inflated ~0.81.
+- Updated `report.md`'s coherence-probe section to reflect the new,
+  significant result (2024/2026), explicitly flagging that the direction
+  changed because of the rank-normalization bug fix changing the
+  clustering, not because of any change to the probe itself.
+
+**Net effect on the project's stance:** T3 now ships the "accept and
+report honestly" option from our original two-option framing (post-hoc
+matching, no artificial stabilization), specifically because the
+alternative mechanism we built turned out to be measuring itself. This is
+recorded here as a substantive finding, not a footnote — catching this
+kind of circularity in our own instrumentation, not just in an externally
+flagged probe, is exactly the kind of verification habit the task asks
+for.
