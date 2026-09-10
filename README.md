@@ -39,14 +39,23 @@ Work in progress.
         corpus, not a bug; P1/P2 hold over the assigned subgraph at each
         snapshot, not over isolated nodes that aren't in any hyperedge yet.
   - [x] Coherence probe (bibliographic coupling between articles, with a
-        provenance assertion closing the earlier leak) — see
-        `src/coherence_probe.py` and `report.md`, "Third review round" and
-        "T2 correction". **Result updated** after the rank-normalization
-        fix changed the clustering: significant coherence signal at 2024
-        (z=2.84, p=0.0068) and 2026 (z=2.59, p=0.011); not significant at
-        2020/2022 (too few articles). An earlier draft reported this as a
-        null result under the pre-fix clustering — flagged and corrected,
-        not silently updated.
+        provenance assertion closing the earlier leak, later relaxed from
+        `== "primary"` to `!= "cites"`) — see `src/coherence_probe.py` and
+        `report.md`, "Third" and "Fourth review round". **Result changed
+        more than once** as bugs were fixed (temporal leak, P3
+        re-weighting): briefly significant at 2024/2026 under an
+        intermediate clustering, currently a null result again at every
+        snapshot (best case 2026: z=1.68, p=0.059) under the final,
+        temporal-leak-fixed clustering. We report the current,
+        reproducible number and note the instability across fixes
+        explicitly rather than picking a favorable past value.
+  - [x] T3 refinements (20-seed perturbation, changed/unchanged node
+        split, paired lambda test, arity-preserving growth-null) — see
+        `src/temporal_reg.py` and `report.md`, "Fifth round". Headline
+        result: real cross-snapshot growth is clearly more
+        structure-preserving than equivalent-sized random growth at every
+        transition (e.g. 2024→2026: observed ARI 0.499 vs. growth-null
+        0.059) — genuinely positive evidence for P5 not previously shown.
 - [x] T3 — Temporal coupling — see `src/temporal_reg.py` (mechanism sweep +
       decisive perturbation test + null model) and
       `src/build_temporal_events.py` (event log). **We found and fixed a
@@ -63,11 +72,14 @@ Work in progress.
       ARI (0.43-0.53, mean 0.49) is reported honestly; identity is tracked
       via post-hoc matching, not artificially enforced. Full account in
       `report.md`, "T3 — Temporal coupling: circularity found and fixed."
-- [x] T4 — Hyper-edge collapse — see `src/hyperedge_collapse.py`. Genuine
+- [x] T4 — Hyper-edge collapse — see `src/hyperedge_collapse.py --all`.
+      Now wired into every level (0-3) of every snapshot (16 combinations,
+      `outputs/hyperedge_collapse_<year>_level<k>.json`), and its
+      per-cluster cohesion scores are consumed by T3's event log (an
+      earlier version computed this once and nothing read it). Genuine
       hypergraph-native coarsening (arity>=3 relations kept as hyperedges
       between super-nodes, not clique-expanded); a `clique_expand=True`
-      mode is also implemented for direct projection-loss comparison
-      (62 native hyperedges -> 83 edges if clique-expanded, see `report.md`).
+      mode is also implemented for direct projection-loss comparison.
       Hand-verified against a real arity-20 hyperedge.
 - [ ] T5 — Labelling with measured faithfulness
 - [ ] T6 — Evaluation
