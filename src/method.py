@@ -39,7 +39,7 @@ from scipy.stats import rankdata
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-EXCLUDED_FROM_CLUSTERING = {"claims"}  # near-degenerate, dominates by volume
+EXCLUDED_FROM_CLUSTERING = {"claims", "authored_by", "presents"}  # near-degenerate volume (claims), pure identity (authored_by), or contributes nothing to similarity and only anchors article placement (presents; arity 2, see place_articles_via_presents)
 HELD_OUT_FOR_COHERENCE = {"cites"}     # never touched by clustering; for T6
 
 
@@ -48,15 +48,95 @@ def load_tkh(path: str) -> dict:
         return json.load(f)
 
 
+def merge_evaluated_on_by_article(edges: list) -> list:
+    """Merge each article's separate `evaluated_on` edges (one per
+    result-table row in the source paper) into a single hyperedge per
+    article.
+
+    Fix (found by external review, verified against our data): 301
+    `evaluated_on` edges came from only 36 distinct articles (one article
+    had 33 separate `evaluated_on` edges). Since hyperedge similarity is
+    driven by member overlap, this let many near-duplicate rows from the
+    SAME paper dominate the similarity signal, pulling level-0 clusters
+    toward "papers" rather than "ideas" (measured: NMI between level-0
+    cluster and source article was 0.498-0.61 depending on measurement
+    method — clusters were substantially explainable by "which paper", not
+    just topic). Merging each article's rows into one hyperedge (union of
+    members) removes this specific source of paper-identity leakage while
+    keeping every original member.
+    """
+    by_article = defaultdict(list)
+    others = []
+    for e in edges:
+        if e["relation_type"] == "evaluated_on":
+            aid = e.get("provenance", {}).get("article_id")
+            by_article[aid].append(e)
+        else:
+            others.append(e)
+
+    merged = []
+    for aid, group in by_article.items():
+        if len(group) == 1:
+            merged.append(group[0])
+            continue
+        seen, member_union = set(), []
+        for e in group:
+            for m in e["members"]:
+                if m not in seen:
+                    seen.add(m)
+                    member_union.append(m)
+        merged.append({
+            "id": f"h_merged_eval_{aid}",
+            "relation_type": "evaluated_on",
+            "members": member_union,
+            "provenance": group[0].get("provenance"),
+            "attributes": {"merged_from_edge_ids": [e["id"] for e in group]},
+        })
+    return others + merged
+
+
 def filter_snapshot(data: dict, cutoff_year: int | None) -> tuple[list, list]:
     """Return (nodes, clustering_edges) for a cutoff year (or the whole
     dataset if cutoff_year is None), excluding EXCLUDED_FROM_CLUSTERING and
-    HELD_OUT_FOR_COHERENCE relation types from the clustering edge set."""
+    HELD_OUT_FOR_COHERENCE relation types from the clustering edge set.
+
+    Temporal-leak fix (found by external review, same issue as in
+    load_graph.py): nodes are filtered on `first_seen_year` (when the
+    corpus itself first recorded the entity), not `year`/`origin_year`
+    (when the entity was invented/published in the real world). Edges are
+    filtered on `provenance.article_year`, not their own `year` field, for
+    the same reason. An earlier version used `year` for both, which let
+    334/332/143 nodes (at cutoffs 2020/2022/2024 respectively) into a
+    snapshot before the corpus had any record of them — a "knowledge from
+    the future" leak at the snapshot-construction level.
+
+    `authored_by` is now excluded from clustering (moved into post-hoc
+    attachment, same treatment as `claims`): it is a pure identity edge
+    (which authors wrote this paper) with no topical content, and
+    including it in the structural similarity pulled clusters toward
+    "same paper" rather than "same idea".
+
+    Correction during implementation: `presents` was also excluded in an
+    earlier version of this fix, following an external review's
+    suggestion, but this broke something else — with `presents` excluded,
+    the only clustering-eligible relation touching `article` nodes at all
+    was `proposes_future_work` (45 edges, not every article has one), so
+    most articles could only reach a cluster via post-hoc attachment
+    through `cites` — directly reintroducing the coherence-probe
+    circularity that `cites`-provenance filtering exists to prevent
+    (verified: `coherence_probe.py`'s `provenance == "primary"` assertion
+    failed after this exclusion). `presents` links an article to the
+    specific technique/method it presents, which is topical content about
+    the article, not pure identity like `authored_by` — so it is kept in
+    clustering.
+    """
     if cutoff_year is not None:
-        nodes = [n for n in data["nodes"] if n.get("year") is not None and n["year"] <= cutoff_year]
+        nodes = [n for n in data["nodes"]
+                 if n.get("first_seen_year") is not None and n["first_seen_year"] <= cutoff_year]
         node_ids = {n["id"] for n in nodes}
         all_edges = [e for e in data["hyperedges"]
-                     if e.get("year") is not None and e["year"] <= cutoff_year
+                     if e.get("provenance", {}).get("article_year") is not None
+                     and e["provenance"]["article_year"] <= cutoff_year
                      and all(m in node_ids for m in e["members"])]
     else:
         nodes = data["nodes"]
@@ -67,23 +147,59 @@ def filter_snapshot(data: dict, cutoff_year: int | None) -> tuple[list, list]:
         if e["relation_type"] not in EXCLUDED_FROM_CLUSTERING
         and e["relation_type"] not in HELD_OUT_FOR_COHERENCE
     ]
+    clustering_edges = merge_evaluated_on_by_article(clustering_edges)
     return nodes, clustering_edges
 
 
 def structural_similarity_matrix(edges: list) -> np.ndarray:
-    """Jaccard index between hyperedges' member sets. O(m^2); fine at our
-    scale (m in the hundreds to low thousands)."""
+    """Paper-frequency-weighted Jaccard between hyperedges' member sets.
+    O(m^2); fine at our scale.
+
+    Correction (second external review): an earlier version weighted by
+    edge-frequency IDF (`log(n_edges/df(v))`), which barely reduced
+    paper-identity bias, because the real driver isn't hub NODES in
+    general — it's a single hub node PER PAPER (that paper's central
+    method node), which co-occurs with nearly all of that paper's edges
+    regardless of what they're actually about. Verified directly: one
+    sample article had 39 clustering-eligible edges, 38 of which shared
+    the same method node. Edge-frequency IDF barely touches this because
+    the hub node's edge-count IS mostly "how many edges this one paper
+    contributed", not a generic popularity signal.
+
+    Fix, corrected once during implementation: weight each member `v` by
+    `w(v) = log(1 + n_papers(v))`, where `n_papers(v)` is the number of
+    DISTINCT ARTICLES whose edges mention `v`. An initial version used the
+    reciprocal, `1/log(1+n_papers(v))` — this was a sign error: it gave
+    single-paper-specific nodes (a paper's own idiosyncratic hub) MORE
+    weight, not less, and measurably made paper-identity NMI worse (0.612
+    vs 0.566 unweighted) before being caught and inverted. The corrected
+    direction downweights nodes specific to one paper and upweights nodes
+    that genuinely recur across many different papers (real shared
+    concepts), which is the intended effect.
+    """
     m = len(edges)
     member_sets = [set(e["members"]) for e in edges]
+
+    node_papers = defaultdict(set)
+    for e in edges:
+        aid = e.get("provenance", {}).get("article_id")
+        if aid is None:
+            continue
+        for v in e["members"]:
+            node_papers[v].add(aid)
+    weight = {v: np.log(1 + len(papers)) for v, papers in node_papers.items()}
+
     sim = np.zeros((m, m))
     for i in range(m):
         sim[i, i] = 1.0
         for j in range(i + 1, m):
-            inter = len(member_sets[i] & member_sets[j])
-            if inter == 0:
+            inter = member_sets[i] & member_sets[j]
+            if not inter:
                 continue
-            union = len(member_sets[i] | member_sets[j])
-            s = inter / union
+            union = member_sets[i] | member_sets[j]
+            w_inter = sum(weight.get(v, 1.0) for v in inter)
+            w_union = sum(weight.get(v, 1.0) for v in union)
+            s = w_inter / w_union if w_union > 0 else 0.0
             sim[i, j] = s
             sim[j, i] = s
     return sim
@@ -424,6 +540,47 @@ def attach_leftover_nodes(nodes: list, all_edges: list, assignment: dict,
     return assignment, provenance
 
 
+def place_articles_via_presents(nodes: list, all_edges: list, node_lookup: dict,
+                                 assignment: dict, provenance: dict, n_levels: int) -> None:
+    """Deterministically place `article` nodes by inheriting the full level
+    path of the method/technique node they present, via `presents` edges
+    (arity 2: {article, method}).
+
+    Rationale (from the same review that found the paper-frequency
+    weighting fix): `presents` contributes nothing to similarity (its
+    arity-2 structure makes its Jaccard overlap with anything else nearly
+    always zero) and is excluded from clustering entirely. But articles
+    still need *some* principled placement that isn't the generic
+    majority-vote post-hoc attachment (which would route them through
+    `cites` and reopen the coherence-probe circularity). Since the
+    presented method has already been placed by real clustering (it
+    appears in `addresses`/`solves`/`uses_*`/`evaluated_on` edges), the
+    article can deterministically inherit that placement. Tagged with
+    `provenance="presents"` — not `"primary"` (it wasn't clustered) and
+    not `"cites"` (it doesn't touch the coherence probe's held-out
+    relation), which is exactly the distinction the relaxed probe
+    assertion (`provenance != "cites"`) is designed to allow.
+
+    Modifies `assignment` and `provenance` in place.
+    """
+    presents_edges = [e for e in all_edges if e["relation_type"] == "presents"]
+    for e in presents_edges:
+        members = e["members"]
+        article_ids = [m for m in members if node_lookup.get(m, {}).get("type") == "article"]
+        method_ids = [m for m in members if m not in article_ids]
+        if not article_ids or not method_ids:
+            continue
+        article = article_ids[0]
+        if assignment.get(article, [None])[0] is not None:
+            continue  # already placed (e.g. multiple presents edges; keep first)
+        for method in method_ids:
+            method_path = assignment.get(method)
+            if method_path is not None and method_path[0] is not None:
+                assignment[article] = list(method_path)
+                provenance[article] = "presents"
+                break
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data", default="data/tkh_collection10.json")
@@ -481,8 +638,13 @@ def main():
 
     all_edges_for_snapshot = [
         e for e in data["hyperedges"]
-        if (args.cutoff is None or (e.get("year") is not None and e["year"] <= args.cutoff))
+        if (args.cutoff is None or (e.get("provenance", {}).get("article_year") is not None
+                                     and e["provenance"]["article_year"] <= args.cutoff))
     ]
+
+    place_articles_via_presents(nodes, all_edges_for_snapshot, node_lookup, assignment, provenance, len(levels))
+    n_via_presents = sum(1 for p in provenance.values() if p == "presents")
+    print(f"Articles placed via presents (deterministic, inherits presented method's cluster): {n_via_presents}")
     assignment, provenance = attach_leftover_nodes(
         nodes, all_edges_for_snapshot, assignment, provenance, len(levels)
     )
