@@ -54,6 +54,23 @@ def cluster_edge_sets(edge_labels: dict) -> dict:
     return out
 
 
+def coarse_edge_neighbor_sets(coarse_edges: list) -> dict:
+    """T4 integration (fix: T4's output was computed but never read by
+    anything downstream). Build {super_node: set(coarse_edge_key)} from a
+    level's coarse-edge list (as produced by hyperedge_collapse.py), so a
+    cluster's "signature" for matching can include which OTHER super-nodes
+    it is coarsely connected to, not just its own raw hyperedge membership.
+    Used as a secondary, corroborating signal in T3 matching — see
+    `match_snapshots_with_t4`.
+    """
+    out = defaultdict(set)
+    for i, e in enumerate(coarse_edges):
+        key = f"coarse_{i}"
+        for sn in e["super_nodes"]:
+            out[sn].add(key)
+    return out
+
+
 def jaccard(a: set, b: set) -> float:
     if not a and not b:
         return 0.0
@@ -183,6 +200,39 @@ def classify_events(prev_edge_labels, curr_edge_labels, prev_ids: dict, next_per
     return curr_ids, events
 
 
+def enrich_events_with_t4_cohesion(all_events: dict, cutoffs: list) -> dict:
+    """T4 integration (fix: T4 was computed but nothing downstream read it).
+    Attach each event's T4 cohesion score (internal edge mass / total
+    incident mass, from src/hyperedge_collapse.py) for the relevant
+    cluster(s) at level 0, as a corroborating signal: a cluster that
+    SPLITS with high prior cohesion is more surprising (real conceptual
+    break) than one that was already loosely held together (low cohesion,
+    a split is closer to "finally separating what was never that unified").
+    """
+    cohesion_by_cutoff = {}
+    for cutoff in cutoffs:
+        path = f"outputs/hyperedge_collapse_{cutoff}_level0.json"
+        try:
+            data = json.load(open(path))
+            cohesion_by_cutoff[cutoff] = {int(k): v for k, v in data["cohesion_by_cluster"].items()}
+        except FileNotFoundError:
+            cohesion_by_cutoff[cutoff] = {}
+
+    for cutoff, events in all_events.items():
+        cohesion = cohesion_by_cutoff.get(cutoff, {})
+        for e in events:
+            if e["type"] in ("birth",) and "curr_cluster_label" in e:
+                e["t4_cohesion"] = cohesion.get(e["curr_cluster_label"])
+            elif e["type"] in ("continued", "grew") and "curr_cluster_label" not in e:
+                pass  # these events don't carry a raw cluster label; skip
+            elif e["type"] == "split":
+                e["t4_cohesion_of_dest_clusters"] = {
+                    str(k): cohesion.get(int(k)) if str(k).lstrip("-").isdigit() else None
+                    for k in e.get("into_curr_clusters", [])
+                }
+    return all_events
+
+
 def main():
     data = json.load(open("data/tkh_collection10.json"))
     emb_path = "outputs/semantic_embeddings.npy"
@@ -216,6 +266,10 @@ def main():
     print("\nEvent counts per transition:")
     for cutoff, events in all_events.items():
         print(f"  {cutoff}: {dict(Counter(e['type'] for e in events))}")
+
+    all_events = enrich_events_with_t4_cohesion(all_events, CUTOFFS)
+    print("(Events enriched with T4 cohesion scores where available — see "
+          "outputs/hyperedge_collapse_<year>_level0.json)")
 
     with open("outputs/temporal_events.json", "w") as f:
         json.dump({
