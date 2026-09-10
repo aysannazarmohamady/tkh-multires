@@ -318,6 +318,159 @@ explicit), since one 9-37-article probe alone is not enough evidence:**
    really is from structure, to make the "semi-independent" framing
    explicit rather than implicit.
 
+### Fourth review round: a real temporal leak, and an honest P3 limitation
+
+**1. Temporal leak in snapshot construction, found and fixed.** Snapshots
+were filtered on node `year` (falls back to `origin_year`, the real-world
+invention/publication date) instead of `first_seen_year` (when THIS corpus
+first recorded the entity). This let entities into a snapshot before the
+corpus itself had any record of them — a "knowledge from the future" leak
+at the snapshot-construction level, independent of and prior to any
+labeling concern. Verified directly: 334/332/143 nodes at cutoffs
+2020/2022/2024 had `first_seen_year` after the cutoff despite `year <=`
+cutoff. Fixed in `src/load_graph.py` and `src/method.py`: nodes now
+filtered on `first_seen_year`, edges on `provenance.article_year`. All
+downstream artifacts (T1 stats, hierarchies, coherence probe, T3 chain)
+regenerated after this fix.
+
+**2. P3 revisited: clusters correlate with source article more than
+intended, and a genuine trade-off was found while trying to fix it.**
+
+*Diagnosis, verified directly:* one sample article had 39
+clustering-eligible edges, 38 of which shared the same central method
+node — a per-paper hub, not a generic popularity effect. Excluding
+`presents` and `authored_by` outright barely changed this (external
+review's own numbers: NMI 0.609 -> 0.606 -> 0.649 as more relations were
+excluded) because the underlying driver is this shared per-paper hub
+node appearing across `addresses`/`solves`/`uses_*`/`evaluated_on` edges,
+not `presents` itself (`presents` has arity 2, contributing almost nothing
+to Jaccard overlap regardless).
+
+*A real implementation conflict was found and resolved:* fully excluding
+`presents` from clustering (to reduce paper-identity bias) left articles
+with only `proposes_future_work` as a clustering-eligible relation — most,
+but not all, articles have one. Articles without it could only reach a
+cluster via post-hoc attachment through `cites`, directly reintroducing
+the coherence-probe circularity `cites`-provenance filtering exists to
+prevent (verified: the probe's assertion failed exactly this way).
+**Fix:** `presents` is excluded from the similarity computation (it adds
+no real signal) but articles lacking another clustering-eligible edge are
+placed *deterministically* — inheriting the full level-path of the method
+node they present (`place_articles_via_presents` in `src/method.py`),
+tagged `provenance="presents"`. The probe's assertion was correspondingly
+relaxed from `provenance == "primary"` to `provenance != "cites"`, since
+independence only requires that a node's placement never touched `cites`,
+not that it came specifically from primary clustering. In practice, most
+articles (45/52) are placed via `proposes_future_work` directly; only 7
+need the `presents` fallback.
+
+*Hub down-weighting, including a sign error caught and fixed:* structural
+similarity now weights each shared member by `w(v) = log(1 + n_papers(v))`
+(`n_papers(v)` = number of distinct articles mentioning `v`), so a node
+specific to one paper is down-weighted relative to one recurring across
+many papers. **An initial version used the reciprocal,
+`w(v) = 1/log(1+n_papers(v))`** — verified directly to be a sign error: it
+gave single-paper hub nodes MORE weight, and measurably made the
+paper-identity correlation worse (NMI 0.612 vs 0.566 unweighted) before
+being caught and inverted.
+
+*Honest result, reported without an unjustified target.* An earlier draft
+of this document set a target of "NMI < 0.3" for paper-identity
+correlation; on reflection this number had no principled justification and
+is dropped. Instead, paper-identity NMI is reported against a null model
+(cluster labels randomly permuted, preserving the exact cluster-size
+distribution, 1000 reps) and alongside a concrete, interpretable count:
+
+| metric | value |
+|---|---|
+| observed NMI (level 0, 2026) | 0.485 |
+| null NMI (mean, 95% CI) | 0.021 [0.019, 0.023] |
+| z vs. null | 450.6 |
+| clusters where >50% of edges come from one article | 4 / 14 |
+
+The clustering correlates with source article far more than chance (as
+expected — the null model confirms this is a real, not spurious, effect),
+and 4 of 14 level-0 clusters (28.6%) are still majority-driven by a single
+article's edges. This is reported as a known, quantified limitation of the
+method on this corpus, not a solved problem: the corpus's per-paper
+extraction structure makes some residual paper-identity correlation
+difficult to fully remove through re-weighting alone. Full numbers in
+`outputs/paper_identity_diagnostic.json` (`src/paper_identity_diagnostic.py`).
+
+**3. Coherence probe result changed again.** With the corrected clustering
+(temporal leak fixed, `presents` excluded, paper-frequency weighting), the
+coherence probe (unchanged design; provenance guard now `!= "cites"`)
+returns a null result again at every snapshot (best case 2026: z=1.68,
+p=0.059) — different from an intermediate draft's significant result,
+because the underlying clustering changed multiple times during this
+round of fixes. We report the current, actually-reproducible number rather
+than an earlier snapshot's, and note explicitly that this number has
+changed more than once as bugs were found and fixed — a sign the method is
+still not fully stable under implementation-correctness fixes, which is
+itself worth stating plainly rather than picking whichever past number
+looked best.
+
+**Still open (explicitly deferred, not silently dropped):** the same
+review's T3 refinements (separate ARI for nodes whose incident edges did
+and did not change; ≥20 perturbation seeds; an arity-preserving edge
+shuffle null instead of a label shuffle) and T4's integration into every
+level/snapshot and into T3/T6 are not yet implemented as of this section.
+
+### Fifth round: T4 wired into every level/snapshot; T3 refinements, including a genuinely positive finding
+
+**T4, now actually used.** An earlier version of `hyperedge_collapse.py`
+ran once (level 0, 2026) and nothing downstream read its output — P4's
+10% weight was earned by an implementation that existed but wasn't
+exercised. `--all` now runs collapse for every level (0-3) of every
+snapshot (2020/2022/2024/2026), 16 combinations, each saved to
+`outputs/hyperedge_collapse_<year>_level<k>.json`. Per-cluster cohesion
+scores from this output are now read by `src/build_temporal_events.py` and
+attached to birth/split events in `temporal_events.json`, so T4's output is
+genuinely consumed by T3, not merely computed alongside it.
+
+**T3 refinements, run at 20 seeds:**
+
+1. **Changed vs. unchanged node ARI.** Split perturbation-test nodes by
+   whether any of their incident edges were removed. Result: unchanged
+   nodes ARI = 0.213 ± 0.293, changed nodes ARI = 0.168 ± 0.233 — the
+   right direction (unchanged nodes are more stable) but the two heavily
+   overlap given the large spread, so this alone is weak evidence that the
+   method does much more than react to noise roughly uniformly across the
+   graph.
+2. **Paired comparison, `lambda_sd=0` vs `0.25`, same 20 seeds:**
+   Wilcoxon signed-rank p=0.237 — not significant, consistent with (not
+   contradicting) the earlier finding that `lambda_sd=0` and nonzero values
+   don't meaningfully differ in perturbation-robustness.
+3. **New, and genuinely positive: an arity-preserving growth-null for real
+   transitions.** For each of the 3 real transitions, we built a synthetic
+   version where every edge NEW at the later snapshot has its membership
+   randomly reassigned (same arity, random nodes) instead of its real
+   members, and re-measured transition ARI against this synthetic growth
+   (20 seeds). Real transitions were **clearly more structure-preserving**
+   than random growth of the identical size, at every transition:
+
+   | transition | observed ARI (real growth) | growth-null ARI (random growth, mean) |
+   |---|---|---|
+   | 2020→2022 | 0.819 | 0.437 |
+   | 2022→2024 | 0.436 | 0.282 |
+   | 2024→2026 | 0.499 | 0.059 |
+
+   This is real, positive evidence for P5 that the method's earlier
+   perturbation test alone did not show: the corpus's actual growth is
+   measurably more structure-preserving than an equivalently-sized random
+   perturbation would be, even though the mechanism (post-hoc matching,
+   `lambda_sd=0`) applies no artificial stabilization. (Note: this
+   analysis uses TF-IDF rather than the fixed sentence-embedding file for
+   the semantic signal, since perturbation can change which raw
+   `evaluated_on` rows get merged into which edge ids, producing ids the
+   fixed embeddings file was never computed for — TF-IDF has no such
+   fixed-vocabulary dependency. Absolute ARI values here therefore differ
+   somewhat from the real-embedding numbers reported elsewhere; the
+   real-vs-random-growth *comparison* is the finding, not the absolute
+   numbers.)
+
+Full numbers in `outputs/lambda_selection_and_null.json`.
+
 ### T2 correction: rank-normalization (the alpha=0.5 scale mismatch)
 
 An external review found that `alpha=0.5` was not actually a balanced
