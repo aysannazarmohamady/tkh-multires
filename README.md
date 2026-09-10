@@ -5,7 +5,7 @@ hyperedge-aware hierarchical clustering with temporal stability tracking.
 
 ## Status
 
-🚧 Work in progress.
+Work in progress.
 
 ## Task checklist
 
@@ -40,17 +40,29 @@ hyperedge-aware hierarchical clustering with temporal stability tracking.
         snapshot, not over isolated nodes that aren't in any hyperedge yet.
   - [x] Coherence probe (bibliographic coupling between articles, with a
         provenance assertion closing the earlier leak) — see
-        `src/coherence_probe.py` and `report.md`, "Third review round".
-        Result: a null result (no significant evidence at 2024 or 2026;
-        undefined at 2020 due to too few articles) — reported honestly.
-- [x] T3 — Temporal coupling — see `src/temporal_reg.py` (mechanism +
-      decisive perturbation test) and `src/build_temporal_events.py`
-      (event log). Mechanism: temporal regularization (lambda=0.2) on the
-      hyperedge distance matrix. Real-transition ARI improves 0.424 -> 0.806,
-      but under 10% perturbation it is slightly *worse* than no
-      regularization (0.273 vs 0.295) — reported honestly as the
-      mechanism's real cost/limit, not hidden. `outputs/temporal_events.json`
-      states ~0.28-0.30 ARI as the reliability ceiling for any single event.
+        `src/coherence_probe.py` and `report.md`, "Third review round" and
+        "T2 correction". **Result updated** after the rank-normalization
+        fix changed the clustering: significant coherence signal at 2024
+        (z=2.84, p=0.0068) and 2026 (z=2.59, p=0.011); not significant at
+        2020/2022 (too few articles). An earlier draft reported this as a
+        null result under the pre-fix clustering — flagged and corrected,
+        not silently updated.
+- [x] T3 — Temporal coupling — see `src/temporal_reg.py` (mechanism sweep +
+      decisive perturbation test + null model) and
+      `src/build_temporal_events.py` (event log). **We found and fixed a
+      circularity bug in our own stability metric**: an initial
+      regularization mechanism (lambda=0.2) directly manipulated the same
+      ARI-vs-previous-snapshot metric used to evaluate it, and separately
+      bypassed the rank-normalization fix below. After fixing both and
+      re-selecting lambda by perturbation-ARI (not transition-ARI, which
+      the mechanism manipulates), the evidence-based choice is
+      **lambda=0 — no regularization**: it has the highest
+      perturbation-ARI (0.457) of any value tested, confirmed by a null
+      model (shuffled prior labels) that is numerically identical to the
+      observed result at lambda=0, as it should be. Real cross-snapshot
+      ARI (0.43-0.53, mean 0.49) is reported honestly; identity is tracked
+      via post-hoc matching, not artificially enforced. Full account in
+      `report.md`, "T3 — Temporal coupling: circularity found and fixed."
 - [x] T4 — Hyper-edge collapse — see `src/hyperedge_collapse.py`. Genuine
       hypergraph-native coarsening (arity>=3 relations kept as hyperedges
       between super-nodes, not clique-expanded); a `clique_expand=True`
@@ -150,17 +162,21 @@ result line per snapshot file.
 python src/temporal_reg.py
 ```
 
-Runs the decisive perturbation-robustness test for the T3 stabilization
-mechanism (see `report.md`, "T3 — Temporal coupling") and saves
-`outputs/perturbation_robustness_check.json`.
+Runs the lambda sweep (in units of the distance distribution's std),
+selects `lambda_sd` by perturbation-ARI (not transition-ARI, which an
+earlier version showed the regularizer directly manipulates), and runs the
+shuffled-prior null model. Saves
+`outputs/lambda_selection_and_null.json`. Current evidence-based choice:
+`lambda_sd=0` (no regularization).
 
 ```bash
 python src/build_temporal_events.py
 ```
 
-Runs the `lambda=0.2` temporally-regularized chain across all 4 snapshots
-and produces `outputs/temporal_events.json` (persistent cluster identity +
-birth/growth/merge/split/dissolution event log, level 0).
+Runs the chain across all 4 snapshots at the selected `lambda_sd=0` and
+produces `outputs/temporal_events.json` (persistent cluster identity +
+birth/growth/merge/split/dissolution event log, level 0, via post-hoc
+hyperedge-Jaccard matching only).
 
 ```bash
 python src/hyperedge_collapse.py --hierarchy outputs/hierarchy.json --level 0
