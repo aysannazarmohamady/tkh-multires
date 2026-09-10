@@ -260,23 +260,34 @@ themselves — implemented as `src/coherence_probe.py`, which asserts every
 article's `provenance == "primary"` before running, so a future regression
 that re-introduces the leak fails loudly instead of silently.
 
-**Results (permutation test, n=10,000), run on the actual clustering
-output:**
+**Results (permutation test, n=10,000), re-run after the rank-normalization
+fix (see below) changed the underlying clustering:**
 
 | snapshot | articles | within-cluster pairs | observed | null sd | z | p |
 |---|---|---|---|---|---|---|
-| 2020 | 9 | 0 | — | — | — | undefined (no within-cluster article pairs) |
-| 2024 | 25 | 87 | 0.0103 | 0.0068 | 1.52 | 0.076 |
-| 2026 | 37 | 126 | -0.0014 | 0.0060 | -0.23 | 0.56 |
+| 2020 | 9 | 1 | -0.0138 | 0.0321 | -0.44 | 1.00 |
+| 2022 | 14 | 13 | 0.0102 | 0.0100 | 1.01 | 0.155 |
+| 2024 | 25 | 61 | 0.0167 | 0.0059 | **2.84** | **0.0068** |
+| 2026 | 37 | 98 | 0.0135 | 0.0052 | **2.59** | **0.0107** |
 
-**Honest interpretation:** this is a null result — no statistically
-significant evidence that co-clustered articles share more references than
-chance, at either snapshot where the test is even defined. We report this
-directly rather than hiding it: per the task's own framing, "a modest method
-honestly and independently evaluated" is preferred over a method whose
-numbers can't be trusted. With only 9-37 articles, this probe is
-underpowered (only large effects would be detectable) — it is one probe,
-not the whole coherence story.
+**Updated honest interpretation — no longer a null result.** An earlier
+draft of this document reported a null result here, based on the
+pre-rank-normalization clustering. After fixing the rank-normalization bug
+(below), which changed which articles land in the same clusters, re-running
+the identical probe now finds a **statistically significant** coherence
+signal at 2024 (z=2.84, p=0.0068) and 2026 (z=2.59, p=0.011): co-clustered
+articles share references more than the degree-preserving null predicts.
+2020 and 2022 remain non-significant, consistent with too few articles
+(9 and 14) for this probe to reliably detect an effect either way. We flag
+this reversal explicitly rather than quietly updating the number: the
+direction changed because a real bug fix changed the clustering, not
+because of any adjustment to the probe itself, and the same
+`provenance == "primary"` circularity guard applies unchanged.
+
+**Caveat, stated directly:** with only 25-37 articles even at the
+significant snapshots, this remains one probe on a small population, not
+proof of general coherence — but it is no longer accurate to describe it as
+a null result.
 
 **Correction on a duplicate-count claim from the prior round:** we had
 originally cited "122 duplicate `cited_work` entities" from a review by
@@ -306,104 +317,6 @@ explicit), since one 9-37-article probe alone is not enough evidence:**
    an upper bound on how "independent" any embedding-based semantic signal
    really is from structure, to make the "semi-independent" framing
    explicit rather than implicit.
-
-### T3 — Temporal coupling: mechanism, its real cost, and honest limits
-
-**Why a stabilization mechanism was needed, not just post-hoc matching.**
-Two findings made "just match clusters after independently re-clustering
-each snapshot" insufficient on its own:
-- Cross-snapshot ARI at level 0 (no regularization) was 0.37-0.45 — real
-  reshuffling, not the "does not reshuffle every time" behavior the task
-  asks for.
-- `alpha` sensitivity: ARI between `alpha=0.3` and `alpha=0.7` on the
-  *identical* 2026 snapshot was 0.213 — lower than the worst real
-  cross-snapshot ARI. An arbitrary hyperparameter choice moves the
-  hierarchy more than two years of real corpus growth does. (Also
-  confirmed: `alpha=1.0` collapses level 0 to a single cluster,
-  `[1, 1, 117, 702]`, an outright P2 violation — empirical evidence for why
-  a purely-structural method is unusable given this corpus's 2-3% Jaccard
-  density, which is the concrete justification for the P3 resolution.)
-- A baseline "pick the level-0 cut height that best matches the previous
-  snapshot" (operating only on which height to cut, not the distance
-  matrix itself) barely moved cross-snapshot ARI: 0.424 -> 0.449. This
-  ruled out "which height to cut" as the source of instability.
-
-**Mechanism chosen: temporal regularization on the hyperedge distance
-matrix.** For snapshot `t > 2020`, before running HAC: for every pair of
-hyperedges that both existed in snapshot `t-1` and were in the same
-level-0 cluster there, reduce their distance by a fixed `lambda`, clipped
-to `[0, inf)`. New edges are untouched. `lambda=0` recovers the
-unregularized method exactly. Implemented in `src/temporal_reg.py`.
-
-**Effect on real transitions (mean level-0 ARI across the 3 transitions):**
-
-| lambda | mean ARI (real transitions) |
-|---|---|
-| 0 | 0.424 |
-| 0.1 | 0.722 |
-| **0.2** | **0.806** |
-| 0.4 | 0.815 |
-
-This is a large improvement, and it comes at negligible cost to
-within-snapshot fit (intra-cluster distance on the *unregularized* matrix
-changes by about 1%, and level-0 cluster count stays within the 10-15
-target at every lambda tested) and actually *improves* top-2 concentration
-at 2026 (0.534 -> 0.410 at lambda=0.2). Our interpretation: the level-0
-dendrogram has several near-tied cut heights, and which one gets picked is
-close to arbitrary; regularization resolves this tie-break in favor of
-history rather than changing the underlying fit.
-
-**The decisive test, and an honest negative result.** A large ARI gain at
-near-zero apparent cost is exactly the profile of a mechanism that might
-just be locking in whatever the 2020 clustering happened to be, rather than
-genuinely stabilizing against noise. We tested this directly: run the full
-2020->2026 chain under 10% random hyperedge removal (5 seeds), compare the
-perturbed 2026 output to the unperturbed reference, for both `lambda=0` and
-`lambda=0.2`:
-
-| lambda | mean ARI under 10% perturbation (5 seeds) |
-|---|---|
-| 0.0 | 0.295 ± 0.061 |
-| 0.2 | 0.273 ± 0.079 |
-
-**`lambda=0.2` is not better under noise — it is slightly worse than
-`lambda=0`** (well within one standard deviation, so not a large effect,
-but explicitly not an improvement). This is the real, stated cost of the
-mechanism: it is a **tie-break stabilizer for consistent data, not a
-noise-robustness mechanism**. It cannot distinguish "this snapshot's
-history was arbitrary but not wrong" from "this snapshot's history was
-corrupted by the specific edges that got removed" — it reinforces whatever
-came before, correct or not. We adopt `lambda=0.2` anyway, because the task
-setting is real (not adversarial) corpus growth, where the near-0.81 ARI on
-genuine transitions is the more decision-relevant number — but we do not
-claim it as a general noise-robustness result, and `outputs/
-temporal_events.json` carries this caveat directly rather than only in
-prose here.
-
-**Event classification and its reliability ceiling.** Using the
-`lambda=0.2` chain's level-0 hyperedge-cluster labels, consecutive
-snapshots are matched via hyperedge-set Jaccard overlap (edges present in
-both snapshots only), classifying each cluster as a continuation, growth,
-merge, split, birth, dissolution, or (new) an explicit "ambiguous weak
-link" category for matches that are real but below the confidence
-threshold, rather than forcing a classification. Implemented in
-`src/build_temporal_events.py`; output in `outputs/temporal_events.json`.
-On this corpus, the observed events were births (13, at 2020, the start of
-the chain), continuations, growths, and a few ambiguous weak links — no
-merges or splits were observed in this run, which we report as-is rather
-than searching for a threshold that would produce some. Given the
-perturbation-test result above, **~0.28-0.30 ARI is the honest reliability
-ceiling for any single event in this log**: some fraction of "continued"
-classifications are plausibly arbitrary tie-breaks carried forward by the
-regularization rather than real conceptual continuity, and the report does
-not claim otherwise.
-
-**Deliberately separated from T1/T2/T6 artifacts.** `outputs/hierarchy_*.json`
-(used and verified for T1, T2, and the T6 coherence probe) are produced
-with `lambda=0` and are untouched by this section. `temporal_events.json`
-uses the separate `lambda=0.2` chain. This keeps the already-verified
-non-temporal artifacts stable while still giving T3 a fair mechanism to
-evaluate — the two are not silently mixed.
 
 ### T2 correction: rank-normalization (the alpha=0.5 scale mismatch)
 
@@ -480,6 +393,98 @@ grounded a coarse relation, and the distinction between e.g. a `(1,1,8)`
 endpoint spread and a `(3,3,4)` spread landing in the same 3 super-nodes.
 The multiplicity vector is stored specifically so this is at least
 recoverable, not silently discarded.
+
+### T3 — Temporal coupling: circularity found and fixed by us
+
+**Why a stabilization mechanism was investigated in the first place.**
+Cross-snapshot ARI at level 0 with no intervention was 0.37-0.45 (later
+0.43-0.53 after the rank-normalization fix below) — real reshuffling.
+Separately, `alpha` sensitivity was measured directly: ARI between
+`alpha=0.3` and `alpha=0.7` on the identical 2026 snapshot was 0.213, lower
+than the worst real cross-snapshot ARI, and `alpha=1.0` collapsed level 0
+to `[1, 1, 117, 702]` (a P2 violation) — concrete evidence that a purely
+structural signal is unusable given this corpus's 2-3% Jaccard density,
+which is why P3's structure+semantics combination matters at all.
+
+**A regularization mechanism was built, and initially looked very good —
+too good.** The mechanism (`src/temporal_reg.py`): for snapshot `t > 2020`,
+reduce the distance between hyperedge pairs that were co-clustered at
+`t-1` by `lambda`, before running HAC. An initial sweep found `lambda=0.2`
+raised mean cross-snapshot ("transition") ARI from 0.424 to 0.806 at
+negligible apparent cost.
+
+**We found and neutralized a circularity problem in our own T3 design
+before it reached this report as a final claim — the same class of hazard
+§6 asks the coherence probe to avoid, occurring instead in the stability
+metric.** Two compounding defects, found on our own re-audit:
+
+1. **The metric was circular.** The regularizer directly reduces the
+   distance of pairs that were co-clustered at `t-1`, and "stability" was
+   then measured as ARI against that same `t-1` partition. The mechanism
+   was optimizing the exact quantity used to evaluate it — a large
+   apparent improvement could not fail to appear, independent of whether
+   it reflected anything real about corpus evolution.
+2. **A scale bug compounded it.** `temporal_reg.run_chain` computed its
+   similarity manually (`sim = alpha*s_struct + (1-alpha)*s_sem` on raw,
+   non-rank-normalized matrices), bypassing the rank-normalization fix
+   already applied to `combined_distance_matrix` elsewhere in
+   `src/method.py`. Separately, `lambda=0.2` was measured to be ~2.5
+   standard deviations of the actual distance distribution (mean 0.848, sd
+   0.081) — not a soft prior but large enough to clip most historical
+   pairs to near-zero distance, re-imposing the previous dendrogram almost
+   verbatim (lock-in, not smoothing).
+
+**Fix and re-decision, evidence-based rather than assumed:**
+1. `run_chain` now calls the actual (rank-normalized) `combined_distance_matrix`
+   — no more bypass.
+2. `lambda` is now expressed in units of the distance distribution's own
+   std (`lambda_sd`), swept over `{0, 0.1, 0.25, 0.5}`.
+3. **Selection is by perturbation-ARI, not transition-ARI** — specifically
+   because the regularizer manipulates transition-ARI directly, so using
+   it to choose `lambda` would keep the circularity. Result:
+
+   | lambda_sd | mean perturbation-ARI (10% edge removal, 5 seeds) |
+   |---|---|
+   | **0.0** | **0.457** |
+   | 0.1 | 0.356 |
+   | 0.25 | 0.382 |
+   | 0.5 | 0.330 |
+
+   `lambda_sd=0` has the *highest* perturbation-ARI of any value tested —
+   every nonzero regularization strength was worse under real noise. This
+   independently confirms an earlier, cruder perturbation test (0.273 vs
+   0.295 at the old, buggy `lambda=0.2` scale) that had already pointed the
+   same direction.
+4. **Null model added:** the same chain with the previous snapshot's edge
+   labels randomly shuffled before regularization is applied. At the
+   selected `lambda_sd=0`, this null is — correctly — numerically identical
+   to the observed result (both give transition ARIs `[0.532, 0.510,
+   0.427]`, mean 0.490, 95% bootstrap CI `[0.427, 0.532]`), because
+   `lambda_sd=0` never reads the prior labels at all. This is the expected
+   sanity-check behavior, not a coincidence, and confirms the null-model
+   code itself is wired correctly for when it matters at `lambda_sd > 0`.
+   Full numbers in `outputs/lambda_selection_and_null.json`.
+
+**Decision: `lambda_sd=0` — no temporal regularization.** Cluster identity
+is tracked via post-hoc hyperedge-Jaccard matching across independently-
+clustered snapshots only (`src/build_temporal_events.py`), not artificially
+enforced. This is the "accept and report honestly" option from our original
+two-option framing, chosen over "add a stabilization mechanism" specifically
+because the mechanism we built for the second option turned out to be
+measuring itself. Real transition ARI (0.43-0.53, mean 0.49, with the
+corrected rank-normalized similarity) is reported as the actual level of
+cross-snapshot consistency.
+
+**Event classification.** Consecutive snapshots are matched via
+hyperedge-Jaccard overlap (edges present in both only), classifying each
+level-0 cluster as continuation, growth, merge, split, birth, dissolution,
+or an explicit "ambiguous weak link" for real-but-below-threshold matches.
+With `lambda_sd=0` (no artificial continuity), the event log is more varied
+than the earlier (circular) version: splits now appear, and there are more
+ambiguous weak links, consistent with an honest ARI of ~0.49 rather than
+the inflated ~0.81 the circular mechanism had produced. Output in
+`outputs/temporal_events.json`, which carries this full account as a
+`reliability_note` field, not only in this report.
 
 ### Note on scope
 
