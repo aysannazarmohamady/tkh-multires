@@ -3,6 +3,10 @@ Hugging Face Space app: upload the TKH json export, get back the two files
 needed by the main pipeline's src/method.py (--embeddings-path /
 --embeddings-order) to use real sentence-transformer embeddings instead of
 the offline TF-IDF fallback.
+
+IMPORTANT: this filtering/merging logic must stay in sync with
+src/method.py's filter_snapshot / merge_evaluated_on_by_article, or the
+embedded edge ids won't line up with what method.py looks for.
 """
 
 import json
@@ -12,7 +16,14 @@ import gradio as gr
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-EXCLUDED_FROM_CLUSTERING = {"claims"}
+try:
+    import spaces
+    GPU_DECORATOR = spaces.GPU
+except ImportError:
+    def GPU_DECORATOR(fn):
+        return fn
+
+EXCLUDED_FROM_CLUSTERING = {"claims", "authored_by"}
 HELD_OUT_FOR_COHERENCE = {"cites"}
 MODEL_NAME = "all-MiniLM-L6-v2"
 
@@ -26,21 +37,54 @@ def get_model():
     return _model
 
 
+def merge_evaluated_on_by_article(edges):
+    """Must match src/method.py's merge_evaluated_on_by_article exactly."""
+    by_article = {}
+    others = []
+    for e in edges:
+        if e["relation_type"] == "evaluated_on":
+            aid = e.get("provenance", {}).get("article_id")
+            by_article.setdefault(aid, []).append(e)
+        else:
+            others.append(e)
+    merged = []
+    for aid, group in by_article.items():
+        if len(group) == 1:
+            merged.append(group[0])
+            continue
+        seen, member_union = set(), []
+        for e in group:
+            for m in e["members"]:
+                if m not in seen:
+                    seen.add(m)
+                    member_union.append(m)
+        merged.append({
+            "id": f"h_merged_eval_{aid}",
+            "relation_type": "evaluated_on",
+            "members": member_union,
+            "provenance": group[0].get("provenance"),
+        })
+    return others + merged
+
+
 def filter_clustering_edges(data, cutoff_year=None):
     if cutoff_year:
-        nodes = [n for n in data["nodes"] if n.get("year") is not None and n["year"] <= cutoff_year]
+        nodes = [n for n in data["nodes"] if n.get("first_seen_year") is not None and n["first_seen_year"] <= cutoff_year]
         node_ids = {n["id"] for n in nodes}
         all_edges = [e for e in data["hyperedges"]
-                     if e.get("year") is not None and e["year"] <= cutoff_year
+                     if e.get("provenance", {}).get("article_year") is not None
+                     and e["provenance"]["article_year"] <= cutoff_year
                      and all(m in node_ids for m in e["members"])]
     else:
         all_edges = data["hyperedges"]
 
-    return [e for e in all_edges
-            if e["relation_type"] not in EXCLUDED_FROM_CLUSTERING
-            and e["relation_type"] not in HELD_OUT_FOR_COHERENCE]
+    clustering_edges = [e for e in all_edges
+                         if e["relation_type"] not in EXCLUDED_FROM_CLUSTERING
+                         and e["relation_type"] not in HELD_OUT_FOR_COHERENCE]
+    return merge_evaluated_on_by_article(clustering_edges)
 
 
+@GPU_DECORATOR
 def compute_embeddings(file_obj, cutoff_year):
     with open(file_obj.name) as f:
         data = json.load(f)
@@ -66,8 +110,8 @@ def compute_embeddings(file_obj, cutoff_year):
 
     status = (
         f"Embedded {len(edges)} clustering-eligible hyperedges "
-        f"(excluded: {EXCLUDED_FROM_CLUSTERING}, held out: {HELD_OUT_FOR_COHERENCE}) "
-        f"with {MODEL_NAME}. Shape: {embeddings.shape}."
+        f"(excluded: {EXCLUDED_FROM_CLUSTERING}, held out: {HELD_OUT_FOR_COHERENCE}, "
+        f"evaluated_on merged per-article) with {MODEL_NAME}. Shape: {embeddings.shape}."
     )
     return status, emb_path, order_path
 
@@ -86,9 +130,10 @@ demo = gr.Interface(
     title="TKH Hyperedge Embeddings",
     description=(
         "Upload the TKH export to compute sentence-transformer embeddings "
-        "for every clustering-eligible hyperedge (excludes `claims` and "
-        "`cites`, matching src/method.py in the main repo). Download both "
-        "output files and place them in the main repo's outputs/ folder."
+        "for every clustering-eligible hyperedge (excludes `claims`, "
+        "`authored_by`, `presents`; merges `evaluated_on` rows per article; "
+        "matching src/method.py in the main repo). Download both output "
+        "files and place them in the main repo's outputs/ folder."
     ),
 )
 
