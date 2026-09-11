@@ -9,7 +9,11 @@ Work in progress.
 
 ## Task checklist
 
-- [x] T1 — Load and describe the evolving graph
+- [x] T1 — Load and describe the evolving graph. Uses
+      `eff_first_seen = min(node's own first_seen_year, earliest incident
+      edge's article_year)` for snapshot membership (fixes 17
+      export-inconsistent nodes, e.g. NequIP; `dropped_partial_edges` is
+      now 0 at every cutoff).
 - [x] Literature review (prep for T2) — see `literature_review.md`
 - [ ] T2 — Method and formal statement (Deliverable 0)
   - [x] Deliverable 0 draft (formal problem statement) — see `report.md`
@@ -56,22 +60,20 @@ Work in progress.
         structure-preserving than equivalent-sized random growth at every
         transition (e.g. 2024→2026: observed ARI 0.499 vs. growth-null
         0.059) — genuinely positive evidence for P5 not previously shown.
-- [x] T3 — Temporal coupling — see `src/temporal_reg.py` (mechanism sweep +
-      decisive perturbation test + null model) and
-      `src/build_temporal_events.py` (event log). **We found and fixed a
-      circularity bug in our own stability metric**: an initial
-      regularization mechanism (lambda=0.2) directly manipulated the same
-      ARI-vs-previous-snapshot metric used to evaluate it, and separately
-      bypassed the rank-normalization fix below. After fixing both and
-      re-selecting lambda by perturbation-ARI (not transition-ARI, which
-      the mechanism manipulates), the evidence-based choice is
-      **lambda=0 — no regularization**: it has the highest
-      perturbation-ARI (0.457) of any value tested, confirmed by a null
-      model (shuffled prior labels) that is numerically identical to the
-      observed result at lambda=0, as it should be. Real cross-snapshot
-      ARI (0.43-0.53, mean 0.49) is reported honestly; identity is tracked
-      via post-hoc matching, not artificially enforced. Full account in
-      `report.md`, "T3 — Temporal coupling: circularity found and fixed."
+- [x] T3 — Temporal coupling — see `src/build_temporal_events.py` (event
+      log, built DIRECTLY from the shipped hierarchies — an earlier version
+      used a separate TF-IDF re-clustering that disagreed with the
+      delivered hierarchies and mis-joined T4 cohesion scores; fixed) and
+      `src/t3_perturbation_real_embeddings.py` (authoritative stability
+      test: real MiniLM embeddings, post-merge edge perturbation, 100
+      seeds, corrected per-transition statistical test). `lambda_sd=0` (no
+      regularization) is used for matching; identity is tracked via
+      post-hoc hyperedge-Jaccard matching. **Honest result: only the
+      2022→2024 transition is robustly more stable than 10%-edge-removal
+      noise (p=0.03); 2020→2022 and 2024→2026 are not distinguishable from
+      noise by this test** — a partial, not uniform, P5 result. Full
+      account in `report.md`, "T3 — authoritative perturbation-robustness
+      result."
 - [x] T4 — Hyper-edge collapse — see `src/hyperedge_collapse.py --all`.
       Now wired into every level (0-3) of every snapshot (16 combinations,
       `outputs/hyperedge_collapse_<year>_level<k>.json`), and its
@@ -81,8 +83,32 @@ Work in progress.
       between super-nodes, not clique-expanded); a `clique_expand=True`
       mode is also implemented for direct projection-loss comparison.
       Hand-verified against a real arity-20 hyperedge.
-- [ ] T5 — Labelling with measured faithfulness
-- [ ] T6 — Evaluation
+- [x] T5 — Labelling with measured faithfulness — see
+      `src/prepare_labelling_input.py` (strict separation of labeller
+      input from the independent faithfulness signal) and `report.md`,
+      "T5". Pilot on 4/14 level-0 clusters: 2 faithful, 2 partial
+      overclaims (both from over-specific inference off the raw member
+      list, not from the general topic description). Full-scale run
+      across all clusters/snapshots is the natural next step.
+- [x] T6 — Evaluation
+  - [x] Coherence probe (see above)
+  - [x] Stability (see T3 above)
+  - [x] Label faithfulness (pilot, see T5 above)
+  - [x] Extrinsic utility — see `src/extrinsic_eval.py` and `report.md`,
+        "T6 — Extrinsic utility". Label-free (mean-TF-IDF cluster
+        representation), beam search vs. flat baseline vs. null hierarchy,
+        with DETERMINISTIC, tie-aware ranking (an earlier version's
+        apparent hierarchy advantage was an artifact of Python's hash-
+        randomization breaking ties among zero-similarity candidates —
+        found and fixed). **Corrected result: a null, uninformative
+        comparison** — hierarchical finds 0/47 targets, flat finds 2/47,
+        because TF-IDF gives zero lexical overlap between natural-language
+        questions and short technical target names for 45/47 targets. A
+        denser embedding scorer is needed before this comparison says
+        anything about the hierarchy's value.
+  - [x] `outputs/metrics.json` — assembled from all of the above (via
+        `src/assemble_metrics.py`), plus an explicit `verified_vs_assumed`
+        section.
 - [ ] T7 — Write-up
 
 ## Setup
