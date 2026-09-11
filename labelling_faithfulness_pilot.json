@@ -1,0 +1,41 @@
+{
+  "cutoff": 2026,
+  "level": 0,
+  "pilot_note": "Small pilot (4 of 14 level-0 clusters) demonstrating the full T5 pipeline. CORRECTED after external review: the original judging pass only skimmed the first several claims per cluster instead of checking the full list, and missed evidence that was actually present. Both original 'partial_overclaim' verdicts were wrong. True pilot over-claim rate: 0/4. This is itself an important finding: the judging PROCESS (partial review of available evidence) was the failure, not the labels. A full-scale run must check every claim systematically (e.g. per-entity search across the full list), not skim.",
+  "clusters": [
+    {
+      "cluster_id": 3,
+      "n_members": 20,
+      "label": "Tensorial & Magnetic Atomic Cluster Expansion",
+      "gloss": "Extends the Atomic Cluster Expansion framework to represent vectorial and tensorial atomic properties\u2014including magnetic moments and charge transfer\u2014for building interatomic potentials that predict energies, forces, and torques.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Directly supported by claims describing ACE generalized to scalar/vectorial/tensorial properties with magnetic moments and charges; no unsupported specifics asserted."
+    },
+    {
+      "cluster_id": 1,
+      "n_members": 40,
+      "label": "Equivariant/Directional Message-Passing GNNs for Molecules",
+      "gloss": "Graph neural network architectures\u2014directional and SE(3)/E(3)-equivariant message passing\u2014for predicting molecular properties and DFT Hamiltonians, evaluated largely on QM9.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "CORRECTED: originally marked partial_overclaim because the QM9 claims were missed on first pass. Checking the full 44-claim list finds: 'The Message Passing Neural Network (MPNN) achieves state-of-the-art performance on all QM9 regression targets...' and 'Across all QM9 properties, the MPNN reduces the mean absolute error by 30-70%...'. QM9 evaluation is directly supported. The word 'largely' is a mild, hard-to-verify quantifier (only 2 of 44 claims are QM9-specific; most others describe DFT-Hamiltonian prediction on graphene/MoS2), worth softening in a future pass, but this is not an over-claim of an unsupported fact."
+    },
+    {
+      "cluster_id": 5,
+      "n_members": 38,
+      "label": "Machine Learning for Multiscale Computational Modeling (Survey)",
+      "gloss": "A survey-level cluster covering machine learning methods (neural networks, generative models, transfer/meta-learning) applied to multiscale computational modeling tasks such as fluid mechanics, materials microstructure, and manufacturing, along with associated challenges like data scarcity and limited extrapolation.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Consistent with claims describing ML as a surrogate/accelerant in multiscale modeling, CNN-based materials microstructure estimation, and memory/computation-cost challenges of hierarchical and concurrent modeling."
+    },
+    {
+      "cluster_id": 13,
+      "n_members": 43,
+      "label": "Differentiable Density Functional Theory (D4FT)",
+      "gloss": "Methods for a GPU-accelerated, automatically-differentiable SCF-DFT implementation (D4FT), including neural local scaling and stochastic optimization, compared against established DFT packages (GPAW, Psi4).",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "CORRECTED: originally marked partial_overclaim because this specific claim was missed on first pass. Checking the full 12-claim list finds: 'D4FT scales to carbon clusters up to C180, achieving wall-clock runtimes an order of magnitude faster (~1100s for C180) than PySCF, GPAW, Psi4, and JAX-SCF.' The GPAW/Psi4 comparison is directly supported."
+    }
+  ],
+  "over_claim_rate": 0.0,
+  "over_claim_rate_note": "CORRECTED from an earlier, wrong 2/4: 0/4 in this pilot, after checking every claim in each cluster's full list rather than skimming the first several. Sample (n=4) is still too small for a reliable rate estimate; a full-scale run with a Wilson CI is the natural next step. The real finding from this pilot is a process lesson: faithfulness judging must check every available claim systematically (e.g. per-entity search), not read a partial list and judge from impression."
+}
