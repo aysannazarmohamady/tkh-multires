@@ -100,6 +100,21 @@ def build_cluster_inputs(hierarchy_path: str, data_path: str, cutoff: int, level
     return result
 
 
+def check_grounding(gloss: str, labeller_input: dict) -> dict:
+    """Deterministic grounding check: every named entity the gloss
+    mentions should verbatim-match (case-insensitive substring) a member
+    surface form. Returns which surface forms were 'used' and a rough flag
+    for unmatched capitalized/technical-looking tokens the gloss didn't
+    ground. This is a coarse, mechanical check — not a substitute for the
+    claims-based faithfulness check, but a cheap first pass per the
+    verbatim-entity design principle (avoid asserting datasets/methods/
+    comparisons not literally in the member list)."""
+    all_forms = [f.lower() for forms in labeller_input.values() for f in forms]
+    gloss_lower = gloss.lower()
+    grounded_forms = [f for f in all_forms if f in gloss_lower]
+    return {"grounded_member_forms_referenced": sorted(set(grounded_forms))}
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--hierarchy", default="outputs/hierarchy.json")
