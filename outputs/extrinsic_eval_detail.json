@@ -1,0 +1,799 @@
+{
+  "usable_questions": [
+    "Q1",
+    "Q2",
+    "Q3",
+    "Q4",
+    "Q6",
+    "Q7",
+    "Q8",
+    "Q9",
+    "Q10",
+    "Q12",
+    "Q13",
+    "Q14"
+  ],
+  "coverage_failures": [
+    "Q5",
+    "Q11"
+  ],
+  "beam_width": 3,
+  "per_question": {
+    "Q1": {
+      "n_targets": 7,
+      "hierarchical_hit_positions": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "hierarchical_overhead": 55,
+      "flat_hit_positions": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "null_hierarchy_hit_positions_per_seed": [
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      "target_types": {
+        "MACE": [
+          "cited_work"
+        ],
+        "M3GNet": [
+          "cited_work",
+          "component",
+          "method"
+        ],
+        "CHGNet": [
+          "cited_work",
+          "component",
+          "method"
+        ],
+        "GAP": [
+          "cited_work"
+        ],
+        "NequIP": [
+          "cited_work",
+          "method"
+        ],
+        "ACE": [
+          "cited_work"
+        ],
+        "EquiformerV2": [
+          "cited_work",
+          "method"
+        ]
+      }
+    },
+    "Q2": {
+      "n_targets": 2,
+      "hierarchical_hit_positions": [
+        null,
+        null
+      ],
+      "hierarchical_overhead": 44,
+      "flat_hit_positions": [
+        null,
+        null
+      ],
+      "null_hierarchy_hit_positions_per_seed": [
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "target_types": {
+        "DeepH": [
+          "cited_work"
+        ],
+        "D4FT": [
+          "component",
+          "method"
+        ]
+      }
+    },
+    "Q3": {
+      "n_targets": 1,
+      "hierarchical_hit_positions": [
+        null
+      ],
+      "hierarchical_overhead": 54,
+      "flat_hit_positions": [
+        null
+      ],
+      "null_hierarchy_hit_positions_per_seed": [
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ]
+      ],
+      "target_types": {
+        "DeepH-E3": [
+          "method"
+        ]
+      }
+    },
+    "Q4": {
+      "n_targets": 1,
+      "hierarchical_hit_positions": [
+        null
+      ],
+      "hierarchical_overhead": 72,
+      "flat_hit_positions": [
+        null
+      ],
+      "null_hierarchy_hit_positions_per_seed": [
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ]
+      ],
+      "target_types": {
+        "VGNN": [
+          "cited_work"
+        ]
+      }
+    },
+    "Q6": {
+      "n_targets": 1,
+      "hierarchical_hit_positions": [
+        null
+      ],
+      "hierarchical_overhead": 38,
+      "flat_hit_positions": [
+        null
+      ],
+      "null_hierarchy_hit_positions_per_seed": [
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ]
+      ],
+      "target_types": {
+        "LiFlow": [
+          "method"
+        ]
+      }
+    },
+    "Q7": {
+      "n_targets": 1,
+      "hierarchical_hit_positions": [
+        null
+      ],
+      "hierarchical_overhead": 43,
+      "flat_hit_positions": [
+        null
+      ],
+      "null_hierarchy_hit_positions_per_seed": [
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ]
+      ],
+      "target_types": {
+        "symbolic regression": [
+          "cited_work",
+          "method"
+        ]
+      }
+    },
+    "Q8": {
+      "n_targets": 1,
+      "hierarchical_hit_positions": [
+        null
+      ],
+      "hierarchical_overhead": 45,
+      "flat_hit_positions": [
+        null
+      ],
+      "null_hierarchy_hit_positions_per_seed": [
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ]
+      ],
+      "target_types": {
+        "ConvLSTM": [
+          "cited_work"
+        ]
+      }
+    },
+    "Q9": {
+      "n_targets": 1,
+      "hierarchical_hit_positions": [
+        null
+      ],
+      "hierarchical_overhead": 55,
+      "flat_hit_positions": [
+        null
+      ],
+      "null_hierarchy_hit_positions_per_seed": [
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ]
+      ],
+      "target_types": {
+        "NequIP": [
+          "cited_work",
+          "method"
+        ]
+      }
+    },
+    "Q10": {
+      "n_targets": 1,
+      "hierarchical_hit_positions": [
+        null
+      ],
+      "hierarchical_overhead": 41,
+      "flat_hit_positions": [
+        null
+      ],
+      "null_hierarchy_hit_positions_per_seed": [
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ]
+      ],
+      "target_types": {
+        "SchNet": [
+          "cited_work",
+          "method"
+        ]
+      }
+    },
+    "Q12": {
+      "n_targets": 13,
+      "hierarchical_hit_positions": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "hierarchical_overhead": 54,
+      "flat_hit_positions": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "null_hierarchy_hit_positions_per_seed": [
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      "target_types": {
+        "MACE": [
+          "cited_work"
+        ],
+        "NequIP": [
+          "cited_work",
+          "method"
+        ],
+        "CHGNet": [
+          "cited_work",
+          "component",
+          "method"
+        ],
+        "M3GNet": [
+          "cited_work",
+          "component",
+          "method"
+        ],
+        "SevenNet": [
+          "cited_work"
+        ],
+        "GAP": [
+          "cited_work"
+        ],
+        "DeePMD": [
+          "cited_work"
+        ],
+        "MatterSim": [
+          "cited_work",
+          "method"
+        ],
+        "Orb": [
+          "cited_work"
+        ],
+        "eSEN": [
+          "cited_work",
+          "method"
+        ],
+        "PET": [
+          "cited_work"
+        ],
+        "UMA": [
+          "cited_work"
+        ],
+        "EquiformerV2": [
+          "cited_work",
+          "method"
+        ]
+      }
+    },
+    "Q13": {
+      "n_targets": 8,
+      "hierarchical_hit_positions": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "hierarchical_overhead": 61,
+      "flat_hit_positions": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "null_hierarchy_hit_positions_per_seed": [
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      "target_types": {
+        "CGCNN": [
+          "cited_work",
+          "method"
+        ],
+        "SchNet": [
+          "cited_work",
+          "method"
+        ],
+        "MEGNet": [
+          "cited_work",
+          "method"
+        ],
+        "M3GNet": [
+          "cited_work",
+          "component",
+          "method"
+        ],
+        "NequIP": [
+          "cited_work",
+          "method"
+        ],
+        "MACE": [
+          "cited_work"
+        ],
+        "CHGNet": [
+          "cited_work",
+          "component",
+          "method"
+        ],
+        "EquiformerV2": [
+          "cited_work",
+          "method"
+        ]
+      }
+    },
+    "Q14": {
+      "n_targets": 10,
+      "hierarchical_hit_positions": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "hierarchical_overhead": 73,
+      "flat_hit_positions": [
+        85.0,
+        null,
+        170.0,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "null_hierarchy_hit_positions_per_seed": [
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      "target_types": {
+        "Matbench Discovery": [
+          "cited_work",
+          "dataset",
+          "method"
+        ],
+        "Matbench": [
+          "cited_work",
+          "component",
+          "dataset",
+          "method"
+        ],
+        "Materials Project": [
+          "cited_work",
+          "dataset",
+          "method"
+        ],
+        "MPtrj": [
+          "cited_work",
+          "dataset"
+        ],
+        "OQMD": [
+          "cited_work",
+          "dataset"
+        ],
+        "AFLOW": [
+          "cited_work"
+        ],
+        "Alexandria": [
+          "cited_work",
+          "method"
+        ],
+        "GNoME": [
+          "cited_work",
+          "component",
+          "dataset",
+          "method"
+        ],
+        "WBM": [
+          "cited_work",
+          "dataset"
+        ],
+        "OMat24": [
+          "cited_work",
+          "dataset"
+        ]
+      }
+    }
+  }
+}
