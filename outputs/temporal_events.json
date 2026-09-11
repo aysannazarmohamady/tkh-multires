@@ -1,0 +1,411 @@
+{
+  "reliability_note": "CORRECTED: an earlier version built its own clustering chain via a TF-IDF-based re-run, which produced a DIFFERENT hierarchy from the one actually shipped (level-0 counts 13/14/21/27, violating P2 at 2024/2026) and agreed with the shipped hierarchies at only ARI 0.28-0.51. Worse, T4 cohesion scores (computed from the real, shipped hierarchies) were then joined onto this different clustering's integer labels, silently attaching wrong values. This version reads cluster/edge labels directly from the shipped `hierarchy_<year>.json` files (same ones used for T1/T2/T6), so events and T4 cohesion now come from the same clustering. Real cross-snapshot ARI on the shipped hierarchies (not this file) is reported separately in report.md; identity here is tracked via post-hoc hyperedge-Jaccard matching, not artificially enforced by any regularization (lambda=0, rejected earlier \u2014 see report.md, 'T3 circularity found and fixed').",
+  "level": 0,
+  "source": "shipped hierarchy_<year>.json files (real MiniLM embeddings), not a re-clustering",
+  "continuation_threshold": 0.5,
+  "birth_threshold": 0.1,
+  "events_by_snapshot": {
+    "2020": [
+      {
+        "type": "birth",
+        "persistent_id": "p0",
+        "curr_cluster_label": 4,
+        "t4_cohesion": 0.472
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p1",
+        "curr_cluster_label": 11,
+        "t4_cohesion": 0.763
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p2",
+        "curr_cluster_label": 9,
+        "t4_cohesion": 0.833
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p3",
+        "curr_cluster_label": 10,
+        "t4_cohesion": 0.571
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p4",
+        "curr_cluster_label": 2,
+        "t4_cohesion": 0.57
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p5",
+        "curr_cluster_label": 7,
+        "t4_cohesion": 0.783
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p6",
+        "curr_cluster_label": 1,
+        "t4_cohesion": 0.701
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p7",
+        "curr_cluster_label": 5,
+        "t4_cohesion": 0.472
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p8",
+        "curr_cluster_label": 8,
+        "t4_cohesion": 0.794
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p9",
+        "curr_cluster_label": 6,
+        "t4_cohesion": 0.58
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p10",
+        "curr_cluster_label": 3,
+        "t4_cohesion": 0.446
+      }
+    ],
+    "2022": [
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p11",
+        "closest_prev_persistent_id": "p0",
+        "overlap_jaccard": 0.286
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p12",
+        "closest_prev_persistent_id": "p1",
+        "overlap_jaccard": 0.471
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p2",
+        "prev_size": 4,
+        "curr_size": 6,
+        "overlap_jaccard": 0.667
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p3",
+        "prev_size": 3,
+        "curr_size": 3,
+        "overlap_jaccard": 1.0
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p13",
+        "curr_cluster_label": 15,
+        "size": 3,
+        "t4_cohesion": 0.729
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p14",
+        "closest_prev_persistent_id": "p0",
+        "overlap_jaccard": 0.3
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p15",
+        "curr_cluster_label": 5,
+        "size": 5,
+        "t4_cohesion": 0.734
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p16",
+        "closest_prev_persistent_id": "p1",
+        "overlap_jaccard": 0.159
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p5",
+        "prev_size": 5,
+        "curr_size": 5,
+        "overlap_jaccard": 1.0
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p6",
+        "prev_size": 10,
+        "curr_size": 10,
+        "overlap_jaccard": 1.0
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p8",
+        "prev_size": 10,
+        "curr_size": 11,
+        "overlap_jaccard": 0.909
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p17",
+        "closest_prev_persistent_id": "p9",
+        "overlap_jaccard": 0.333
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p10",
+        "prev_size": 5,
+        "curr_size": 7,
+        "overlap_jaccard": 0.5
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p18",
+        "closest_prev_persistent_id": "p4",
+        "overlap_jaccard": 0.286
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p19",
+        "closest_prev_persistent_id": "p4",
+        "overlap_jaccard": 0.182
+      },
+      {
+        "type": "split",
+        "persistent_id": "p4",
+        "into_curr_clusters": [
+          7,
+          11,
+          8
+        ],
+        "shares": {
+          "7": 0.4,
+          "11": 0.4,
+          "8": 0.2
+        },
+        "t4_cohesion_of_dest_clusters": {
+          "7": 0.727,
+          "11": 0.515,
+          "8": 0.0
+        }
+      },
+      {
+        "type": "split",
+        "persistent_id": "p9",
+        "into_curr_clusters": [
+          3,
+          7,
+          2
+        ],
+        "shares": {
+          "3": 0.333,
+          "7": 0.333,
+          "2": 0.333
+        },
+        "t4_cohesion_of_dest_clusters": {
+          "3": 0.689,
+          "7": 0.727,
+          "2": 0.391
+        }
+      }
+    ],
+    "2024": [
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p20",
+        "closest_prev_persistent_id": "p11",
+        "overlap_jaccard": 0.488
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p21",
+        "closest_prev_persistent_id": "p12",
+        "overlap_jaccard": 0.375
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p2",
+        "prev_size": 6,
+        "curr_size": 7,
+        "overlap_jaccard": 0.857
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p3",
+        "prev_size": 3,
+        "curr_size": 3,
+        "overlap_jaccard": 1.0
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p22",
+        "closest_prev_persistent_id": "p15",
+        "overlap_jaccard": 0.143
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p13",
+        "prev_size": 3,
+        "curr_size": 4,
+        "overlap_jaccard": 0.75
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p23",
+        "closest_prev_persistent_id": "p16",
+        "overlap_jaccard": 0.408
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p8",
+        "prev_size": 11,
+        "curr_size": 18,
+        "overlap_jaccard": 0.611
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p24",
+        "curr_cluster_label": 4,
+        "size": 4,
+        "t4_cohesion": 0.265
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p5",
+        "prev_size": 5,
+        "curr_size": 6,
+        "overlap_jaccard": 0.833
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p6",
+        "prev_size": 10,
+        "curr_size": 10,
+        "overlap_jaccard": 1.0
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p14",
+        "prev_size": 12,
+        "curr_size": 15,
+        "overlap_jaccard": 0.588
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p25",
+        "closest_prev_persistent_id": "p15",
+        "overlap_jaccard": 0.167
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p26",
+        "closest_prev_persistent_id": "p10",
+        "overlap_jaccard": 0.308
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p27",
+        "curr_cluster_label": 13,
+        "size": 6,
+        "t4_cohesion": 0.8
+      }
+    ],
+    "2026": [
+      {
+        "type": "grew",
+        "persistent_id": "p20",
+        "prev_size": 42,
+        "curr_size": 53,
+        "overlap_jaccard": 0.532
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p28",
+        "closest_prev_persistent_id": "p23",
+        "overlap_jaccard": 0.361
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p2",
+        "prev_size": 7,
+        "curr_size": 7,
+        "overlap_jaccard": 1.0
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p29",
+        "closest_prev_persistent_id": "p22",
+        "overlap_jaccard": 0.458
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p25",
+        "prev_size": 9,
+        "curr_size": 16,
+        "overlap_jaccard": 0.562
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p30",
+        "closest_prev_persistent_id": "p14",
+        "overlap_jaccard": 0.268
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p31",
+        "closest_prev_persistent_id": "p23",
+        "overlap_jaccard": 0.375
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p8",
+        "prev_size": 18,
+        "curr_size": 16,
+        "overlap_jaccard": 0.889
+      },
+      {
+        "type": "grew",
+        "persistent_id": "p6",
+        "prev_size": 10,
+        "curr_size": 17,
+        "overlap_jaccard": 0.588
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p24",
+        "prev_size": 4,
+        "curr_size": 4,
+        "overlap_jaccard": 1.0
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p5",
+        "prev_size": 6,
+        "curr_size": 6,
+        "overlap_jaccard": 1.0
+      },
+      {
+        "type": "ambiguous_weak_link",
+        "persistent_id": "p32",
+        "closest_prev_persistent_id": "p22",
+        "overlap_jaccard": 0.235
+      },
+      {
+        "type": "birth",
+        "persistent_id": "p33",
+        "curr_cluster_label": 7,
+        "size": 13,
+        "t4_cohesion": 0.392
+      },
+      {
+        "type": "continued",
+        "persistent_id": "p27",
+        "prev_size": 6,
+        "curr_size": 6,
+        "overlap_jaccard": 1.0
+      }
+    ]
+  }
+}

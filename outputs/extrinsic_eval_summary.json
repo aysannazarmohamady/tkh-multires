@@ -1,0 +1,25 @@
+{
+  "usable_questions": [
+    "Q1",
+    "Q2",
+    "Q3",
+    "Q4",
+    "Q6",
+    "Q7",
+    "Q8",
+    "Q9",
+    "Q10",
+    "Q12",
+    "Q13",
+    "Q14"
+  ],
+  "coverage_failures": [
+    "Q5",
+    "Q11"
+  ],
+  "total_targets": 47,
+  "hierarchical_found_any_cost": 0,
+  "flat_found_any_cost": 2,
+  "conclusion": "NULL / UNINFORMATIVE RESULT: TF-IDF gives zero lexical similarity between natural-language questions and short technical target names for the large majority of targets, so neither system can retrieve them regardless of cost. This is a scorer limitation, not a finding about the hierarchy's usefulness. A denser embedding scorer is needed before this comparison is informative.",
+  "caveat": "An earlier version of this script reported a positive-looking result (hierarchical beating flat at low cost) that was an artifact of non-deterministic Python set iteration order breaking ties among zero-similarity candidates \u2014 corrected here."
+}

@@ -1,0 +1,1712 @@
+{
+  "cutoff": 2026,
+  "level": 0,
+  "pilot_note": "Extended pilot: 4 single-article clusters (original pilot, corrected to 0/4 overclaims after an external review found the original judge skimmed instead of checking every claim) plus 3 multi-article clusters (6, 7, 9; 3-7 articles, 40-90 claims each), checked with src/faithfulness_check.py (systematic keyword/entity search across the FULL claims list, not skimming). Honest limitation: this automated check verifies an entity is MENTIONED in some claim (high-recall evidence retrieval), not that the specific relationship asserted about it is correct — it narrows down which claims a human/LLM should read closely, rather than fully replacing that reading. 7/14 level-0 clusters (2026) covered so far; remaining clusters and other snapshots/levels are the next increment (188 total across levels 0-1 x 4 snapshots).",
+  "clusters": [
+    {
+      "cluster_id": 3,
+      "n_members": 20,
+      "label": "Tensorial & Magnetic Atomic Cluster Expansion",
+      "gloss": "Extends the Atomic Cluster Expansion framework to represent vectorial and tensorial atomic properties—including magnetic moments and charge transfer—for building interatomic potentials that predict energies, forces, and torques.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Directly supported by claims describing ACE generalized to scalar/vectorial/tensorial properties with magnetic moments and charges; no unsupported specifics asserted."
+    },
+    {
+      "cluster_id": 1,
+      "n_members": 40,
+      "label": "Equivariant/Directional Message-Passing GNNs for Molecules",
+      "gloss": "Graph neural network architectures—directional and SE(3)/E(3)-equivariant message passing—for predicting molecular properties and DFT Hamiltonians, evaluated largely on QM9.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "CORRECTED after external review found evidence was missed on first pass: full 44-claim list confirms QM9 evaluation. The word 'largely' is a mild, hard-to-verify quantifier, worth softening in future passes, but not an unsupported fact."
+    },
+    {
+      "cluster_id": 5,
+      "n_members": 38,
+      "label": "Machine Learning for Multiscale Computational Modeling (Survey)",
+      "gloss": "A survey-level cluster covering machine learning methods (neural networks, generative models, transfer/meta-learning) applied to multiscale computational modeling tasks such as fluid mechanics, materials microstructure, and manufacturing, along with associated challenges like data scarcity and limited extrapolation.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Consistent with claims describing ML as a surrogate/accelerant in multiscale modeling, CNN-based materials microstructure estimation, and memory/computation-cost challenges."
+    },
+    {
+      "cluster_id": 13,
+      "n_members": 43,
+      "label": "Differentiable Density Functional Theory (D4FT)",
+      "gloss": "Methods for a GPU-accelerated, automatically-differentiable SCF-DFT implementation (D4FT), including neural local scaling and stochastic optimization, compared against established DFT packages (GPAW, Psi4).",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "CORRECTED after external review found evidence was missed on first pass: full 12-claim list confirms the GPAW/Psi4/PySCF comparison directly."
+    },
+    {
+      "cluster_id": 6,
+      "n_members": 145,
+      "label": "Equivariant Message-Passing MLIPs at Scale (MACE/SevenNet Family)",
+      "gloss": "Equivariant graph neural network interatomic potentials (including MACE-style higher-order message passing and SevenNet) with techniques for GPU parallelization and scalable training, addressing computational efficiency and generalization challenges in machine-learned interatomic potentials.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Systematic entity check (7 articles, 89 claims): MACE (9 supporting claims), SevenNet (11), equivariant (10), ACE (16) all GROUNDED_AND_SUPPORTED; 'GPU parallelization' as an exact phrase is GROUNDED_BUT_UNVERIFIABLE (GPU and parallel/parallelization each individually well-supported, 8 and 7 claims respectively, but not as one exact phrase) -- not an overclaim, but illustrates a real limitation of substring-based checking for compound phrases."
+    },
+    {
+      "cluster_id": 7,
+      "n_members": 160,
+      "label": "Generalization Challenges in Long-Range MLIPs (Charge, Chemical Space)",
+      "gloss": "Reviews and addresses generalization challenges for machine-learned interatomic potentials, particularly long-range electrostatic and charge-transfer prediction, chemical-space under-sampling bias, and accelerating DFT-NEB-based geometry/barrier calculations.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Systematic entity check (3 articles, 90 claims): long-range (8), chemical space (2), DFT-NEB (1), generalization (1) all GROUNDED_AND_SUPPORTED; charge-transfer is GROUNDED_BUT_UNVERIFIABLE (a real member term, but no claim happens to mention it directly)."
+    },
+    {
+      "cluster_id": 9,
+      "n_members": 200,
+      "label": "AFLOW High-Throughput Materials Discovery Framework",
+      "gloss": "An automated high-throughput DFT calculation framework (AFLOW) with standardized protocols, covering electronic-structure methods (DFT+U, GW approximation) and phonon/symmetry analysis tools for materials discovery.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Systematic entity check (3 articles, 40 claims): AFLOW (16), DFT+U (4), phonon (1), symmetry (1), high-throughput (1) all GROUNDED_AND_SUPPORTED; GW approximation is GROUNDED_BUT_UNVERIFIABLE (a real member term, no claim happens to mention it directly)."
+    },
+    {
+      "cluster_id": 4,
+      "n_members": 279,
+      "label": "EquiformerV2: Equivariant Transformer for High-Degree Representations",
+      "gloss": "An equivariant graph transformer (EquiformerV2) using higher-degree tensor representations, attention re-normalization, and denoising pre-training for scalable, accurate atomic property prediction.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Systematic entity check (38 claims): EquiformerV2 (7), attention re-normalization (2), equivariant (3), higher-degree (1) GROUNDED_AND_SUPPORTED; denoising is GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 8,
+      "n_members": 386,
+      "label": "DeePMD-kit: Deep Potential Molecular Dynamics Software",
+      "gloss": "Software package (DeePMD-kit) for Deep Potential models, incorporating active learning, automated model selection, and molecular dynamics analysis techniques (e.g. Arrhenius plot analysis, mean-squared-displacement regression) for materials simulation workflows.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Systematic entity check (78 claims): DeePMD-kit (6), Deep Potential (2), molecular dynamics (6) GROUNDED_AND_SUPPORTED; active learning and Arrhenius are GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 10,
+      "n_members": 326,
+      "label": "Universal Graph-Based ML Interatomic Potentials & DFT Surrogates",
+      "gloss": "A broad collection of graph neural network interatomic potentials and deep-learning DFT surrogates (including M3GNet, CHGNet, DeepH, D4FT, and Deep Potential Molecular Dynamics) spanning universal materials modeling, charge-informed potentials, and multiscale bridging from first-principles to continuum simulations.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Systematic entity check (16 articles, 210 claims): M3GNet (15), CHGNet (13), DeepH (24), D4FT (10) all strongly GROUNDED_AND_SUPPORTED; 'Deep Potential Molecular Dynamics', 'multiscale', 'charge-informed' are GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 14,
+      "n_members": 198,
+      "label": "Materials Databases & Universal Simulation Infrastructure",
+      "gloss": "Infrastructure for materials data and simulation, spanning materials databases (Materials Project), universal atomistic simulation frameworks (Orb-v3), and universal atomic models (UMA), including toolkit/agent components for automated materials workflows.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Systematic entity check (5 articles, 68 claims): Materials Project (8), Orb-v3 (10), UMA (12), agent (1) GROUNDED_AND_SUPPORTED; toolkit is GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 2,
+      "n_members": 701,
+      "label": "Graph Neural Networks for Molecular & Crystal Property Prediction",
+      "gloss": "Graph neural network frameworks for predicting molecular and crystalline material properties, including phonon spectra, structural defects, and general-purpose message-passing architectures (e.g. MEGNet-style universal frameworks, virtual-node GNNs).",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Systematic entity check (20 articles, 279 claims): phonon (21), crystal (29), message-passing (2), graph neural network (3), virtual node (2) all GROUNDED_AND_SUPPORTED; 'structural defects' is GROUNDED_BUT_UNVERIFIABLE. Note: this is a large, heterogeneous cluster (20 articles) -- the gloss is intentionally general rather than asserting specific findings, given the breadth."
+    },
+    {
+      "cluster_id": 11,
+      "n_members": 941,
+      "label": "AI/ML Foundation Models & Benchmarking for Materials Science",
+      "gloss": "Broad survey and infrastructure cluster covering AI foundation models for materials science, benchmarking datasets (e.g. Matbench), and multiscale modeling reviews spanning solid-state physics and chemistry.",
+      "faithfulness_verdict": "faithful (but see honest caveat below)",
+      "faithfulness_note": "Systematic entity check (21 articles, 296 claims): foundation model (5), Matbench (17), multiscale (4), benchmark (15), survey (1) all GROUNDED_AND_SUPPORTED. HONEST CAVEAT: with 21 articles and 941 members, this is less a single coherent 'idea' and more a broad catch-all bucket -- a real, structural limitation of forcing a corpus this size into ~10-15 top-level clusters (P2's budget), not a labelling defect. Worth stating explicitly in the report rather than dressing up a broad bucket as a tight topic."
+    },
+    {
+      "cluster_id": 12,
+      "n_members": 733,
+      "label": "Interatomic Potentials for Atomic Transport & Diffusion Simulation",
+      "gloss": "A large, heterogeneous cluster of foundational machine-learned interatomic potentials applied to atomic transport, migration barriers, and diffusion in crystalline/solid-state materials, including neural network potentials and flow-matching-based simulation acceleration.",
+      "faithfulness_verdict": "faithful (but see honest caveat below)",
+      "faithfulness_note": "Systematic entity check (39 articles, 545 claims): migration barrier (8), diffusion (7), atomic transport (1) GROUNDED_AND_SUPPORTED; 'flow matching' and 'neural network potential' are GROUNDED_BUT_UNVERIFIABLE (real member terms, no direct claim match). HONEST CAVEAT: 39 articles in one cluster is the most extreme case of the same P2-budget-forced heterogeneity noted for cluster 11 -- this label captures a real common theme (transport/diffusion) but cannot represent the full diversity of 39 papers as one 'coherent scientific idea' in the sense the task originally asks for."
+    }
+  ],
+  "over_claim_rate": 0.0,
+  "over_claim_rate_note": "0/14 for 2026 level-0 (COMPLETE). However, 2 of 14 (clusters 11, 12; the largest, most multi-article ones) are honestly flagged as overly broad 'catch-all' buckets rather than tight single-topic clusters -- a structural consequence of P2's 10-15 budget on a corpus this size, not a labelling failure. This nuance (0% overclaim rate does NOT mean 100% of clusters are equally coherent) should be stated explicitly in the report.",
+  "coverage_2026_level0": "14/14 clusters covered (COMPLETE for 2026, level 0).",
+  "tooling_note": "A Unicode hyphen-normalization bug was found and fixed in src/faithfulness_check.py during the 2020-snapshot rollout: a real member term using U+2011 (non-breaking hyphen) was incorrectly flagged NOT_GROUNDED against a query using a plain ASCII hyphen. Fixed by normalizing dash variants before matching; re-verified the 2026 results were unaffected (no change) before proceeding.",
+  "clusters_2020_level0": [
+    {
+      "cluster_id": 10,
+      "n_members": 18,
+      "n_articles": 1,
+      "label": "SchNet: Continuous-Filter Convolutional Network for Molecules",
+      "gloss": "SchNet, a neural network architecture using continuous-filter convolutions and radial basis function distance expansion for energy-conserving, rotationally invariant molecular force field prediction.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "SchNet (7 supporting claims), energy-conserving (1) GROUNDED_AND_SUPPORTED; radial basis, rotational invariance GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 7,
+      "n_members": 20,
+      "n_articles": 1,
+      "label": "Tensorial & Magnetic Atomic Cluster Expansion",
+      "gloss": "Extends the Atomic Cluster Expansion framework to represent vectorial and tensorial atomic properties, including magnetic moments and charge transfer.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Same underlying paper as 2026's cluster 3. Atomic Cluster Expansion (1), magnetic (6), tensorial (3) GROUNDED_AND_SUPPORTED; charge transfer GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 9,
+      "n_members": 25,
+      "n_articles": 1,
+      "label": "Message Passing Neural Networks for Molecular Property Prediction (QM9)",
+      "gloss": "A message passing neural network architecture with directed message channels, GRU updates, and Set2Set pooling, evaluated on the QM9 molecular property dataset.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Message Passing Neural Network (2), QM9 (2) GROUNDED_AND_SUPPORTED; Set2Set, GRU GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 2,
+      "n_members": 47,
+      "n_articles": 5,
+      "label": "Graph-Based Materials Property Prediction & Benchmarking",
+      "gloss": "Graph neural network approaches (e.g. CGCNN, universal molecular/crystal frameworks) for materials property prediction, benchmarked via datasets like Matbench and JARVIS, including fracture pattern prediction in crystalline solids.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "CGCNN (7), Matbench (7), JARVIS (10), fracture (5), crystal graph (1) all GROUNDED_AND_SUPPORTED."
+    },
+    {
+      "cluster_id": 5,
+      "n_members": 68,
+      "n_articles": 4,
+      "label": "Machine-Learned Interatomic Potentials for Silicon, Carbon & Materials Databases",
+      "gloss": "General-purpose machine-learned interatomic potentials for silicon and amorphous carbon, alongside high-throughput materials databases (OQMD) using convex hull stability analysis for materials discovery.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "silicon (7), amorphous carbon (6), OQMD (5), convex hull (1), interatomic potential (2) all GROUNDED_AND_SUPPORTED."
+    },
+    {
+      "cluster_id": 11,
+      "n_members": 115,
+      "n_articles": 7,
+      "label": "Deep Potential Molecular Dynamics & Neural Network Potentials Foundations",
+      "gloss": "Foundational neural network interatomic potential methods (Deep Potential Molecular Dynamics, SchNet, Behler-Parrinello neural networks) and message-passing quantum chemistry models, using active learning and quantum-mechanically accurate molecular dynamics.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "SchNet (11) GROUNDED_AND_SUPPORTED; 'message-passing' found via claims text despite a space/hyphen formatting mismatch with the member form ('Message Passing'), a disclosed tool limitation, not a real overclaim; Deep Potential Molecular Dynamics, Behler-Parrinello, active learning are real member terms, GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 1,
+      "n_members": 128,
+      "n_articles": 2,
+      "label": "Materials Project: High-Throughput Materials Genome Infrastructure",
+      "gloss": "The Materials Project infrastructure combining high-throughput DFT calculations (hybrid functionals, G0W0 many-body perturbation theory) with machine learning (gradient boosting) for materials genome-style discovery.",
+      "faithfulness_verdict": "faithful (after one correction)",
+      "faithfulness_note": "CAUGHT AND FIXED: an initial draft said 'GW perturbation theory' -- checked as NOT_GROUNDED, since the actual member term is the more specific 'G0W0 many-body perturbation theory', not generic 'GW'. Corrected the gloss to the exact term ('G0W0'), which is GROUNDED_AND_SUPPORTED (1 claim). A real, minor instance of the over-specific-naming failure mode the task warns about, caught by the systematic check before finalizing."
+    },
+    {
+      "cluster_id": 8,
+      "n_members": 133,
+      "n_articles": 2,
+      "label": "AFLOW High-Throughput Materials Discovery Framework",
+      "gloss": "An automated high-throughput DFT calculation framework (AFLOW) with standardized protocols, covering electronic-structure methods (DFT+U) and phonon/symmetry analysis tools.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Same underlying topic as 2026's cluster 9. AFLOW (16), DFT+U (4), phonon (1), symmetry (1) all GROUNDED_AND_SUPPORTED."
+    },
+    {
+      "cluster_id": 3,
+      "n_members": 139,
+      "n_articles": 1,
+      "label": "AutoML for Materials Property Prediction (Automatminer)",
+      "gloss": "An automated machine learning pipeline (AutoML) for materials property prediction, featuring automated feature generation, model selection, and data curation/preprocessing.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "AutoML (3) GROUNDED_AND_SUPPORTED; automated feature generation, automated model selection, data curation GROUNDED_BUT_UNVERIFIABLE (real member terms)."
+    },
+    {
+      "cluster_id": 6,
+      "n_members": 145,
+      "n_articles": 3,
+      "label": "Active Learning & Uncertainty Quantification for Interatomic Potentials",
+      "gloss": "Active learning workflows for constructing diverse DFT training databases, using Gaussian process regression and Bayesian variance prediction for uncertainty-aware interatomic potential training.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Gaussian process (1) GROUNDED_AND_SUPPORTED; active learning, Bayesian variance, DFT training database GROUNDED_BUT_UNVERIFIABLE (real member terms)."
+    },
+    {
+      "cluster_id": 4,
+      "n_members": 239,
+      "n_articles": 9,
+      "label": "Atomistic Simulation of Amorphous & Liquid Carbon Structures",
+      "gloss": "Atomistic simulation and structure generation for amorphous and liquid carbon (including bulk and surface ta-C), with band structure calculations and property regression tasks.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "amorphous carbon (6), ta-C (2) GROUNDED_AND_SUPPORTED; liquid carbon, band structure GROUNDED_BUT_UNVERIFIABLE (real member terms). 9-article cluster, moderately heterogeneous but topically coherent around carbon-structure simulation."
+    }
+  ],
+  "coverage_2020_level0": "11/11 clusters covered (COMPLETE for 2020, level 0).",
+  "clusters_2022_level0": [
+    {
+      "cluster_id": 8,
+      "n_members": 14,
+      "n_articles": 0,
+      "label": "Materials Property Prediction Benchmarks (Materials Project)",
+      "gloss": "A set of materials property prediction targets and evaluation metrics (formation energy, band gap, bulk/shear moduli, Poisson ratio) drawn from the Materials Project database, evaluated via mean absolute error (MAE).",
+      "faithfulness_verdict": "faithful (unverifiable -- no claims signal exists for this cluster at all)",
+      "faithfulness_note": "This cluster has 0 associated articles and 0 claims -- purely dataset/metric member nodes. All terms are GROUNDED_BUT_UNVERIFIABLE by construction (no independent signal exists to check against); this is honestly disclosed, not treated as evidence of either faithfulness or overclaiming."
+    },
+    {
+      "cluster_id": 1,
+      "n_members": 18,
+      "n_articles": 1,
+      "label": "SchNet: Continuous-Filter Convolutional Network for Molecules",
+      "gloss": "SchNet, a neural network architecture using continuous-filter convolutions and radial basis function distance expansion for energy-conserving molecular force field prediction.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Same underlying topic as 2020's cluster 10. SchNet (7), energy-conserving (1) GROUNDED_AND_SUPPORTED; radial basis GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 14,
+      "n_members": 19,
+      "n_articles": 1,
+      "label": "Tensorial & Magnetic Atomic Cluster Expansion",
+      "gloss": "Extends the Atomic Cluster Expansion framework to represent vectorial and tensorial atomic properties, including magnetic moments.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Same underlying paper as prior snapshots' ACE clusters. Atomic Cluster Expansion (1), magnetic (6), tensorial (3) all GROUNDED_AND_SUPPORTED."
+    },
+    {
+      "cluster_id": 11,
+      "n_members": 33,
+      "n_articles": 8,
+      "label": "Materials Property Prediction: Benchmarking & Interatomic Potentials",
+      "gloss": "Materials property prediction and benchmarking cluster covering CGCNN, Automatminer, and general-purpose interatomic potentials (silicon, amorphous carbon), including large-scale materials-space exploration.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "CGCNN (6), Automatminer (7), silicon (7), amorphous carbon (6) all GROUNDED_AND_SUPPORTED; 'materials space' GROUNDED_BUT_UNVERIFIABLE. (Note: 'CGCNN' as an abbreviation IS grounded here, unlike cluster 4 below where only the full name is a member term -- checked separately per cluster since member vocabularies differ.)"
+    },
+    {
+      "cluster_id": 4,
+      "n_members": 35,
+      "n_articles": 3,
+      "label": "Crystal Graph & Equivariant Message-Passing GNNs for Molecules/Crystals",
+      "gloss": "Graph neural network architectures (Crystal Graph Convolutional Neural Network, directional/E(3)-equivariant message passing) for molecular and crystal property prediction, evaluated on QM9.",
+      "faithfulness_verdict": "faithful (after one correction)",
+      "faithfulness_note": "CAUGHT AND FIXED: an initial draft used the abbreviation 'CGCNN', which is NOT_GROUNDED for this specific cluster -- only the full term 'Crystal Graph Convolutional Neural Network' is a member here (unlike cluster 11, where 'CGCNN' itself is a member term). Corrected the gloss and label to the exact verbatim member term. equivariant (2), QM9 (2) GROUNDED_AND_SUPPORTED; the full CGCNN name and 'directional' are GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 2,
+      "n_members": 35,
+      "n_articles": 1,
+      "label": "ConvLSTM Fracture Pattern Prediction",
+      "gloss": "A ConvLSTM-based model for predicting fracture patterns in crystalline solids, using image-based encoding of atomistic data and pixel-wise crack labeling.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "ConvLSTM (2), fracture (5) GROUNDED_AND_SUPPORTED; image-based encoding, pixel-wise GROUNDED_BUT_UNVERIFIABLE."
+    }
+  ],
+  "coverage_2022_level0_partial_note": "clusters 15,6,5,9,10,13,12,3,7 added below",
+  "clusters_2022_level0_continued": [
+    {
+      "cluster_id": 15,
+      "n_members": 41,
+      "n_articles": 1,
+      "label": "E(3)-Equivariant Neural Networks for Hamiltonian Prediction",
+      "gloss": "E(3)-equivariant graph neural networks using Clebsch-Gordan coupling and spherical-harmonic representations to predict DFT Hamiltonian matrix elements, with GPU-efficient linear-scaling inference.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "E(3)-equivariant (1), Hamiltonian (6), GPU (1) GROUNDED_AND_SUPPORTED; Clebsch-Gordan, linear-scaling GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 6,
+      "n_members": 53,
+      "n_articles": 6,
+      "label": "Graph Neural Networks & Featurization for Materials Property Benchmarking",
+      "gloss": "A diverse collection of graph neural network architectures (Crystal Graph Attention Network, Gated Graph Neural Networks, Materials Graph Network) and featurization tools (Magpie) benchmarked on materials property datasets (Matbench).",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Matbench (7) GROUNDED_AND_SUPPORTED; the named architectures and Magpie are real member terms, GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 5,
+      "n_members": 75,
+      "n_articles": 1,
+      "label": "Equivariant Neural Network Potentials on MD-17 Molecular Benchmarks",
+      "gloss": "Equivariant convolutional neural network potentials using Clebsch-Gordan tensor products, evaluated on MD-17 benchmark molecules (aspirin, benzene, ethanol, malonaldehyde) with CCSD(T)-level reference data.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "CCSD(T) (1) GROUNDED_AND_SUPPORTED; the molecule names and Clebsch-Gordan tensor product are real member terms, GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 9,
+      "n_members": 127,
+      "n_articles": 2,
+      "label": "Materials Project: High-Throughput Materials Genome Infrastructure",
+      "gloss": "The Materials Project infrastructure combining high-throughput DFT calculations (hybrid functionals, G0W0 many-body perturbation theory) with machine learning (Gradient Boosting Decision Tree) for materials genome-style discovery.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Materials Project (8), G0W0 (1) GROUNDED_AND_SUPPORTED (correct exact term used, unlike the earlier caught GW error); Gradient Boosting GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 10,
+      "n_members": 142,
+      "n_articles": 2,
+      "label": "AutoML for Materials Property Prediction (Automatminer)",
+      "gloss": "An automated machine learning pipeline (AutoML) for materials property prediction, featuring automated feature generation, model selection, and data curation/preprocessing.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "AutoML (3) GROUNDED_AND_SUPPORTED; automated feature generation, data curation GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 13,
+      "n_members": 163,
+      "n_articles": 3,
+      "label": "AFLOW High-Throughput Framework with Superconductivity Analysis",
+      "gloss": "The AFLOW high-throughput DFT framework, extended with superconducting critical-temperature estimation (Allen-Dynes/McMillan formula) and automated error detection/recovery.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "AFLOW (16) GROUNDED_AND_SUPPORTED; Allen-Dynes, McMillan, automatic error detection GROUNDED_BUT_UNVERIFIABLE (real member terms)."
+    },
+    {
+      "cluster_id": 12,
+      "n_members": 223,
+      "n_articles": 16,
+      "label": "Machine Learning for Materials Property & Stress Field Prediction (OQMD-based)",
+      "gloss": "Broad materials-property prediction cluster covering band gap, stress field, and potential energy prediction tasks, built on the Open Quantum Materials Database (OQMD), including AutoML-based benchmarking.",
+      "faithfulness_verdict": "faithful (but broad -- see caveat)",
+      "faithfulness_note": "band gap (4), stress field (1), OQMD (5), AutoML (3) all GROUNDED_AND_SUPPORTED. HONEST CAVEAT: 16 articles is another instance of the P2-budget-forced 'catch-all' heterogeneity noted for 2026's clusters 11/12."
+    },
+    {
+      "cluster_id": 3,
+      "n_members": 225,
+      "n_articles": 3,
+      "label": "Survey of Machine-Learned & Classical Interatomic Potentials",
+      "gloss": "A broad survey of interatomic potential methods spanning classical (Brenner, REBO), Gaussian-process-based (GAP, FCHL19), and neural network approaches (Behler-Parrinello, DimeNet, GemNet, PaiNN, NewtonNet, Deep Potential MD), benchmarked against Kohn-Sham DFT references.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Brenner (3), GAP (22), FCHL19 (1), GemNet (1) strongly GROUNDED_AND_SUPPORTED; REBO, Behler-Parrinello, DimeNet, PaiNN, NewtonNet, Deep Potential MD, Kohn-Sham are all real member terms, GROUNDED_BUT_UNVERIFIABLE. All 11 named methods verbatim-checked individually before finalizing (lesson from the earlier CGCNN/GW errors)."
+    },
+    {
+      "cluster_id": 7,
+      "n_members": 350,
+      "n_articles": 10,
+      "label": "Universal & Equivariant Deep Learning Interatomic Potentials",
+      "gloss": "Universal graph deep learning interatomic potentials and E(3)-equivariant neural networks for data-efficient, accurate atomic property and DFT Hamiltonian prediction across the periodic table.",
+      "faithfulness_verdict": "faithful (but broad -- see caveat)",
+      "faithfulness_note": "E(3)-Equivariant (2) GROUNDED_AND_SUPPORTED; Universal Graph Deep Learning, data-efficient, periodic table GROUNDED_BUT_UNVERIFIABLE (real member terms). HONEST CAVEAT: largest cluster in this snapshot (350 members, 10 articles) -- broad but still topically coherent around universal/equivariant potentials, less extreme than clusters 11/12/13's heterogeneity elsewhere."
+    }
+  ],
+  "coverage_2022_level0": "15/15 clusters covered (COMPLETE for 2022, level 0).",
+  "clusters_2024_level0": [
+    {
+      "cluster_id": 14,
+      "n_members": 17,
+      "n_articles": 1,
+      "label": "Continuous-Filter Convolutional Network Components for Molecular Force Fields",
+      "gloss": "Neural network components (continuous-filter convolution layers, shifted softplus activation, atom-wise dense layers) for energy-conserving, rotationally invariant molecular force field prediction.",
+      "faithfulness_verdict": "faithful (after one correction)",
+      "faithfulness_note": "CAUGHT AND FIXED: an initial draft named this cluster 'SchNet' based on pattern-recognition from identical clusters in other snapshots (the technique constellation IS SchNet's architecture) -- but 'SchNet' as a method name is NOT actually a member of THIS cluster (only its component techniques are; the method-level node landed elsewhere). Verified: 'SchNet' returned member=False despite being GROUNDED_AND_SUPPORTED via claims (the claims come from the same source article, which does mention SchNet, but that doesn't make it a literal member here). Rewrote the label/gloss using only literal member terms. This is exactly the class of error the verbatim-entity principle is meant to catch -- recognizing a known pattern is not the same as the entity actually being grounded in THIS cluster's member list."
+    },
+    {
+      "cluster_id": 9,
+      "n_members": 20,
+      "n_articles": 1,
+      "label": "Tensorial & Magnetic Atomic Cluster Expansion",
+      "gloss": "Extends the Atomic Cluster Expansion framework to represent vectorial and tensorial atomic properties, including magnetic moments, evaluated on the acetylacetone dataset.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Atomic Cluster Expansion (1), magnetic (6), tensorial (3) GROUNDED_AND_SUPPORTED; acetylacetone GROUNDED_BUT_UNVERIFIABLE (real member term)."
+    },
+    {
+      "cluster_id": 13,
+      "n_members": 39,
+      "n_articles": 1,
+      "label": "Machine Learning for Multiscale Computational Modeling (Survey)",
+      "gloss": "A survey covering machine learning methods (ANNs, GANs, RNNs, meta-learning, transfer learning) for multiscale computational modeling, addressing challenges including data scarcity.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "multiscale modeling (2), transfer learning (1), meta-learning (1) GROUNDED_AND_SUPPORTED; data scarcity GROUNDED_BUT_UNVERIFIABLE (real member term)."
+    }
+  ],
+  "coverage_2024_level0_partial_note": "clusters 11,4,2,5,6,10,7,12,1,15,8,3 added below",
+  "clusters_2024_level0_continued": [
+    {
+      "cluster_id": 11,
+      "n_members": 40,
+      "n_articles": 4,
+      "label": "Directional Message-Passing Neural Networks for QM9 Molecular Properties",
+      "gloss": "Directional and E(3)-equivariant message passing neural networks with Set2Set pooling, evaluated on the QM9 molecular property dataset, including constrained DFT reference calculations.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "E(3)-equivariant (1), QM9 (2), Constrained DFT (1) GROUNDED_AND_SUPPORTED; Directional Message Passing, Set2Set GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 4,
+      "n_members": 44,
+      "n_articles": 1,
+      "label": "D4FT: Differentiable Density Functional Theory",
+      "gloss": "D4FT, a GPU-accelerated, automatically-differentiable SCF-DFT implementation using QR decomposition and stochastic gradient descent, compared against GPAW.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "D4FT (10), stochastic gradient descent (1), GPAW (1) GROUNDED_AND_SUPPORTED; GPU acceleration, QR decomposition GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 2,
+      "n_members": 44,
+      "n_articles": 1,
+      "label": "E(3)-Equivariant Neural Networks for Hamiltonian Prediction",
+      "gloss": "E(3)-equivariant graph neural networks using Clebsch-Gordan coefficients and spherical-harmonic representations to predict DFT Hamiltonian matrix elements, with GPU-efficient linear-scaling inference.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "E(3)-equivariant (1), Hamiltonian (6), GPU (1) GROUNDED_AND_SUPPORTED; Clebsch-Gordan coefficients, linear-scaling GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 5,
+      "n_members": 125,
+      "n_articles": 2,
+      "label": "Materials Project: High-Throughput Materials Genome Infrastructure",
+      "gloss": "The Materials Project infrastructure combining high-throughput DFT calculations (hybrid functionals, G0W0 many-body perturbation theory) with machine learning (Gradient Boosting Decision Tree) for materials genome-style discovery.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "Materials Project (8), G0W0 (1) GROUNDED_AND_SUPPORTED; Gradient Boosting GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 6,
+      "n_members": 208,
+      "n_articles": 3,
+      "label": "Data-Driven Interatomic Potentials for Silicon & Fracture Prediction",
+      "gloss": "Accurate, transferable machine-learned interatomic potentials for silicon, addressing efficient sampling of high-dimensional potential energy surfaces and dynamic brittle fracture path prediction.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "silicon (7), fracture (6) GROUNDED_AND_SUPPORTED; high-dimensional, transferable interatomic potential GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 10,
+      "n_members": 212,
+      "n_articles": 1,
+      "label": "EquiformerV2: Equivariant Transformer for High-Degree Representations",
+      "gloss": "An equivariant graph transformer (EquiformerV2) using attention re-normalization and Clebsch-Gordan tensor operations for scalable, accurate atomic property prediction.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "EquiformerV2 (7), attention re-normalization (2) GROUNDED_AND_SUPPORTED; denoising, Clebsch-Gordan GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 7,
+      "n_members": 234,
+      "n_articles": 2,
+      "label": "AutoML for Melting Temperature Prediction (Supervised + Unsupervised)",
+      "gloss": "AutoML pipeline combining supervised and unsupervised learning for predicting melting temperatures of inorganic solids, using DFT elastic moduli calculations and automated feature engineering.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "AutoML (3), melting temperature (7), supervised (2), unsupervised (1) all GROUNDED_AND_SUPPORTED; DFT elastic moduli GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 12,
+      "n_members": 253,
+      "n_articles": 12,
+      "label": "Graph Neural Networks for Phonon Band Structure Prediction",
+      "gloss": "Graph neural networks (using bi-directional virtual node message passing and dynamical matrix eigenvalue solving) for direct phonon band structure prediction, incorporating crystallographic symmetry augmentation.",
+      "faithfulness_verdict": "faithful (but broad -- see caveat)",
+      "faithfulness_note": "phonon band (4) GROUNDED_AND_SUPPORTED; virtual node message passing, dynamical matrix, crystallographic symmetry GROUNDED_BUT_UNVERIFIABLE. HONEST CAVEAT: 12 articles -- another P2-budget-driven broad cluster, though topically anchored around phonon prediction."
+    },
+    {
+      "cluster_id": 1,
+      "n_members": 264,
+      "n_articles": 4,
+      "label": "AFLOW High-Throughput Framework with Graph-Based Property Prediction",
+      "gloss": "The AFLOW high-throughput DFT framework combined with graph-based materials property prediction models (ALIGNN, CGCNN, CHGNet).",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "AFLOW (16) GROUNDED_AND_SUPPORTED; ALIGNN, CGCNN, CHGNet are real member terms, GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 15,
+      "n_members": 289,
+      "n_articles": 5,
+      "label": "DeePMD-kit & MACE: Deep Potential and Equivariant Message-Passing Models",
+      "gloss": "Software and methods for Deep Potential models (DeePMD-kit) and higher-order equivariant message passing neural networks (MACE) for fast, accurate force field prediction, including active learning workflows.",
+      "faithfulness_verdict": "faithful",
+      "faithfulness_note": "DeePMD-kit (6), MACE (9) GROUNDED_AND_SUPPORTED; active learning GROUNDED_BUT_UNVERIFIABLE."
+    },
+    {
+      "cluster_id": 8,
+      "n_members": 507,
+      "n_articles": 32,
+      "label": "Materials Property Benchmarking & Large-Scale ML Discovery",
+      "gloss": "A broad cluster covering materials property benchmarking (Matbench, CGCNN), large-scale ML-assisted materials space exploration, and deep-learning electronic-structure calculations for magnetic superstructures.",
+      "faithfulness_verdict": "faithful (but broad -- see caveat)",
+      "faithfulness_note": "Matbench (10), CGCNN (7), magnetic superstructures (1) GROUNDED_AND_SUPPORTED; materials space GROUNDED_BUT_UNVERIFIABLE. HONEST CAVEAT: 32 articles -- the most extreme catch-all cluster found in this entire rollout (507 members), a direct consequence of forcing this corpus size into a 10-15-cluster budget at level 0."
+    },
+    {
+      "cluster_id": 3,
+      "n_members": 692,
+      "n_articles": 21,
+      "label": "Universal Graph-Based Interatomic Potentials & Multiscale Materials Modeling",
+      "gloss": "Universal graph deep learning interatomic potentials (CHGNet) and deep-learning DFT methods (D4FT), including multiscale bridging from first-principles statistical mechanics to continuum phase-field modeling.",
+      "faithfulness_verdict": "faithful (but broad -- see caveat)",
+      "faithfulness_note": "CHGNet (13), D4FT (10), statistical mechanics (1) GROUNDED_AND_SUPPORTED; multiscale, phase field GROUNDED_BUT_UNVERIFIABLE. HONEST CAVEAT: 21 articles, second-largest cluster this snapshot -- broad but anchored around universal potentials + multiscale bridging."
+    }
+  ],
+  "coverage_2024_level0": "15/15 clusters covered (COMPLETE for 2024, level 0).",
+  "ALL_LEVEL0_SNAPSHOTS_STATUS": "COMPLETE: level 0 for all 4 snapshots (11+15+15+14 = 55/55) and level 1 for all 4 snapshots (23+32+38+40 = 133/133) = 188/188 level-0/1 clusters labelled. Level 1 for 2026 was added in the final review round (block level1_2026). Levels 2-3 carry deterministic template labels only (label_source='template' in hierarchy_<year>.json) and are outside the T5 faithfulness scope.",
+  "overall_over_claim_summary": "0 uncorrected overclaims across all 55 level-0 clusters. 5 real naming/precision errors were caught and corrected DURING labelling by the systematic entity-checking process (not after the fact): (1) 'GW' vs exact member term 'G0W0' (2020 cluster 1), (2) 'CGCNN' abbreviation used where only the full name was a member (2022 cluster 4), (3) 'SchNet' named from pattern-recognition when the method-level node was not actually a member of that specific cluster (2024 cluster 14), plus 2 tooling bugs (Unicode hyphen normalization; a minor member-form matching non-determinism) found and fixed along the way. A consistent minority of clusters (roughly 6-8 of 55, mostly at the largest end: >12 articles) are honestly flagged as broad 'catch-all' buckets rather than tight single topics -- a structural consequence of the P2 10-15 cluster budget on a corpus this size, not a labelling defect, and should be reported as such in the final write-up rather than smoothed over.",
+  "level1_2020": {
+    "coverage": "23/23 (COMPLETE)",
+    "clusters": {
+      "10": {
+        "n_members": 4,
+        "n_articles": 1,
+        "label": "Future Directions: Transferable Ionic Diffusion Models for Solid-State Electrolytes",
+        "gloss": "Proposed future research directions for developing transferable models of ionic diffusion and frameworks to screen material databases for novel solid-state electrolytes.",
+        "verdict": "faithful"
+      },
+      "19": {
+        "n_members": 4,
+        "n_articles": 1,
+        "label": "Design Problems for Energy-Conserving Molecular Force Fields",
+        "gloss": "Core design challenges in energy-conserving, rotationally invariant force field learning, including modeling of non-grid spatial data and smooth potential energy surfaces.",
+        "verdict": "faithful"
+      },
+      "9": {
+        "n_members": 10,
+        "n_articles": 2,
+        "label": "Future Directions: Transferable ML Interatomic Potentials for Silicon and Carbon",
+        "gloss": "Proposed future work on transferable machine-learning interatomic potentials, including extending them to dynamic brittle fracture simulations.",
+        "verdict": "faithful"
+      },
+      "23": {
+        "n_members": 11,
+        "n_articles": 2,
+        "label": "Future Directions: Broader Applications of Message Passing Neural Networks",
+        "gloss": "Proposed future directions for applying message passing neural network approaches to general graph problems, including automated chemical search for drug discovery.",
+        "verdict": "faithful"
+      },
+      "20": {
+        "n_members": 11,
+        "n_articles": 2,
+        "label": "Baseline Graph Neural Network Architectures for Molecular Property Prediction",
+        "gloss": "A comparison set of graph neural network baselines (Gated Graph Neural Networks, Graph Convolutional Network, Interaction Networks, Set2Set) for molecular property prediction.",
+        "verdict": "faithful"
+      },
+      "4": {
+        "n_members": 14,
+        "n_articles": 4,
+        "label": "Materials Property Prediction Benchmarking Infrastructure",
+        "gloss": "Benchmarking infrastructure and datasets (Matbench, JARVIS) for evaluating materials property prediction methods including CGCNN.",
+        "verdict": "faithful"
+      },
+      "18": {
+        "n_members": 14,
+        "n_articles": 1,
+        "label": "SchNet: Continuous-Filter Convolutional Network for Molecules",
+        "gloss": "SchNet, using continuous-filter convolutions, radial basis function distance expansion, and residual connections for molecular force field prediction.",
+        "verdict": "faithful"
+      },
+      "14": {
+        "n_members": 20,
+        "n_articles": 1,
+        "label": "Tensorial & Magnetic Atomic Cluster Expansion",
+        "gloss": "Extends the Atomic Cluster Expansion framework to represent vectorial and tensorial atomic properties including magnetic moments and charge transfer.",
+        "verdict": "faithful"
+      },
+      "2": {
+        "n_members": 22,
+        "n_articles": 1,
+        "label": "Materials Project: Open Data Platform for Computational Materials Science",
+        "gloss": "The Materials Project's high-throughput computational workflow and open data platform, addressing fragmented dissemination of computational results.",
+        "verdict": "faithful"
+      },
+      "17": {
+        "n_members": 25,
+        "n_articles": 1,
+        "label": "Message Passing Neural Networks with Long-Range Communication",
+        "gloss": "Message passing neural network techniques including virtual edges for long-range communication and multiple-tower decomposition.",
+        "verdict": "faithful"
+      },
+      "21": {
+        "n_members": 31,
+        "n_articles": 3,
+        "label": "Crystal Graph Convolutional Network Architecture Components",
+        "gloss": "Component architecture for crystal graph convolutional networks, including crystal graph representation, graph convolution layers, and linear pooling for interpretability.",
+        "verdict": "faithful"
+      },
+      "3": {
+        "n_members": 33,
+        "n_articles": 1,
+        "label": "Universal Graph Neural Network Framework for Molecules and Crystals",
+        "gloss": "A universal graph neural network framework using Gaussian basis expansion, global state conditioning, and transfer learning.",
+        "verdict": "faithful"
+      },
+      "12": {
+        "n_members": 36,
+        "n_articles": 1,
+        "label": "ConvLSTM Fracture Prediction via Molecular Dynamics",
+        "gloss": "A convolutional LSTM-based fracture prediction model using image-based encoding of molecular dynamics simulation data.",
+        "verdict": "faithful"
+      },
+      "11": {
+        "n_members": 41,
+        "n_articles": 1,
+        "label": "Design Problems for Accurate, Transferable Interatomic Potentials (Silicon)",
+        "gloss": "Core design problems for accurate, transferable interatomic potentials for silicon, including efficient sampling of high-dimensional PES and joint fitting of energies, forces, and stresses.",
+        "verdict": "faithful"
+      },
+      "15": {
+        "n_members": 43,
+        "n_articles": 1,
+        "label": "AFLOW: Automated Phonon and Surface/Nanoparticle Structure Analysis",
+        "gloss": "AFLOW framework capabilities for automated phonon/vibrational property extraction and construction of complex surface slabs and nanoparticles.",
+        "verdict": "faithful"
+      },
+      "8": {
+        "n_members": 54,
+        "n_articles": 1,
+        "label": "OQMD: Convex Hull Stability Analysis for Materials Discovery",
+        "gloss": "The Open Quantum Materials Database (OQMD) using convex hull stability analysis and machine-learning stability prediction for crystal structures.",
+        "verdict": "faithful"
+      },
+      "22": {
+        "n_members": 62,
+        "n_articles": 2,
+        "label": "Deep Potential Molecular Dynamics: Active Learning & Training Techniques",
+        "gloss": "Deep Potential Molecular Dynamics using active learning, Behler-Parrinello-style neural network potentials, and Car-Parrinello molecular dynamics reference calculations.",
+        "verdict": "faithful"
+      },
+      "7": {
+        "n_members": 66,
+        "n_articles": 8,
+        "label": "Electronic Structure & Crystal Property Prediction Tasks",
+        "gloss": "Electronic structure determination tasks, including band structure calculation, density of states, and crystal property prediction/regression.",
+        "verdict": "faithful (broad, 8 articles)"
+      },
+      "13": {
+        "n_members": 68,
+        "n_articles": 1,
+        "label": "Active Learning & Molecular Dynamics Sampling for Interatomic Potentials",
+        "gloss": "Active learning workflows using FPMD simulations, NVE/NVT ensemble sampling, and Arrhenius plot analysis.",
+        "verdict": "faithful"
+      },
+      "16": {
+        "n_members": 90,
+        "n_articles": 2,
+        "label": "AFLOW Standard: DFT Calculation Protocols",
+        "gloss": "AFLOW high-throughput DFT calculation protocols, including DFT+U, Davidson block subspace methods, and force-constant calculations.",
+        "verdict": "faithful"
+      },
+      "1": {
+        "n_members": 106,
+        "n_articles": 1,
+        "label": "Materials Project: Electronic Structure & ML Methods",
+        "gloss": "Materials Project methods spanning electronic structure calculations (G0W0, hybrid functionals HSE06/PBE0, Dynamical Mean Field Theory) and machine learning (Gradient Boosting Decision Tree).",
+        "verdict": "faithful"
+      },
+      "5": {
+        "n_members": 139,
+        "n_articles": 1,
+        "label": "AutoML Pipeline for Materials Property Prediction",
+        "gloss": "An AutoML pipeline with automated feature generation, model selection, and data curation for materials property prediction.",
+        "verdict": "faithful"
+      },
+      "6": {
+        "n_members": 173,
+        "n_articles": 1,
+        "label": "Descriptor-Based Interatomic Potential Database Construction",
+        "gloss": "Techniques for interatomic potential training database construction and validation, including CUR sparsification, iterative database extension, and hierarchical descriptor combination.",
+        "verdict": "faithful"
+      }
+    },
+    "over_claim_rate": 0.0
+  },
+  "level1_2022": {
+    "coverage": "32/32 (COMPLETE)",
+    "clusters": {
+      "16": {
+        "n_members": 3,
+        "n_articles": 0,
+        "label": "Materials Property Prediction Targets (MoS2, Graphene)",
+        "gloss": "Property prediction targets (MoS2, graphene) evaluated via MAE (meV).",
+        "verdict": "faithful (no claims signal)"
+      },
+      "19": {
+        "n_members": 4,
+        "n_articles": 1,
+        "label": "Future Directions: Materials Project Open-Source Analysis Platforms",
+        "gloss": "Proposed future directions for cost-effective, data-driven materials design and open-source materials analysis platforms.",
+        "verdict": "faithful"
+      },
+      "25": {
+        "n_members": 4,
+        "n_articles": 1,
+        "label": "Future Directions: Transferable Ionic Diffusion Models for Solid-State Electrolytes",
+        "gloss": "Proposed future directions for transferable ionic diffusion models and solid-state electrolyte screening.",
+        "verdict": "faithful"
+      },
+      "2": {
+        "n_members": 4,
+        "n_articles": 1,
+        "label": "Design Problems for Energy-Conserving Molecular Force Fields",
+        "gloss": "Core design problems in energy-conserving, rotationally invariant force field learning and potential energy surface modeling.",
+        "verdict": "faithful"
+      },
+      "22": {
+        "n_members": 7,
+        "n_articles": 2,
+        "label": "Future Directions: Materials Property Benchmarking Comparisons",
+        "gloss": "Proposed future directions for comparing algorithms against benchmarking test sets (Matbench, JARVIS).",
+        "verdict": "faithful"
+      },
+      "24": {
+        "n_members": 10,
+        "n_articles": 2,
+        "label": "Future Directions: Transferable ML Interatomic Potentials for Silicon and Carbon",
+        "gloss": "Proposed future work on transferable interatomic potentials, including brittle fracture simulation.",
+        "verdict": "faithful"
+      },
+      "9": {
+        "n_members": 11,
+        "n_articles": 2,
+        "label": "Baseline Graph Neural Network Architectures for Molecular Property Prediction",
+        "gloss": "A comparison set of graph neural network baselines for molecular property prediction.",
+        "verdict": "faithful"
+      },
+      "15": {
+        "n_members": 11,
+        "n_articles": 0,
+        "label": "Materials Property Prediction Benchmarks (Materials Project)",
+        "gloss": "Materials property targets and metrics (formation energy, band gap, bulk/shear moduli) from the Materials Project, evaluated via MAE.",
+        "verdict": "faithful (no claims signal)"
+      },
+      "23": {
+        "n_members": 12,
+        "n_articles": 3,
+        "label": "Future Directions: Materials Property Prediction & Fracture Modeling",
+        "gloss": "Proposed future directions building on CGCNN and large-scale materials-space exploration, including fracture pattern prediction.",
+        "verdict": "faithful"
+      },
+      "1": {
+        "n_members": 14,
+        "n_articles": 1,
+        "label": "SchNet: Continuous-Filter Convolutional Network for Molecules",
+        "gloss": "SchNet, using continuous-filter convolutions, radial basis function distance expansion, and a combined energy-and-force loss for molecular property prediction.",
+        "verdict": "faithful (after one correction: 'energy-conserving' was not a member term for this specific cluster, unlike a similar cluster elsewhere -- corrected to the actual member term 'combined energy-and-force loss')"
+      },
+      "7": {
+        "n_members": 17,
+        "n_articles": 1,
+        "label": "Neural Equivariant Interatomic Potentials (NequIP)",
+        "gloss": "Equivariant convolutional neural network potentials using Clebsch-Gordan tensor products and energy-gradient force derivation.",
+        "verdict": "faithful"
+      },
+      "18": {
+        "n_members": 18,
+        "n_articles": 1,
+        "label": "Materials Project: Open Data Platform for Computational Materials Science",
+        "gloss": "The Materials Project's high-throughput computational workflow and open data platform.",
+        "verdict": "faithful"
+      },
+      "31": {
+        "n_members": 19,
+        "n_articles": 1,
+        "label": "Tensorial & Magnetic Atomic Cluster Expansion",
+        "gloss": "Extends the Atomic Cluster Expansion framework to tensorial atomic properties including magnetic moments.",
+        "verdict": "faithful"
+      },
+      "6": {
+        "n_members": 35,
+        "n_articles": 3,
+        "label": "Message Passing Neural Networks with Long-Range Communication",
+        "gloss": "Message passing techniques including virtual edges for long-range communication and multiple-tower decomposition.",
+        "verdict": "faithful"
+      },
+      "3": {
+        "n_members": 35,
+        "n_articles": 1,
+        "label": "ConvLSTM Fracture Pattern Prediction",
+        "gloss": "A ConvLSTM-based fracture prediction model using image-based encoding of atomistic data.",
+        "verdict": "faithful"
+      },
+      "20": {
+        "n_members": 38,
+        "n_articles": 1,
+        "label": "Crystal Graph Attention Network (CGAT) Variants for Elastic/Deformation Properties",
+        "gloss": "CGAT network variants for predicting deformation potential, convex hull distance, and stiffness tensor properties.",
+        "verdict": "faithful"
+      },
+      "4": {
+        "n_members": 41,
+        "n_articles": 1,
+        "label": "Design Problems for Accurate, Transferable Interatomic Potentials (Silicon)",
+        "gloss": "Core design problems for transferable silicon interatomic potentials, including high-dimensional PES sampling.",
+        "verdict": "faithful"
+      },
+      "32": {
+        "n_members": 41,
+        "n_articles": 1,
+        "label": "E(3)-Equivariant Neural Networks for Hamiltonian Prediction",
+        "gloss": "E(3)-equivariant networks using Clebsch-Gordan coefficients to predict DFT Hamiltonian matrix elements.",
+        "verdict": "faithful"
+      },
+      "10": {
+        "n_members": 42,
+        "n_articles": 4,
+        "label": "Crystal Graph Convolutional Network Architecture Components",
+        "gloss": "Component architecture for crystal graph convolutional networks (graph convolution layers, linear pooling).",
+        "verdict": "faithful"
+      },
+      "28": {
+        "n_members": 43,
+        "n_articles": 1,
+        "label": "AFLOW: Automated Phonon and Surface/Nanoparticle Structure Analysis",
+        "gloss": "AFLOW capabilities for automated phonon extraction and surface/nanoparticle structure construction.",
+        "verdict": "faithful"
+      },
+      "27": {
+        "n_members": 54,
+        "n_articles": 1,
+        "label": "OQMD: Convex Hull Stability Analysis for Materials Discovery",
+        "gloss": "OQMD using convex hull stability analysis for materials discovery.",
+        "verdict": "faithful"
+      },
+      "29": {
+        "n_members": 57,
+        "n_articles": 2,
+        "label": "AFLOW Superconductivity Analysis (Allen-Dynes/McMillan)",
+        "gloss": "AFLOW-based superconducting critical-temperature estimation using Allen-Dynes/McMillan formulas, with band gap and spin polarization calculations.",
+        "verdict": "faithful"
+      },
+      "14": {
+        "n_members": 58,
+        "n_articles": 4,
+        "label": "Deep Potential, Message Passing & SchNet Foundations",
+        "gloss": "Foundational neural network potential methods (Deep Potential, SchNet) with active learning workflows.",
+        "verdict": "faithful"
+      },
+      "8": {
+        "n_members": 58,
+        "n_articles": 0,
+        "label": "MD-17 Molecular Benchmark Datasets",
+        "gloss": "MD-17 benchmark molecules (aspirin, benzene, ethanol, malonaldehyde, toluene) with CCSD(T)-level reference data.",
+        "verdict": "faithful (no claims signal)"
+      },
+      "13": {
+        "n_members": 59,
+        "n_articles": 2,
+        "label": "E(3)-Equivariant Deep-Learning DFT Hamiltonian Prediction",
+        "gloss": "E(3)-equivariant neural network representations of DFT Hamiltonians, using ARPACK eigenvalue solving.",
+        "verdict": "faithful"
+      },
+      "30": {
+        "n_members": 63,
+        "n_articles": 2,
+        "label": "AFLOW Standard: DFT Calculation Protocols",
+        "gloss": "AFLOW DFT calculation protocols including DFT+U and Davidson block subspace methods.",
+        "verdict": "faithful"
+      },
+      "12": {
+        "n_members": 68,
+        "n_articles": 1,
+        "label": "Active Learning & Molecular Dynamics Sampling for Interatomic Potentials",
+        "gloss": "Active learning workflows using FPMD simulations and NVE/NVT ensemble sampling.",
+        "verdict": "faithful"
+      },
+      "21": {
+        "n_members": 104,
+        "n_articles": 1,
+        "label": "AutoML for Materials Property Prediction",
+        "gloss": "AutoML pipeline with automated feature generation for materials property prediction.",
+        "verdict": "faithful"
+      },
+      "17": {
+        "n_members": 105,
+        "n_articles": 1,
+        "label": "Materials Project: Electronic Structure & ML Methods",
+        "gloss": "Materials Project methods spanning G0W0, HSE06, JARVIS integration, and Gradient Boosting Decision Tree.",
+        "verdict": "faithful"
+      },
+      "11": {
+        "n_members": 165,
+        "n_articles": 4,
+        "label": "Universal & Equivariant Graph Interatomic Potentials",
+        "gloss": "Universal graph deep learning interatomic potentials and E(3)-equivariant networks, linking atomic defects to mesoscale properties.",
+        "verdict": "faithful"
+      },
+      "26": {
+        "n_members": 169,
+        "n_articles": 15,
+        "label": "Materials Property Prediction Tasks & Benchmarking (AutoML/Automatminer)",
+        "gloss": "A broad set of materials property prediction tasks (stress field, band gap, phonon) benchmarked via AutoML/Automatminer.",
+        "verdict": "faithful (broad -- 15 articles, P2-budget catch-all)"
+      },
+      "5": {
+        "n_members": 184,
+        "n_articles": 2,
+        "label": "Survey of Machine-Learned & Classical Interatomic Potentials",
+        "gloss": "A survey of interatomic potentials spanning classical (Brenner), GP-based (GAP, FCHL19, SOAP), and neural approaches (GemNet, PaiNN, NewtonNet, DimeNet), vs Kohn-Sham DFT.",
+        "verdict": "faithful"
+      }
+    },
+    "over_claim_rate": 0.0
+  },
+  "level1_2024": {
+    "coverage": "38/38 (COMPLETE)",
+    "clusters": {
+      "24": {
+        "n_members": 2,
+        "n_articles": 0,
+        "label": "ACE Evaluation on Acetylacetone",
+        "gloss": "Energy RMSE evaluation on the acetylacetone dataset.",
+        "verdict": "faithful (no claims)"
+      },
+      "8": {
+        "n_members": 14,
+        "n_articles": 3,
+        "label": "Future Directions: Transferable ML Interatomic Potentials & Electrolytes",
+        "gloss": "Future directions for transferable interatomic potentials (silicon, carbon) and solid-state electrolyte screening.",
+        "verdict": "faithful"
+      },
+      "35": {
+        "n_members": 16,
+        "n_articles": 1,
+        "label": "Equivariant Interatomic Potentials: Data Efficiency Challenges",
+        "gloss": "Equivariant convolutional potentials (Clebsch-Gordan tensor products) addressing data inefficiency in neural interatomic potentials.",
+        "verdict": "faithful"
+      },
+      "34": {
+        "n_members": 17,
+        "n_articles": 1,
+        "label": "Continuous-Filter Convolutional Network Components for Molecular Force Fields",
+        "gloss": "Neural network components (radial basis expansion, combined energy-and-force loss) for molecular force field prediction.",
+        "verdict": "faithful"
+      },
+      "28": {
+        "n_members": 17,
+        "n_articles": 0,
+        "label": "Materials Formation Energy Benchmark Datasets (GNoME, ICSD)",
+        "gloss": "Benchmark composition/validation datasets (GNoME, ICSD, r2SCAN validation) for materials formation energy prediction.",
+        "verdict": "faithful (no claims)"
+      },
+      "23": {
+        "n_members": 18,
+        "n_articles": 1,
+        "label": "Tensorial & Magnetic Atomic Cluster Expansion",
+        "gloss": "Extends ACE to tensorial atomic properties including magnetic moments and charge transfer.",
+        "verdict": "faithful"
+      },
+      "20": {
+        "n_members": 20,
+        "n_articles": 4,
+        "label": "Deep Learning for Magnetic Superstructures & Materials Space Exploration (OQMD)",
+        "gloss": "Deep-learning electronic structure calculation of magnetic superstructures and large-scale materials-space exploration using OQMD.",
+        "verdict": "faithful"
+      },
+      "19": {
+        "n_members": 21,
+        "n_articles": 5,
+        "label": "Materials Property Benchmarking (Matbench, CGCNN)",
+        "gloss": "Benchmarking materials property prediction methods (Matbench, CGCNN) across multiple datasets.",
+        "verdict": "faithful"
+      },
+      "13": {
+        "n_members": 22,
+        "n_articles": 1,
+        "label": "Materials Project: Open Data Platform for Computational Materials Science",
+        "gloss": "The Materials Project's high-throughput workflow and open data platform.",
+        "verdict": "faithful"
+      },
+      "37": {
+        "n_members": 25,
+        "n_articles": 1,
+        "label": "MACE-MP-0: Extrapolation & Data-Efficiency Challenges",
+        "gloss": "MACE-MP-0 addressing extrapolation to out-of-domain configurations and data-efficiency challenges.",
+        "verdict": "faithful"
+      },
+      "14": {
+        "n_members": 35,
+        "n_articles": 1,
+        "label": "ConvLSTM Fracture Pattern Prediction",
+        "gloss": "ConvLSTM-based fracture prediction using image-based encoding of atomistic data.",
+        "verdict": "faithful"
+      },
+      "29": {
+        "n_members": 38,
+        "n_articles": 1,
+        "label": "CGAT Variants for Elastic/Deformation & Electron-Phonon Properties",
+        "gloss": "CGAT network variants for convex hull distance and electron-phonon coupling prediction.",
+        "verdict": "faithful"
+      },
+      "33": {
+        "n_members": 39,
+        "n_articles": 1,
+        "label": "Machine Learning for Multiscale Computational Modeling (Survey)",
+        "gloss": "ML methods (meta-learning, transfer learning) for multiscale computational modeling.",
+        "verdict": "faithful"
+      },
+      "27": {
+        "n_members": 40,
+        "n_articles": 4,
+        "label": "Message Passing Neural Networks with Long-Range Communication",
+        "gloss": "Message passing techniques including virtual edges for long-range communication and multiple-tower decomposition.",
+        "verdict": "faithful"
+      },
+      "15": {
+        "n_members": 40,
+        "n_articles": 1,
+        "label": "Design Problems for Transferable Interatomic Potentials (Silicon)",
+        "gloss": "Core design problems for transferable silicon interatomic potentials, including high-dimensional PES sampling.",
+        "verdict": "faithful"
+      },
+      "11": {
+        "n_members": 44,
+        "n_articles": 1,
+        "label": "D4FT: Differentiable Density Functional Theory",
+        "gloss": "D4FT using QR decomposition, GPU acceleration, and stochastic optimization for differentiable DFT.",
+        "verdict": "faithful"
+      },
+      "4": {
+        "n_members": 44,
+        "n_articles": 1,
+        "label": "E(3)-Equivariant Neural Networks for Hamiltonian Prediction",
+        "gloss": "E(3)-equivariant networks predicting DFT Hamiltonian matrix elements.",
+        "verdict": "faithful"
+      },
+      "21": {
+        "n_members": 49,
+        "n_articles": 1,
+        "label": "High-Throughput Screening with Convex-Hull & Ensemble Methods",
+        "gloss": "High-throughput materials screening using ensemble learning and high-throughput screening techniques.",
+        "verdict": "faithful"
+      },
+      "31": {
+        "n_members": 50,
+        "n_articles": 4,
+        "label": "Crystal Graph Networks & Superconductivity Analysis",
+        "gloss": "Crystal graph representation methods alongside Allen-Dynes superconductivity formula calculations.",
+        "verdict": "faithful"
+      },
+      "32": {
+        "n_members": 59,
+        "n_articles": 7,
+        "label": "Survey of Neural Network Interatomic Potentials (BOTNet, Behler-Parrinello, ACE)",
+        "gloss": "A survey of neural network interatomic potentials including BOTNet and related equivariant/classical approaches.",
+        "verdict": "faithful"
+      },
+      "2": {
+        "n_members": 64,
+        "n_articles": 1,
+        "label": "AFLOW: Automated Phonon Calculation Methods",
+        "gloss": "AFLOW phonon calculation methods including DFT+U and frozen-phonon approaches.",
+        "verdict": "faithful"
+      },
+      "9": {
+        "n_members": 65,
+        "n_articles": 5,
+        "label": "Universal Graph-Based Interatomic Potentials (CHGNet, Deep Potential MD)",
+        "gloss": "Universal graph-based interatomic potentials (CHGNet) and Deep Potential Molecular Dynamics.",
+        "verdict": "faithful"
+      },
+      "5": {
+        "n_members": 70,
+        "n_articles": 2,
+        "label": "Deep-Learning DFT Hamiltonian Prediction",
+        "gloss": "Deep-learning Hamiltonian prediction using ARPACK eigenvalue solving and Gaussian distance expansion.",
+        "verdict": "faithful"
+      },
+      "36": {
+        "n_members": 71,
+        "n_articles": 1,
+        "label": "GPU-Parallelized Equivariant Message-Passing for Melt-Quench MD",
+        "gloss": "GPU-optimized equivariant message-passing techniques for melt-quench molecular dynamics simulation.",
+        "verdict": "faithful"
+      },
+      "30": {
+        "n_members": 89,
+        "n_articles": 1,
+        "label": "Graph Neural Networks for Phonon Band Structure Prediction",
+        "gloss": "Bi-directional virtual node message passing for phonon band structure prediction.",
+        "verdict": "faithful"
+      },
+      "1": {
+        "n_members": 91,
+        "n_articles": 1,
+        "label": "Survey of Universal ML Models for Materials Discovery (M3GNet, Equiformer, GNoME)",
+        "gloss": "A survey of universal ML models (M3GNet, Equiformer) for materials discovery and property prediction.",
+        "verdict": "faithful"
+      },
+      "25": {
+        "n_members": 97,
+        "n_articles": 0,
+        "label": "MD-17 & Carbon-Cluster Benchmark Datasets",
+        "gloss": "MD-17 molecular benchmarks and carbon-cluster (C20-C180) datasets with local-scaling variants.",
+        "verdict": "faithful (no claims)"
+      },
+      "18": {
+        "n_members": 102,
+        "n_articles": 1,
+        "label": "AutoML for Materials Property Prediction",
+        "gloss": "AutoML pipeline for materials property prediction with automated feature generation.",
+        "verdict": "faithful"
+      },
+      "12": {
+        "n_members": 103,
+        "n_articles": 1,
+        "label": "Materials Project: Electronic Structure & ML Methods",
+        "gloss": "Materials Project methods spanning G0W0, HSE06, and Gradient Boosting Decision Tree.",
+        "verdict": "faithful"
+      },
+      "3": {
+        "n_members": 109,
+        "n_articles": 2,
+        "label": "AFLOW Superconductivity Analysis (Allen-Dynes/McMillan)",
+        "gloss": "AFLOW-based superconducting critical-temperature estimation.",
+        "verdict": "faithful"
+      },
+      "26": {
+        "n_members": 115,
+        "n_articles": 1,
+        "label": "EquiformerV2: Equivariant Transformer for High-Degree Representations",
+        "gloss": "EquiformerV2 using attention re-normalization for scalable atomic property prediction.",
+        "verdict": "faithful"
+      },
+      "10": {
+        "n_members": 127,
+        "n_articles": 6,
+        "label": "D4FT, DeepH & Multiscale Bridging Methods",
+        "gloss": "Deep-learning DFT methods (D4FT, DeepH) and multiscale bridging from statistical mechanics to phase-field modeling.",
+        "verdict": "faithful (broad, 6 articles)"
+      },
+      "17": {
+        "n_members": 132,
+        "n_articles": 1,
+        "label": "AutoML for Melting Temperature Prediction",
+        "gloss": "AutoML pipeline with DFT elastic moduli calculations for melting temperature prediction.",
+        "verdict": "faithful"
+      },
+      "16": {
+        "n_members": 133,
+        "n_articles": 1,
+        "label": "Descriptor-Based Interatomic Potential Database Construction",
+        "gloss": "CUR sparsification and iterative database extension techniques for potential training data.",
+        "verdict": "faithful"
+      },
+      "38": {
+        "n_members": 177,
+        "n_articles": 2,
+        "label": "DeePMD-kit: Deep Potential Software with Active Learning",
+        "gloss": "DeePMD-kit software package with active learning and Arrhenius-based analysis.",
+        "verdict": "faithful"
+      },
+      "7": {
+        "n_members": 193,
+        "n_articles": 3,
+        "label": "Active-Learning Interatomic Potential Training with Physics-Based Constraints",
+        "gloss": "Active learning with iterative retraining and physics-based constraints (charge-state via magmom projection) for interatomic potential training.",
+        "verdict": "faithful"
+      },
+      "6": {
+        "n_members": 223,
+        "n_articles": 9,
+        "label": "Graph Neural Networks for Molecular & Crystal Property Prediction (Universal Frameworks)",
+        "gloss": "Universal graph neural network frameworks including E(3)-equivariant potentials, linking atomic defects to mesoscale properties.",
+        "verdict": "faithful (broad, 9 articles)"
+      },
+      "22": {
+        "n_members": 417,
+        "n_articles": 27,
+        "label": "Broad Atomistic Simulation Tasks (AIMD, Adsorption, Activation Energy)",
+        "gloss": "A broad set of atomistic simulation tasks: AIMD, adsorption energy calculation (AdsorbML), and activation energy estimation.",
+        "verdict": "faithful (EXTREME catch-all: 27 articles, 417 members -- the largest single cluster in the entire rollout, a direct P2-budget artifact)"
+      }
+    },
+    "over_claim_rate": 0.0
+  },
+  "level1_2026": {
+    "coverage": "40/40 (COMPLETE)",
+    "labeller": "Claude Opus 5 (chat), given ONLY labeller_input (member surface forms by type) from outputs/labelling_input_2026_level1.json; faithfulness_signal (claims) never shown",
+    "labelling_rule": "name only entities that occur verbatim in the member list; every named entity is listed under `entities` and checked by src/faithfulness_check.py",
+    "clusters": {
+      "1": {
+        "n_members": 40,
+        "n_articles": 4,
+        "label": "Message Passing Neural Networks for Quantum Chemistry (QM9)",
+        "gloss": "Message-passing and equivariant graph neural networks (e.g. Message Passing Neural Network, SE(3)-Transformer) with components such as Set2Set readout and GRU update, evaluated on QM9.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 6,
+          "n_supported_by_claims": 2,
+          "n_member_only": 4,
+          "not_grounded": []
+        }
+      },
+      "2": {
+        "n_members": 224,
+        "n_articles": 15,
+        "label": "Crystal Graph Networks for Material Property and Phonon Prediction",
+        "gloss": "Graph neural network methods (e.g. ALIGNN, Allegro) on crystal graph representations predicting material properties such as band gap and formation energy, including full phonon band structure prediction, with data from Materials Project.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 7,
+          "n_supported_by_claims": 5,
+          "n_member_only": 2,
+          "not_grounded": []
+        }
+      },
+      "3": {
+        "n_members": 55,
+        "n_articles": 1,
+        "label": "Crystal-Graph Attention Networks (CGAT) for Stability Screening",
+        "gloss": "The Crystal-Graph Attention Network series (CGAT, DCGAT-2) used for convex hull distance prediction and screening tasks such as hard material discovery and high-Tc superconductor identification.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 6,
+          "n_supported_by_claims": 2,
+          "n_member_only": 4,
+          "not_grounded": []
+        }
+      },
+      "4": {
+        "n_members": 422,
+        "n_articles": 10,
+        "label": "Graph-Network Potentials and Property Models (broad)",
+        "gloss": "A broad catch-all group of graph-network models (e.g. Crystal Hamiltonian Graph neural Network, Euclidean neural networks, MEGNet) for fast energy/force/stress and property prediction, applied to tasks such as grain-boundary energy calculation and martensitic phase transition modeling.",
+        "verdict": "faithful (entity-level); broad catch-all cluster",
+        "entity_check": {
+          "n_entities": 6,
+          "n_supported_by_claims": 2,
+          "n_member_only": 4,
+          "not_grounded": []
+        }
+      },
+      "5": {
+        "n_members": 18,
+        "n_articles": 1,
+        "label": "Atomic Cluster Expansion for Vectorial and Tensorial Properties",
+        "gloss": "Extension of the Atomic Cluster Expansion to scalar, vectorial and tensorial properties with magnetic and charge degrees of freedom, using Clebsch-Gordan coupling and analytic gradient evaluation for forces and torques.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 5,
+          "n_supported_by_claims": 2,
+          "n_member_only": 3,
+          "not_grounded": []
+        }
+      },
+      "6": {
+        "n_members": 2,
+        "n_articles": 0,
+        "label": "Energy RMSE on Acetylacetone",
+        "gloss": "Energy RMSE (meV) evaluation on the acetylacetone dataset.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 2,
+          "n_supported_by_claims": 0,
+          "n_member_only": 2,
+          "not_grounded": []
+        }
+      },
+      "7": {
+        "n_members": 107,
+        "n_articles": 1,
+        "label": "EquiformerV2: Equivariant Transformer on OC20/OC22",
+        "gloss": "EquiformerV2, an equivariant Transformer using equivariant graph attention and attention re-normalization, evaluated on OC20 and OC22 energy and force prediction.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 6,
+          "n_supported_by_claims": 4,
+          "n_member_only": 2,
+          "not_grounded": []
+        }
+      },
+      "8": {
+        "n_members": 95,
+        "n_articles": 0,
+        "label": "Molecular and Elemental Benchmark Sets with Energy/Force Errors",
+        "gloss": "Benchmark datasets such as Aspirin (MD-17) and Benzene, together with error and cost metrics such as Energy MAE, force MAE and wall-clock time.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 5,
+          "n_supported_by_claims": 0,
+          "n_member_only": 5,
+          "not_grounded": []
+        }
+      },
+      "9": {
+        "n_members": 77,
+        "n_articles": 2,
+        "label": "Interatomic Potentials on OMol25: Transformers and Learned Equivariance",
+        "gloss": "Machine-learned interatomic potentials evaluated on OMol25, including Transformer-based Inter-Atomic Potentials, TransAug and GemNet-OC, with components such as continuous-filter convolution and a contrastive latent equivariance loss.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 7,
+          "n_supported_by_claims": 5,
+          "n_member_only": 2,
+          "not_grounded": []
+        }
+      },
+      "10": {
+        "n_members": 38,
+        "n_articles": 1,
+        "label": "Machine Learning for Multiscale Computational Modeling: Challenges",
+        "gloss": "Perspective on machine learning for multiscale modeling (neural operators, transfer learning, meta-learning) in computational mechanics and fluid mechanics, naming problems such as data scarcity and model interpretability.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 7,
+          "n_supported_by_claims": 3,
+          "n_member_only": 4,
+          "not_grounded": []
+        }
+      },
+      "11": {
+        "n_members": 96,
+        "n_articles": 4,
+        "label": "SevenNet: Parallel GNN Potentials for Large-Scale MD",
+        "gloss": "The SevenNet package and a spatial decomposition scheme for GNN-IPs enabling multi-GPU parallelization of large-scale MD, applied to SiO2 and amorphous Si3N4.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 6,
+          "n_supported_by_claims": 3,
+          "n_member_only": 3,
+          "not_grounded": []
+        }
+      },
+      "12": {
+        "n_members": 24,
+        "n_articles": 1,
+        "label": "MACE: Higher-Order Equivariant Message Passing",
+        "gloss": "MACE, an equivariant message passing network with higher-order many-body messages, Bessel radial basis functions and loop tensor contraction, targeting data-efficiency and scalability.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 6,
+          "n_supported_by_claims": 1,
+          "n_member_only": 5,
+          "not_grounded": []
+        }
+      },
+      "13": {
+        "n_members": 25,
+        "n_articles": 3,
+        "label": "Energy-Conserving vs Unconstrained Equivariant Potentials",
+        "gloss": "E(3)-equivariant convolution potentials with energy-conserving force computation, contrasted with unconstrained models that give energy-non-conserving force predictions.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 4,
+          "n_supported_by_claims": 1,
+          "n_member_only": 3,
+          "not_grounded": []
+        }
+      },
+      "14": {
+        "n_members": 79,
+        "n_articles": 1,
+        "label": "Long-Range Electrostatics and Charge Equilibration in MLIPs",
+        "gloss": "Long-range electrostatic modeling in MLIPs via charge equilibration (CELLI), Latent Ewald Summation and Euclidean Fast Attention, with biased data splitting to test chemical space generalization on QMOF and ODAC25.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 9,
+          "n_supported_by_claims": 4,
+          "n_member_only": 5,
+          "not_grounded": []
+        }
+      },
+      "15": {
+        "n_members": 16,
+        "n_articles": 0,
+        "label": "Universal MLIP Benchmark Datasets (LAMBench, MADBench, SPICE)",
+        "gloss": "Benchmark datasets for universal MLIPs such as LAMBench, MADBench, OC20-NEB and SPICE, with metrics including DAF and MAE E.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 7,
+          "n_supported_by_claims": 0,
+          "n_member_only": 7,
+          "not_grounded": []
+        }
+      },
+      "16": {
+        "n_members": 65,
+        "n_articles": 3,
+        "label": "Benchmarking Universal MLIPs for NEB Migration Barriers",
+        "gloss": "An MLIP-NEB benchmarking workflow assessing MLIPs such as CHGNet, M3GNet and MACE-MP-0 on migration barriers for high-throughput ionic conductor screening.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 6,
+          "n_supported_by_claims": 4,
+          "n_member_only": 2,
+          "not_grounded": []
+        }
+      },
+      "17": {
+        "n_members": 176,
+        "n_articles": 2,
+        "label": "DeePMD-kit v2 and Deep Potential Models for Ionic Diffusion",
+        "gloss": "The DeePMD-kit v2 software package with Deep Potential models (DeepPot-SE, DPA-1) and DP-GEN, applied to diffusion coefficient and activation energy estimation in materials such as LGPS, LLZO and NASICON.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 9,
+          "n_supported_by_claims": 6,
+          "n_member_only": 3,
+          "not_grounded": []
+        }
+      },
+      "18": {
+        "n_members": 79,
+        "n_articles": 2,
+        "label": "Training Datasets for ML Interatomic Potentials (MPtrj, MatPES, OMat24)",
+        "gloss": "Training datasets and dataset-generation workflows for ML interatomic potentials (MPtrj, MatPES, OMat24, Alexandria) using stratified sampling, BIRCH clustering and DeNS denoising.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 8,
+          "n_supported_by_claims": 5,
+          "n_member_only": 3,
+          "not_grounded": []
+        }
+      },
+      "19": {
+        "n_members": 30,
+        "n_articles": 1,
+        "label": "Flow-Matching Models for Atomistic Dynamics (LiFlow)",
+        "gloss": "Flow Matching models such as LiFlow, built from a Propagator and a Corrector with a modified PaiNN flow approximator and an adaptive Maxwell–Boltzmann prior.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 6,
+          "n_supported_by_claims": 2,
+          "n_member_only": 4,
+          "not_grounded": []
+        }
+      },
+      "20": {
+        "n_members": 101,
+        "n_articles": 1,
+        "label": "Automatminer: AutoML for Materials Property Prediction on Matbench",
+        "gloss": "Automatminer, an AutoML pipeline with automated feature generation and automated model selection for materials property prediction, benchmarked on the Matbench test suite.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 5,
+          "n_supported_by_claims": 1,
+          "n_member_only": 4,
+          "not_grounded": []
+        }
+      },
+      "21": {
+        "n_members": 85,
+        "n_articles": 1,
+        "label": "Matbench Discovery: Benchmarking Stable-Crystal Prediction",
+        "gloss": "Matbench Discovery, benchmarking models such as CGCNN, MEGNet, Equiformer and BOWSR on the WBM test set for thermodynamic stability classification and convex-hull distance regression.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 8,
+          "n_supported_by_claims": 3,
+          "n_member_only": 5,
+          "not_grounded": []
+        }
+      },
+      "22": {
+        "n_members": 115,
+        "n_articles": 2,
+        "label": "AFLOW High-Throughput DFT Framework and Standard",
+        "gloss": "The AFLOW framework and standard for high-throughput DFT calculations, covering phonon dispersion, convex-hull phase diagram construction and interstitial site discovery.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 4,
+          "n_supported_by_claims": 2,
+          "n_member_only": 2,
+          "not_grounded": []
+        }
+      },
+      "23": {
+        "n_members": 43,
+        "n_articles": 1,
+        "label": "DeepH-E3: Equivariant DFT Hamiltonians with Spin-Orbit Coupling",
+        "gloss": "DeepH-E3, an E(3)-equivariant neural network for DFT Hamiltonian learning including strong spin-orbit coupling, evaluated on MoS2 and graphene.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 6,
+          "n_supported_by_claims": 3,
+          "n_member_only": 3,
+          "not_grounded": []
+        }
+      },
+      "24": {
+        "n_members": 74,
+        "n_articles": 2,
+        "label": "Equivariant Hamiltonian Learning for Magnetic and Twisted Materials",
+        "gloss": "A deep equivariant neural network method for predicting DFT Hamiltonian matrices of magnetic and moiré-twisted materials, tested on Moiré-twisted bilayer CrI3, NiBr2 spin-spiral and twisted bilayer graphene.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 6,
+          "n_supported_by_claims": 3,
+          "n_member_only": 3,
+          "not_grounded": []
+        }
+      },
+      "25": {
+        "n_members": 209,
+        "n_articles": 15,
+        "label": "Universal Potentials, Active Learning and Phase-Field Models (broad)",
+        "gloss": "A broad catch-all group spanning pretrained universal potentials (CHGNet, M3GNet), Deep Potential molecular dynamics, active learning workflows and Allen–Cahn / Cahn–Hilliard phase field models.",
+        "verdict": "faithful (entity-level); broad catch-all cluster",
+        "entity_check": {
+          "n_entities": 6,
+          "n_supported_by_claims": 3,
+          "n_member_only": 3,
+          "not_grounded": []
+        }
+      },
+      "26": {
+        "n_members": 35,
+        "n_articles": 1,
+        "label": "ConvLSTM Prediction of Brittle Fracture from MD",
+        "gloss": "A ConvLSTM-based fracture prediction model trained on MD simulation data to predict crack paths and fracture toughness, including bicrystal and gradient-orientation cases.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 6,
+          "n_supported_by_claims": 0,
+          "n_member_only": 6,
+          "not_grounded": []
+        }
+      },
+      "27": {
+        "n_members": 40,
+        "n_articles": 8,
+        "label": "Future Directions: Materials Datasets, Benchmarks and Foundation Models",
+        "gloss": "Future-work topics from dataset, benchmark and survey papers (e.g. Matbench Discovery, OMat24, JARVIS), such as continuous expansion of JARVIS datasets and larger, higher-quality PES datasets.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 6,
+          "n_supported_by_claims": 4,
+          "n_member_only": 2,
+          "not_grounded": []
+        }
+      },
+      "28": {
+        "n_members": 129,
+        "n_articles": 1,
+        "label": "Interpretable Melting Temperature Prediction for Inorganic Compounds",
+        "gloss": "Interpretable, cluster-based models (SISSO, Extreme Gradient Boosting, SHAP analysis) for melting temperature prediction of binary inorganic compounds from elemental and DFT-derived features.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 8,
+          "n_supported_by_claims": 3,
+          "n_member_only": 5,
+          "not_grounded": []
+        }
+      },
+      "29": {
+        "n_members": 51,
+        "n_articles": 7,
+        "label": "Future Directions: ML Potentials, Electronic Structure and Multiscale AI",
+        "gloss": "Future-work topics on machine-learning interatomic potentials, AI-accelerated electronic structure prediction and data-driven multiscale modeling, alongside the Universal HamGNN Hamiltonian model.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 4,
+          "n_supported_by_claims": 0,
+          "n_member_only": 4,
+          "not_grounded": []
+        }
+      },
+      "30": {
+        "n_members": 39,
+        "n_articles": 1,
+        "label": "Gaussian Approximation Potential for Silicon",
+        "gloss": "A Gaussian Approximation Potential (GAP) for silicon built with the SOAP kernel, sparse Gaussian process regression and CUR matrix decomposition, with uncertainty quantification.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 5,
+          "n_supported_by_claims": 2,
+          "n_member_only": 3,
+          "not_grounded": []
+        }
+      },
+      "31": {
+        "n_members": 194,
+        "n_articles": 3,
+        "label": "Cross-Domain Benchmarks and Metrics for MLIPs",
+        "gloss": "Benchmark datasets and metrics for evaluating MLIPs across domains such as catalysis (AdsorbML), the CSP Blind Test and elasticity, with metrics like Energy/Atom MAE and MAE_Kbulk.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 7,
+          "n_supported_by_claims": 0,
+          "n_member_only": 7,
+          "not_grounded": []
+        }
+      },
+      "32": {
+        "n_members": 453,
+        "n_articles": 5,
+        "label": "Carbon Potentials and Universal Atomistic Models (broad)",
+        "gloss": "A broad catch-all group combining interatomic potentials for carbon (Tersoff, REBO, Gaussian approximation potentials with SOAP descriptors) with universal models such as Orb-v3 and Universal Models for Atoms.",
+        "verdict": "faithful (entity-level); broad catch-all cluster",
+        "entity_check": {
+          "n_entities": 7,
+          "n_supported_by_claims": 3,
+          "n_member_only": 4,
+          "not_grounded": []
+        }
+      },
+      "33": {
+        "n_members": 48,
+        "n_articles": 1,
+        "label": "Heuristic + ML Formation-Energy Screening of Ternary Compounds (OQMD)",
+        "gloss": "A combined heuristic-ML pipeline (decision-tree regression) predicting ternary formation energies with the OQMD, applied to screening Li-ion battery anodes, HF-scavenging cathode coatings and Mg-based LPSO precipitates.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 7,
+          "n_supported_by_claims": 3,
+          "n_member_only": 4,
+          "not_grounded": []
+        }
+      },
+      "34": {
+        "n_members": 605,
+        "n_articles": 38,
+        "label": "Task Mentions (catch-all)",
+        "gloss": "A catch-all group consisting only of task-type nodes, e.g. AIMD simulations, activation energy estimation and AdsorbML adsorption energy calculation.",
+        "verdict": "faithful (entity-level); broad catch-all cluster",
+        "entity_check": {
+          "n_entities": 3,
+          "n_supported_by_claims": 1,
+          "n_member_only": 2,
+          "not_grounded": []
+        }
+      },
+      "35": {
+        "n_members": 60,
+        "n_articles": 1,
+        "label": "Descriptor-Based Screening of Superionic Conductors",
+        "gloss": "Screening of solid-state ionic conductors with free-volume descriptors, the frozen framework approximation and ML-IAPs (CHGNet, M3GNet), combined via descriptor fusion and CatBoost classification models.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 9,
+          "n_supported_by_claims": 4,
+          "n_member_only": 5,
+          "not_grounded": []
+        }
+      },
+      "36": {
+        "n_members": 20,
+        "n_articles": 3,
+        "label": "Future Directions: Accelerated Simulation of Solid-State Electrolytes",
+        "gloss": "Future-work topics on extending LiFlow and flow-matching models, integrating universal MLIPs and high-throughput screening for ionic transport in solid-state electrolytes.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 5,
+          "n_supported_by_claims": 2,
+          "n_member_only": 3,
+          "not_grounded": []
+        }
+      },
+      "37": {
+        "n_members": 43,
+        "n_articles": 1,
+        "label": "D4FT: Stochastic-Gradient KS-DFT",
+        "gloss": "D4FT, a GPU-accelerated reformulation of KS-DFT that replaces slow self-consistent field convergence with mini-batch stochastic gradient descent over a neural local scaling basis, using automatic differentiation via JAX.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 8,
+          "n_supported_by_claims": 4,
+          "n_member_only": 4,
+          "not_grounded": []
+        }
+      },
+      "38": {
+        "n_members": 123,
+        "n_articles": 2,
+        "label": "JARVIS Integrated Materials Design Infrastructure",
+        "gloss": "The JARVIS integrated materials design infrastructure (JARVIS-DFT, JARVIS-FF, CFID descriptors) for high-throughput DFT property calculation, force-field benchmarking and machine-learning property prediction.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 7,
+          "n_supported_by_claims": 3,
+          "n_member_only": 4,
+          "not_grounded": []
+        }
+      },
+      "39": {
+        "n_members": 66,
+        "n_articles": 1,
+        "label": "LLM Agents and Foundation Models for Materials Discovery",
+        "gloss": "LLM-agent frameworks and foundation models (CLIP, BERT) for accelerated materials discovery, covering hypothesis generation, experimental plan generation and human-in-the-loop workflows.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 7,
+          "n_supported_by_claims": 1,
+          "n_member_only": 6,
+          "not_grounded": []
+        }
+      },
+      "40": {
+        "n_members": 9,
+        "n_articles": 2,
+        "label": "Future Directions: Universal Models for Atoms at Scale (Orb-v3, UMA)",
+        "gloss": "Future-work topics from the Orb-v3 and UMA papers, such as uniting universality and scalability in MLIPs and generalization across chemical domains.",
+        "verdict": "faithful (entity-level)",
+        "entity_check": {
+          "n_entities": 4,
+          "n_supported_by_claims": 2,
+          "n_member_only": 2,
+          "not_grounded": []
+        }
+      }
+    },
+    "over_claim_rate": 0.0,
+    "entity_summary": {
+      "n_entities_checked": 246,
+      "n_supported_by_claims": 98,
+      "n_broad_catch_all_clusters": 4
+    },
+    "method_note": "entity-level check via src/faithfulness_check.py (member list + independent claims); relationships asserted between entities were not independently NLI-verified"
+  }
+}

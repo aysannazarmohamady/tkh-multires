@@ -1,0 +1,9197 @@
+{
+  "cutoff_year": 2024,
+  "level": 2,
+  "cohesion_by_cluster": {
+    "1": 0.0,
+    "2": 0.408,
+    "3": 0.0,
+    "4": 0.784,
+    "5": 0.0,
+    "6": 0.5,
+    "7": 0.068,
+    "8": 0.636,
+    "9": 0.0,
+    "10": 0.0,
+    "11": 0.531,
+    "12": 0.757,
+    "13": 0.0,
+    "14": 0.34,
+    "15": 0.949,
+    "16": 0.738,
+    "17": 0.351,
+    "18": 0.795,
+    "19": 0.212,
+    "20": 0.0,
+    "21": 0.868,
+    "22": 0.026,
+    "23": 0.672,
+    "24": 0.0,
+    "25": 0.868,
+    "26": 0.584,
+    "27": 0.537,
+    "28": 0.5,
+    "29": 0.306,
+    "30": 0.63,
+    "31": 0.184,
+    "32": 0.621,
+    "33": 0.13,
+    "34": 0.105,
+    "35": 0.842,
+    "36": 0.343,
+    "37": 0.231,
+    "38": 0.701,
+    "39": 0.121,
+    "40": 0.744,
+    "41": 0.39,
+    "42": 0.0,
+    "43": 0.157,
+    "44": 0.437,
+    "45": 0.87,
+    "46": 0.769,
+    "47": 0.391,
+    "48": 0.534,
+    "49": 0.952,
+    "50": 0.0,
+    "51": 0.421,
+    "52": 0.185,
+    "53": 0.0,
+    "54": 0.957,
+    "55": 0.28,
+    "56": 0.967,
+    "57": 0.05,
+    "58": 0.353,
+    "59": 0.935,
+    "60": 1.0,
+    "61": 0.613,
+    "62": 0.491,
+    "63": 0.0,
+    "64": 0.429,
+    "65": 0.0,
+    "66": 0.0,
+    "67": 0.0,
+    "68": 0.0,
+    "69": 0.0,
+    "70": 0.738,
+    "71": 0.0,
+    "72": 0.0,
+    "73": 0.0,
+    "74": 0.211,
+    "75": 0.0,
+    "76": 0.0,
+    "77": 0.139,
+    "78": 0.0,
+    "79": 0.0,
+    "80": 0.5,
+    "81": 0.769,
+    "82": 0.293,
+    "83": 0.0,
+    "84": 0.0,
+    "85": 0.385,
+    "86": 0.289,
+    "87": 0.0,
+    "88": 0.0,
+    "89": 0.0,
+    "90": 0.922,
+    "91": 0.0,
+    "92": 0.71,
+    "93": 0.676,
+    "94": 0.81,
+    "95": 0.577,
+    "96": 0.0
+  },
+  "internal_edges_by_cluster": {
+    "77": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00004",
+          "relation_type": "solves",
+          "arity": 5
+        }
+      ],
+      "internal_mass": 5
+    },
+    "92": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00018",
+          "relation_type": "solves",
+          "arity": 6
+        },
+        {
+          "edge_id": "h_00019",
+          "relation_type": "uses_component",
+          "arity": 8
+        },
+        {
+          "edge_id": "h_00020",
+          "relation_type": "uses_technique",
+          "arity": 8
+        }
+      ],
+      "internal_mass": 22
+    },
+    "8": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00025",
+          "relation_type": "uses_component",
+          "arity": 19
+        },
+        {
+          "edge_id": "h_00026",
+          "relation_type": "uses_technique",
+          "arity": 16
+        }
+      ],
+      "internal_mass": 35
+    },
+    "16": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00029",
+          "relation_type": "solves",
+          "arity": 9
+        },
+        {
+          "edge_id": "h_00030",
+          "relation_type": "uses_component",
+          "arity": 12
+        },
+        {
+          "edge_id": "h_00031",
+          "relation_type": "uses_technique",
+          "arity": 10
+        }
+      ],
+      "internal_mass": 31
+    },
+    "26": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00033",
+          "relation_type": "evaluated_on",
+          "arity": 4
+        },
+        {
+          "edge_id": "h_00035",
+          "relation_type": "solves",
+          "arity": 9
+        },
+        {
+          "edge_id": "h_00036",
+          "relation_type": "uses_component",
+          "arity": 12
+        },
+        {
+          "edge_id": "h_00037",
+          "relation_type": "uses_technique",
+          "arity": 11
+        },
+        {
+          "edge_id": "h_00372",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00373",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00374",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 45
+    },
+    "38": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00051",
+          "relation_type": "solves",
+          "arity": 18
+        },
+        {
+          "edge_id": "h_00052",
+          "relation_type": "uses_component",
+          "arity": 32
+        },
+        {
+          "edge_id": "h_00053",
+          "relation_type": "uses_technique",
+          "arity": 32
+        },
+        {
+          "edge_id": "h_00317",
+          "relation_type": "presents",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00991",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00992",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00993",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00994",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00995",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00996",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00997",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00998",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00999",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01000",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01001",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01002",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01003",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01004",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01005",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01343",
+          "relation_type": "authored_by",
+          "arity": 9
+        }
+      ],
+      "internal_mass": 138
+    },
+    "2": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00058",
+          "relation_type": "uses_component",
+          "arity": 27
+        },
+        {
+          "edge_id": "h_00059",
+          "relation_type": "uses_technique",
+          "arity": 22
+        }
+      ],
+      "internal_mass": 49
+    },
+    "15": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00072",
+          "relation_type": "evaluated_on",
+          "arity": 9
+        },
+        {
+          "edge_id": "h_00074",
+          "relation_type": "solves",
+          "arity": 9
+        },
+        {
+          "edge_id": "h_00075",
+          "relation_type": "uses_component",
+          "arity": 18
+        },
+        {
+          "edge_id": "h_00076",
+          "relation_type": "uses_technique",
+          "arity": 15
+        },
+        {
+          "edge_id": "h_00579",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00580",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00581",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00582",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00583",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00584",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00585",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00586",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 75
+    },
+    "28": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00079",
+          "relation_type": "solves",
+          "arity": 9
+        },
+        {
+          "edge_id": "h_00081",
+          "relation_type": "uses_technique",
+          "arity": 16
+        }
+      ],
+      "internal_mass": 25
+    },
+    "32": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00085",
+          "relation_type": "solves",
+          "arity": 7
+        },
+        {
+          "edge_id": "h_00086",
+          "relation_type": "uses_component",
+          "arity": 13
+        },
+        {
+          "edge_id": "h_00087",
+          "relation_type": "uses_technique",
+          "arity": 13
+        },
+        {
+          "edge_id": "h_00332",
+          "relation_type": "presents",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01175",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01176",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01177",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01178",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01179",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01180",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01181",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01182",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01183",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01307",
+          "relation_type": "cites",
+          "arity": 5
+        },
+        {
+          "edge_id": "h_01349",
+          "relation_type": "authored_by",
+          "arity": 6
+        }
+      ],
+      "internal_mass": 64
+    },
+    "11": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00091",
+          "relation_type": "solves",
+          "arity": 9
+        },
+        {
+          "edge_id": "h_00092",
+          "relation_type": "uses_component",
+          "arity": 16
+        },
+        {
+          "edge_id": "h_00436",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00439",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00440",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 34
+    },
+    "12": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00095",
+          "relation_type": "evaluated_on",
+          "arity": 4
+        },
+        {
+          "edge_id": "h_00097",
+          "relation_type": "solves",
+          "arity": 4
+        },
+        {
+          "edge_id": "h_00098",
+          "relation_type": "uses_component",
+          "arity": 11
+        },
+        {
+          "edge_id": "h_00416",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00417",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00418",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 28
+    },
+    "43": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00103",
+          "relation_type": "solves",
+          "arity": 11
+        }
+      ],
+      "internal_mass": 11
+    },
+    "82": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00107",
+          "relation_type": "evaluated_on",
+          "arity": 9
+        },
+        {
+          "edge_id": "h_00109",
+          "relation_type": "solves",
+          "arity": 6
+        },
+        {
+          "edge_id": "h_00110",
+          "relation_type": "uses_component",
+          "arity": 9
+        },
+        {
+          "edge_id": "h_00342",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 27
+    },
+    "70": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00120",
+          "relation_type": "solves",
+          "arity": 4
+        },
+        {
+          "edge_id": "h_00121",
+          "relation_type": "uses_component",
+          "arity": 7
+        },
+        {
+          "edge_id": "h_00328",
+          "relation_type": "presents",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01126",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01127",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01128",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01129",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01130",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01131",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01132",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01133",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01134",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01135",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01355",
+          "relation_type": "authored_by",
+          "arity": 2
+        }
+      ],
+      "internal_mass": 45
+    },
+    "18": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00124",
+          "relation_type": "evaluated_on",
+          "arity": 4
+        },
+        {
+          "edge_id": "h_00126",
+          "relation_type": "solves",
+          "arity": 11
+        },
+        {
+          "edge_id": "h_00127",
+          "relation_type": "uses_component",
+          "arity": 17
+        },
+        {
+          "edge_id": "h_00128",
+          "relation_type": "uses_technique",
+          "arity": 21
+        },
+        {
+          "edge_id": "h_00509",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00510",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00511",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 62
+    },
+    "44": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00132",
+          "relation_type": "uses_component",
+          "arity": 26
+        },
+        {
+          "edge_id": "h_00133",
+          "relation_type": "uses_technique",
+          "arity": 26
+        }
+      ],
+      "internal_mass": 52
+    },
+    "64": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00141",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00144",
+          "relation_type": "uses_component",
+          "arity": 12
+        },
+        {
+          "edge_id": "h_00587",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00588",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 21
+    },
+    "4": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00147",
+          "relation_type": "evaluated_on",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00149",
+          "relation_type": "solves",
+          "arity": 10
+        },
+        {
+          "edge_id": "h_00150",
+          "relation_type": "uses_component",
+          "arity": 16
+        },
+        {
+          "edge_id": "h_00151",
+          "relation_type": "uses_technique",
+          "arity": 16
+        },
+        {
+          "edge_id": "h_00340",
+          "relation_type": "presents",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00589",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01267",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01268",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01269",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01270",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01271",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01272",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01273",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01274",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01275",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01276",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01277",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01278",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01279",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01280",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01281",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01360",
+          "relation_type": "authored_by",
+          "arity": 15
+        }
+      ],
+      "internal_mass": 109
+    },
+    "48": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00154",
+          "relation_type": "solves",
+          "arity": 9
+        },
+        {
+          "edge_id": "h_00155",
+          "relation_type": "uses_component",
+          "arity": 11
+        },
+        {
+          "edge_id": "h_00156",
+          "relation_type": "uses_technique",
+          "arity": 11
+        }
+      ],
+      "internal_mass": 31
+    },
+    "47": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00159",
+          "relation_type": "solves",
+          "arity": 7
+        },
+        {
+          "edge_id": "h_00160",
+          "relation_type": "uses_component",
+          "arity": 11
+        }
+      ],
+      "internal_mass": 18
+    },
+    "45": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00170",
+          "relation_type": "solves",
+          "arity": 5
+        },
+        {
+          "edge_id": "h_00171",
+          "relation_type": "uses_component",
+          "arity": 8
+        },
+        {
+          "edge_id": "h_00172",
+          "relation_type": "uses_technique",
+          "arity": 7
+        }
+      ],
+      "internal_mass": 20
+    },
+    "94": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00174",
+          "relation_type": "evaluated_on",
+          "arity": 7
+        },
+        {
+          "edge_id": "h_00176",
+          "relation_type": "solves",
+          "arity": 11
+        },
+        {
+          "edge_id": "h_00177",
+          "relation_type": "uses_component",
+          "arity": 14
+        },
+        {
+          "edge_id": "h_00178",
+          "relation_type": "uses_technique",
+          "arity": 18
+        },
+        {
+          "edge_id": "h_00487",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00488",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00489",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00490",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00491",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00492",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 68
+    },
+    "90": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00192",
+          "relation_type": "evaluated_on",
+          "arity": 6
+        },
+        {
+          "edge_id": "h_00194",
+          "relation_type": "solves",
+          "arity": 18
+        },
+        {
+          "edge_id": "h_00196",
+          "relation_type": "uses_technique",
+          "arity": 32
+        },
+        {
+          "edge_id": "h_00482",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00483",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00484",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00485",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00486",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 71
+    },
+    "52": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00230",
+          "relation_type": "solves",
+          "arity": 22
+        }
+      ],
+      "internal_mass": 22
+    },
+    "81": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00236",
+          "relation_type": "solves",
+          "arity": 21
+        },
+        {
+          "edge_id": "h_00237",
+          "relation_type": "uses_component",
+          "arity": 28
+        },
+        {
+          "edge_id": "h_00238",
+          "relation_type": "uses_technique",
+          "arity": 31
+        },
+        {
+          "edge_id": "h_00539",
+          "relation_type": "evaluated_on",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00540",
+          "relation_type": "evaluated_on",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00542",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00543",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00544",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00545",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00546",
+          "relation_type": "evaluated_on",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00547",
+          "relation_type": "evaluated_on",
+          "arity": 2
+        }
+      ],
+      "internal_mass": 100
+    },
+    "95": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00249",
+          "relation_type": "uses_component",
+          "arity": 40
+        },
+        {
+          "edge_id": "h_00250",
+          "relation_type": "uses_technique",
+          "arity": 41
+        },
+        {
+          "edge_id": "h_00303",
+          "relation_type": "presents",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00758",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00759",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00760",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00761",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00762",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00763",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00764",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00765",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00766",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00767",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00768",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00769",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00770",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00771",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00772",
+          "relation_type": "claims",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 128
+    },
+    "80": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00252",
+          "relation_type": "evaluated_on",
+          "arity": 4
+        },
+        {
+          "edge_id": "h_00255",
+          "relation_type": "uses_component",
+          "arity": 18
+        },
+        {
+          "edge_id": "h_00496",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 25
+    },
+    "85": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00258",
+          "relation_type": "extends",
+          "arity": 8
+        },
+        {
+          "edge_id": "h_00259",
+          "relation_type": "solves",
+          "arity": 8
+        },
+        {
+          "edge_id": "h_00260",
+          "relation_type": "uses_component",
+          "arity": 4
+        }
+      ],
+      "internal_mass": 20
+    },
+    "49": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00263",
+          "relation_type": "evaluated_on",
+          "arity": 18
+        },
+        {
+          "edge_id": "h_00265",
+          "relation_type": "solves",
+          "arity": 29
+        },
+        {
+          "edge_id": "h_00267",
+          "relation_type": "uses_technique",
+          "arity": 41
+        },
+        {
+          "edge_id": "h_00590",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00591",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00592",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00593",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00594",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00595",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00596",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00597",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00598",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00599",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00600",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00601",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00602",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00603",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00604",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00605",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00606",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 139
+    },
+    "6": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00270",
+          "relation_type": "solves",
+          "arity": 16
+        },
+        {
+          "edge_id": "h_00271",
+          "relation_type": "uses_component",
+          "arity": 17
+        }
+      ],
+      "internal_mass": 33
+    },
+    "51": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00279",
+          "relation_type": "evaluated_on",
+          "arity": 6
+        },
+        {
+          "edge_id": "h_00282",
+          "relation_type": "uses_component",
+          "arity": 31
+        },
+        {
+          "edge_id": "h_00295",
+          "relation_type": "presents",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00353",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00354",
+          "relation_type": "evaluated_on",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00658",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00659",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00660",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00661",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00662",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00663",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00664",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00665",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00666",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00667",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00668",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00669",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00670",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01383",
+          "relation_type": "authored_by",
+          "arity": 9
+        }
+      ],
+      "internal_mass": 93
+    },
+    "27": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00287",
+          "relation_type": "solves",
+          "arity": 29
+        },
+        {
+          "edge_id": "h_00288",
+          "relation_type": "uses_component",
+          "arity": 36
+        }
+      ],
+      "internal_mass": 65
+    },
+    "60": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00306",
+          "relation_type": "presents",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00797",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00798",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00799",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00800",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00801",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00802",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00803",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00804",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00805",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_00806",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01362",
+          "relation_type": "authored_by",
+          "arity": 7
+        },
+        {
+          "edge_id": "h_01409",
+          "relation_type": "proposes_future_work",
+          "arity": 7
+        }
+      ],
+      "internal_mass": 46
+    },
+    "74": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00334",
+          "relation_type": "presents",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01194",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01195",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01196",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01197",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01198",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01199",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01200",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01201",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01202",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01203",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01204",
+          "relation_type": "claims",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01205",
+          "relation_type": "claims",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 38
+    },
+    "54": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00607",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00608",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00609",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00610",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00611",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00612",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00613",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01353",
+          "relation_type": "authored_by",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01402",
+          "relation_type": "proposes_future_work",
+          "arity": 5
+        }
+      ],
+      "internal_mass": 22
+    },
+    "46": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00614",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00615",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00616",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00617",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00618",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00619",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00620",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00621",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00622",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00623",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00624",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00625",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00626",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01412",
+          "relation_type": "proposes_future_work",
+          "arity": 4
+        }
+      ],
+      "internal_mass": 30
+    },
+    "56": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00633",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00634",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00635",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00636",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00637",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00638",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00639",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00640",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00641",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00642",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00643",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00644",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00645",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01357",
+          "relation_type": "authored_by",
+          "arity": 29
+        },
+        {
+          "edge_id": "h_01405",
+          "relation_type": "proposes_future_work",
+          "arity": 4
+        }
+      ],
+      "internal_mass": 59
+    },
+    "35": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00671",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00672",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00673",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00674",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00675",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00676",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00677",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00678",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00679",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00680",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00681",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00682",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00683",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01398",
+          "relation_type": "proposes_future_work",
+          "arity": 6
+        }
+      ],
+      "internal_mass": 32
+    },
+    "25": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00736",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00737",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00738",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00739",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00740",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00741",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00742",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00743",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00744",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00745",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00746",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01297",
+          "relation_type": "cites",
+          "arity": 25
+        },
+        {
+          "edge_id": "h_01334",
+          "relation_type": "authored_by",
+          "arity": 6
+        },
+        {
+          "edge_id": "h_01385",
+          "relation_type": "proposes_future_work",
+          "arity": 6
+        }
+      ],
+      "internal_mass": 59
+    },
+    "62": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00807",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00808",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00809",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00810",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00811",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00812",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00813",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00814",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00815",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00816",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00817",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01400",
+          "relation_type": "proposes_future_work",
+          "arity": 4
+        }
+      ],
+      "internal_mass": 26
+    },
+    "40": {
+      "internal_edges": [
+        {
+          "edge_id": "h_00979",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00980",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00981",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00982",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00983",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00984",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00985",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00986",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00987",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00988",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00989",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_00990",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01399",
+          "relation_type": "proposes_future_work",
+          "arity": 8
+        }
+      ],
+      "internal_mass": 32
+    },
+    "23": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01066",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01067",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01068",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01069",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01070",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01071",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01072",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01073",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01074",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01075",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01076",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01077",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01078",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01079",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01080",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01369",
+          "relation_type": "authored_by",
+          "arity": 5
+        },
+        {
+          "edge_id": "h_01416",
+          "relation_type": "proposes_future_work",
+          "arity": 4
+        }
+      ],
+      "internal_mass": 39
+    },
+    "21": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01094",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01095",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01096",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01097",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01098",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01099",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01100",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01101",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01102",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01310",
+          "relation_type": "cites",
+          "arity": 9
+        },
+        {
+          "edge_id": "h_01403",
+          "relation_type": "proposes_future_work",
+          "arity": 6
+        }
+      ],
+      "internal_mass": 33
+    },
+    "61": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01103",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01104",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01105",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01106",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01107",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01108",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01109",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01110",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01111",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01112",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01113",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01114",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01379",
+          "relation_type": "authored_by",
+          "arity": 9
+        },
+        {
+          "edge_id": "h_01424",
+          "relation_type": "proposes_future_work",
+          "arity": 5
+        }
+      ],
+      "internal_mass": 38
+    },
+    "93": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01206",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01207",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01208",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01209",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01210",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01211",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01212",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01213",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01214",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01388",
+          "relation_type": "proposes_future_work",
+          "arity": 5
+        }
+      ],
+      "internal_mass": 23
+    },
+    "59": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01257",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01258",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01259",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01260",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01261",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01262",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01263",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01264",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01265",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01266",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01359",
+          "relation_type": "authored_by",
+          "arity": 6
+        },
+        {
+          "edge_id": "h_01407",
+          "relation_type": "proposes_future_work",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 29
+    },
+    "30": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01282",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01283",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01284",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01285",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01286",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01287",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01288",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01289",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01290",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01291",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01292",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01293",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01294",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01295",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01296",
+          "relation_type": "claims",
+          "arity": 2
+        },
+        {
+          "edge_id": "h_01426",
+          "relation_type": "proposes_future_work",
+          "arity": 4
+        }
+      ],
+      "internal_mass": 34
+    },
+    "17": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01300",
+          "relation_type": "cites",
+          "arity": 10
+        },
+        {
+          "edge_id": "h_01339",
+          "relation_type": "authored_by",
+          "arity": 5
+        },
+        {
+          "edge_id": "h_01390",
+          "relation_type": "proposes_future_work",
+          "arity": 5
+        }
+      ],
+      "internal_mass": 20
+    },
+    "55": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01313",
+          "relation_type": "cites",
+          "arity": 5
+        },
+        {
+          "edge_id": "h_01410",
+          "relation_type": "proposes_future_work",
+          "arity": 2
+        }
+      ],
+      "internal_mass": 7
+    },
+    "36": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01335",
+          "relation_type": "authored_by",
+          "arity": 7
+        },
+        {
+          "edge_id": "h_01386",
+          "relation_type": "proposes_future_work",
+          "arity": 5
+        }
+      ],
+      "internal_mass": 12
+    },
+    "39": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01338",
+          "relation_type": "authored_by",
+          "arity": 7
+        },
+        {
+          "edge_id": "h_01389",
+          "relation_type": "proposes_future_work",
+          "arity": 4
+        }
+      ],
+      "internal_mass": 11
+    },
+    "37": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01340",
+          "relation_type": "authored_by",
+          "arity": 6
+        },
+        {
+          "edge_id": "h_01391",
+          "relation_type": "proposes_future_work",
+          "arity": 6
+        }
+      ],
+      "internal_mass": 12
+    },
+    "58": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01344",
+          "relation_type": "authored_by",
+          "arity": 11
+        },
+        {
+          "edge_id": "h_01394",
+          "relation_type": "proposes_future_work",
+          "arity": 7
+        }
+      ],
+      "internal_mass": 18
+    },
+    "33": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01347",
+          "relation_type": "authored_by",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01397",
+          "relation_type": "proposes_future_work",
+          "arity": 6
+        }
+      ],
+      "internal_mass": 9
+    },
+    "41": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01352",
+          "relation_type": "authored_by",
+          "arity": 10
+        },
+        {
+          "edge_id": "h_01401",
+          "relation_type": "proposes_future_work",
+          "arity": 6
+        }
+      ],
+      "internal_mass": 16
+    },
+    "19": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01356",
+          "relation_type": "authored_by",
+          "arity": 3
+        },
+        {
+          "edge_id": "h_01404",
+          "relation_type": "proposes_future_work",
+          "arity": 4
+        }
+      ],
+      "internal_mass": 7
+    },
+    "29": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01361",
+          "relation_type": "authored_by",
+          "arity": 5
+        },
+        {
+          "edge_id": "h_01408",
+          "relation_type": "proposes_future_work",
+          "arity": 6
+        }
+      ],
+      "internal_mass": 11
+    },
+    "31": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01366",
+          "relation_type": "authored_by",
+          "arity": 5
+        },
+        {
+          "edge_id": "h_01413",
+          "relation_type": "proposes_future_work",
+          "arity": 4
+        }
+      ],
+      "internal_mass": 9
+    },
+    "14": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01376",
+          "relation_type": "authored_by",
+          "arity": 14
+        },
+        {
+          "edge_id": "h_01422",
+          "relation_type": "proposes_future_work",
+          "arity": 4
+        }
+      ],
+      "internal_mass": 18
+    },
+    "86": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01380",
+          "relation_type": "authored_by",
+          "arity": 5
+        },
+        {
+          "edge_id": "h_01425",
+          "relation_type": "proposes_future_work",
+          "arity": 6
+        }
+      ],
+      "internal_mass": 11
+    },
+    "22": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01395",
+          "relation_type": "proposes_future_work",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 3
+    },
+    "57": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01421",
+          "relation_type": "proposes_future_work",
+          "arity": 3
+        }
+      ],
+      "internal_mass": 3
+    },
+    "7": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01427",
+          "relation_type": "proposes_future_work",
+          "arity": 4
+        }
+      ],
+      "internal_mass": 4
+    },
+    "34": {
+      "internal_edges": [
+        {
+          "edge_id": "h_01429",
+          "relation_type": "proposes_future_work",
+          "arity": 6
+        }
+      ],
+      "internal_mass": 6
+    }
+  },
+  "coarse_edges_native": [
+    {
+      "super_nodes": [
+        65,
+        69,
+        77
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2017,
+      "max_year": 2017,
+      "contributing_edges": [
+        "h_00001"
+      ],
+      "multiplicities": [
+        {
+          "77": 1,
+          "69": 3,
+          "65": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        77,
+        78
+      ],
+      "weight": 4.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on",
+        "uses_component",
+        "uses_technique"
+      ],
+      "min_year": 2017,
+      "max_year": 2017,
+      "contributing_edges": [
+        "h_00002",
+        "h_00005",
+        "h_00006",
+        "h_00371"
+      ],
+      "multiplicities": [
+        {
+          "77": 1,
+          "78": 1
+        },
+        {
+          "77": 1,
+          "78": 9
+        },
+        {
+          "77": 1,
+          "78": 9
+        },
+        {
+          "77": 1,
+          "78": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        77,
+        83
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2017,
+      "max_year": 2017,
+      "contributing_edges": [
+        "h_00003"
+      ],
+      "multiplicities": [
+        {
+          "77": 1,
+          "83": 7
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        65,
+        68,
+        84
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2017,
+      "max_year": 2017,
+      "contributing_edges": [
+        "h_00007"
+      ],
+      "multiplicities": [
+        {
+          "84": 1,
+          "68": 4,
+          "65": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        83,
+        84
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2017,
+      "max_year": 2017,
+      "contributing_edges": [
+        "h_00008"
+      ],
+      "multiplicities": [
+        {
+          "83": 5,
+          "84": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        84,
+        88
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "solves"
+      ],
+      "min_year": 2017,
+      "max_year": 2017,
+      "contributing_edges": [
+        "h_00009"
+      ],
+      "multiplicities": [
+        {
+          "84": 1,
+          "88": 4
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        84,
+        87
+      ],
+      "weight": 2.0,
+      "arity": 2,
+      "relation_types": [
+        "uses_component",
+        "uses_technique"
+      ],
+      "min_year": 2017,
+      "max_year": 2017,
+      "contributing_edges": [
+        "h_00010",
+        "h_00011"
+      ],
+      "multiplicities": [
+        {
+          "84": 1,
+          "87": 7
+        },
+        {
+          "84": 1,
+          "87": 6
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        65,
+        66,
+        92
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00015"
+      ],
+      "multiplicities": [
+        {
+          "92": 1,
+          "66": 5,
+          "65": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        71,
+        92
+      ],
+      "weight": 2.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00016",
+        "h_00538"
+      ],
+      "multiplicities": [
+        {
+          "71": 1,
+          "92": 1
+        },
+        {
+          "71": 2,
+          "92": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        13,
+        83,
+        84,
+        92
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00017"
+      ],
+      "multiplicities": [
+        {
+          "92": 1,
+          "84": 14,
+          "13": 1,
+          "83": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        8,
+        65,
+        68
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00021"
+      ],
+      "multiplicities": [
+        {
+          "8": 1,
+          "68": 6,
+          "65": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        8,
+        10
+      ],
+      "weight": 3.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00022",
+        "h_00524",
+        "h_00525"
+      ],
+      "multiplicities": [
+        {
+          "8": 1,
+          "10": 2
+        },
+        {
+          "8": 1,
+          "10": 2
+        },
+        {
+          "8": 1,
+          "10": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        8,
+        77,
+        84
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00023"
+      ],
+      "multiplicities": [
+        {
+          "8": 1,
+          "77": 6,
+          "84": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        8,
+        9
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "solves"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00024"
+      ],
+      "multiplicities": [
+        {
+          "8": 1,
+          "9": 7
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        16,
+        65,
+        66,
+        67,
+        69
+      ],
+      "weight": 0.25,
+      "arity": 5,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00027"
+      ],
+      "multiplicities": [
+        {
+          "16": 1,
+          "69": 7,
+          "65": 2,
+          "66": 1,
+          "67": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        13,
+        16,
+        84,
+        92
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00028"
+      ],
+      "multiplicities": [
+        {
+          "16": 1,
+          "13": 8,
+          "92": 1,
+          "84": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        26,
+        65
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00032"
+      ],
+      "multiplicities": [
+        {
+          "26": 9,
+          "65": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        13,
+        26,
+        77
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00034"
+      ],
+      "multiplicities": [
+        {
+          "26": 6,
+          "77": 1,
+          "13": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        38,
+        65,
+        67
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00049"
+      ],
+      "multiplicities": [
+        {
+          "38": 1,
+          "67": 19,
+          "65": 3
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        4,
+        13,
+        38
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00050"
+      ],
+      "multiplicities": [
+        {
+          "38": 18,
+          "4": 1,
+          "13": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        1,
+        2,
+        65
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00054"
+      ],
+      "multiplicities": [
+        {
+          "2": 1,
+          "1": 12,
+          "65": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        2,
+        3
+      ],
+      "weight": 2.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00055",
+        "h_00497"
+      ],
+      "multiplicities": [
+        {
+          "2": 1,
+          "3": 1
+        },
+        {
+          "2": 1,
+          "3": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        2,
+        13,
+        24,
+        84,
+        92
+      ],
+      "weight": 0.25,
+      "arity": 5,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00056"
+      ],
+      "multiplicities": [
+        {
+          "2": 19,
+          "24": 1,
+          "92": 1,
+          "13": 1,
+          "84": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        1,
+        2
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "solves"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00057"
+      ],
+      "multiplicities": [
+        {
+          "1": 11,
+          "2": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        65,
+        66,
+        68,
+        84
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2021,
+      "max_year": 2021,
+      "contributing_edges": [
+        "h_00060"
+      ],
+      "multiplicities": [
+        {
+          "84": 1,
+          "68": 3,
+          "65": 1,
+          "66": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        72,
+        73,
+        84
+      ],
+      "weight": 1.0,
+      "arity": 3,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2021,
+      "max_year": 2021,
+      "contributing_edges": [
+        "h_00061",
+        "h_00406"
+      ],
+      "multiplicities": [
+        {
+          "84": 1,
+          "72": 21,
+          "73": 1
+        },
+        {
+          "84": 1,
+          "73": 1,
+          "72": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        13,
+        49,
+        84
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2021,
+      "max_year": 2021,
+      "contributing_edges": [
+        "h_00062"
+      ],
+      "multiplicities": [
+        {
+          "84": 15,
+          "13": 1,
+          "49": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        84,
+        89
+      ],
+      "weight": 2.0,
+      "arity": 2,
+      "relation_types": [
+        "solves",
+        "uses_technique"
+      ],
+      "min_year": 2021,
+      "max_year": 2021,
+      "contributing_edges": [
+        "h_00063",
+        "h_00065"
+      ],
+      "multiplicities": [
+        {
+          "84": 1,
+          "89": 3
+        },
+        {
+          "84": 1,
+          "89": 7
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        84,
+        87,
+        89
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "uses_component"
+      ],
+      "min_year": 2021,
+      "max_year": 2021,
+      "contributing_edges": [
+        "h_00064"
+      ],
+      "multiplicities": [
+        {
+          "84": 1,
+          "89": 6,
+          "87": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        15,
+        65,
+        66,
+        69
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00071"
+      ],
+      "multiplicities": [
+        {
+          "15": 1,
+          "69": 11,
+          "66": 2,
+          "65": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        2,
+        15,
+        24,
+        77,
+        84
+      ],
+      "weight": 0.25,
+      "arity": 5,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00073"
+      ],
+      "multiplicities": [
+        {
+          "15": 1,
+          "24": 1,
+          "77": 1,
+          "84": 15,
+          "2": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        28,
+        65,
+        66,
+        67
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00077"
+      ],
+      "multiplicities": [
+        {
+          "28": 1,
+          "67": 11,
+          "65": 1,
+          "66": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        2,
+        28,
+        84,
+        92
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00078"
+      ],
+      "multiplicities": [
+        {
+          "28": 1,
+          "84": 12,
+          "92": 1,
+          "2": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        28,
+        87
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "uses_component"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00080"
+      ],
+      "multiplicities": [
+        {
+          "28": 20,
+          "87": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        32,
+        65,
+        66,
+        68
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2017,
+      "max_year": 2017,
+      "contributing_edges": [
+        "h_00082"
+      ],
+      "multiplicities": [
+        {
+          "32": 1,
+          "68": 6,
+          "66": 2,
+          "65": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        32,
+        72
+      ],
+      "weight": 13.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2017,
+      "max_year": 2017,
+      "contributing_edges": [
+        "h_00083",
+        "h_00512",
+        "h_00513",
+        "h_00514",
+        "h_00515",
+        "h_00516",
+        "h_00517",
+        "h_00518",
+        "h_00519",
+        "h_00520",
+        "h_00521",
+        "h_00522",
+        "h_00523"
+      ],
+      "multiplicities": [
+        {
+          "32": 1,
+          "72": 10
+        },
+        {
+          "32": 1,
+          "72": 2
+        },
+        {
+          "32": 1,
+          "72": 2
+        },
+        {
+          "32": 1,
+          "72": 2
+        },
+        {
+          "32": 1,
+          "72": 2
+        },
+        {
+          "32": 1,
+          "72": 2
+        },
+        {
+          "32": 1,
+          "72": 2
+        },
+        {
+          "32": 1,
+          "72": 2
+        },
+        {
+          "32": 1,
+          "72": 2
+        },
+        {
+          "32": 1,
+          "72": 2
+        },
+        {
+          "32": 1,
+          "72": 2
+        },
+        {
+          "32": 1,
+          "72": 2
+        },
+        {
+          "32": 1,
+          "72": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        32,
+        83
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2017,
+      "max_year": 2017,
+      "contributing_edges": [
+        "h_00084"
+      ],
+      "multiplicities": [
+        {
+          "32": 11,
+          "83": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        11,
+        65,
+        67
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00088"
+      ],
+      "multiplicities": [
+        {
+          "11": 1,
+          "67": 9,
+          "65": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        10,
+        11
+      ],
+      "weight": 3.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00089",
+        "h_00434",
+        "h_00435"
+      ],
+      "multiplicities": [
+        {
+          "10": 2,
+          "11": 6
+        },
+        {
+          "10": 1,
+          "11": 2
+        },
+        {
+          "10": 1,
+          "11": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        11,
+        13,
+        77,
+        84
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00090"
+      ],
+      "multiplicities": [
+        {
+          "11": 1,
+          "13": 1,
+          "77": 5,
+          "84": 3
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        11,
+        89
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00093"
+      ],
+      "multiplicities": [
+        {
+          "11": 14,
+          "89": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        12,
+        65,
+        67
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00094"
+      ],
+      "multiplicities": [
+        {
+          "12": 1,
+          "67": 4,
+          "65": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        8,
+        12,
+        77
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00096"
+      ],
+      "multiplicities": [
+        {
+          "12": 1,
+          "77": 9,
+          "8": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        8,
+        12,
+        26
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00099"
+      ],
+      "multiplicities": [
+        {
+          "12": 6,
+          "26": 1,
+          "8": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        43,
+        65,
+        66,
+        68
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00100"
+      ],
+      "multiplicities": [
+        {
+          "43": 1,
+          "68": 7,
+          "66": 1,
+          "65": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        26,
+        43,
+        72,
+        73
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00101"
+      ],
+      "multiplicities": [
+        {
+          "43": 1,
+          "73": 23,
+          "72": 2,
+          "26": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        13,
+        43
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00102"
+      ],
+      "multiplicities": [
+        {
+          "13": 1,
+          "43": 8
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        42,
+        43
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "uses_component"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00104"
+      ],
+      "multiplicities": [
+        {
+          "42": 14,
+          "43": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        32,
+        42,
+        43
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00105"
+      ],
+      "multiplicities": [
+        {
+          "43": 1,
+          "42": 12,
+          "32": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        65,
+        69,
+        82
+      ],
+      "weight": 1.0,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2018,
+      "max_year": 2019,
+      "contributing_edges": [
+        "h_00106",
+        "h_00112"
+      ],
+      "multiplicities": [
+        {
+          "82": 1,
+          "69": 4,
+          "65": 1
+        },
+        {
+          "82": 1,
+          "69": 5,
+          "65": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        82,
+        83
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2018,
+      "max_year": 2018,
+      "contributing_edges": [
+        "h_00108"
+      ],
+      "multiplicities": [
+        {
+          "82": 4,
+          "83": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        42,
+        82
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2018,
+      "max_year": 2018,
+      "contributing_edges": [
+        "h_00111"
+      ],
+      "multiplicities": [
+        {
+          "42": 1,
+          "82": 7
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        79,
+        82
+      ],
+      "weight": 9.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2018,
+      "max_year": 2019,
+      "contributing_edges": [
+        "h_00113",
+        "h_00343",
+        "h_00344",
+        "h_00345",
+        "h_00346",
+        "h_00347",
+        "h_00348",
+        "h_00349",
+        "h_00493"
+      ],
+      "multiplicities": [
+        {
+          "79": 1,
+          "82": 1
+        },
+        {
+          "79": 1,
+          "82": 2
+        },
+        {
+          "79": 1,
+          "82": 2
+        },
+        {
+          "79": 1,
+          "82": 2
+        },
+        {
+          "79": 1,
+          "82": 2
+        },
+        {
+          "79": 1,
+          "82": 2
+        },
+        {
+          "79": 1,
+          "82": 2
+        },
+        {
+          "79": 1,
+          "82": 2
+        },
+        {
+          "79": 2,
+          "82": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        77,
+        82,
+        84
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2019,
+      "max_year": 2019,
+      "contributing_edges": [
+        "h_00114"
+      ],
+      "multiplicities": [
+        {
+          "82": 3,
+          "84": 1,
+          "77": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        20,
+        82
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "solves"
+      ],
+      "min_year": 2019,
+      "max_year": 2019,
+      "contributing_edges": [
+        "h_00115"
+      ],
+      "multiplicities": [
+        {
+          "20": 4,
+          "82": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        11,
+        20,
+        78,
+        82
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "uses_component"
+      ],
+      "min_year": 2019,
+      "max_year": 2019,
+      "contributing_edges": [
+        "h_00116"
+      ],
+      "multiplicities": [
+        {
+          "82": 1,
+          "20": 5,
+          "11": 1,
+          "78": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        20,
+        78,
+        82
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2019,
+      "max_year": 2019,
+      "contributing_edges": [
+        "h_00117"
+      ],
+      "multiplicities": [
+        {
+          "82": 1,
+          "20": 5,
+          "78": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        65,
+        70
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00118"
+      ],
+      "multiplicities": [
+        {
+          "65": 2,
+          "70": 3
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        70,
+        84
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00119"
+      ],
+      "multiplicities": [
+        {
+          "70": 1,
+          "84": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        70,
+        92
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00122"
+      ],
+      "multiplicities": [
+        {
+          "70": 6,
+          "92": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        18,
+        65,
+        69
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00123"
+      ],
+      "multiplicities": [
+        {
+          "18": 1,
+          "69": 14,
+          "65": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        18,
+        24,
+        38
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00125"
+      ],
+      "multiplicities": [
+        {
+          "18": 1,
+          "24": 10,
+          "38": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        44,
+        65,
+        68,
+        69
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00129"
+      ],
+      "multiplicities": [
+        {
+          "44": 17,
+          "68": 1,
+          "65": 2,
+          "69": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        13,
+        38,
+        44
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00130"
+      ],
+      "multiplicities": [
+        {
+          "44": 25,
+          "13": 1,
+          "38": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        44,
+        82
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "solves"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00131"
+      ],
+      "multiplicities": [
+        {
+          "44": 13,
+          "82": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        63,
+        64,
+        65
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2013,
+      "max_year": 2013,
+      "contributing_edges": [
+        "h_00140"
+      ],
+      "multiplicities": [
+        {
+          "64": 1,
+          "63": 9,
+          "65": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        2,
+        13,
+        64
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2013,
+      "max_year": 2013,
+      "contributing_edges": [
+        "h_00142"
+      ],
+      "multiplicities": [
+        {
+          "64": 7,
+          "13": 1,
+          "2": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        1,
+        44,
+        63,
+        64
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "solves"
+      ],
+      "min_year": 2013,
+      "max_year": 2013,
+      "contributing_edges": [
+        "h_00143"
+      ],
+      "multiplicities": [
+        {
+          "64": 1,
+          "44": 1,
+          "1": 1,
+          "63": 6
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        44,
+        64
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2013,
+      "max_year": 2013,
+      "contributing_edges": [
+        "h_00145"
+      ],
+      "multiplicities": [
+        {
+          "44": 1,
+          "64": 13
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        4,
+        65
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2013,
+      "max_year": 2013,
+      "contributing_edges": [
+        "h_00146"
+      ],
+      "multiplicities": [
+        {
+          "4": 12,
+          "65": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        4,
+        44,
+        64
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2013,
+      "max_year": 2013,
+      "contributing_edges": [
+        "h_00148"
+      ],
+      "multiplicities": [
+        {
+          "4": 11,
+          "64": 1,
+          "44": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        48,
+        65,
+        66
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2018,
+      "max_year": 2018,
+      "contributing_edges": [
+        "h_00152"
+      ],
+      "multiplicities": [
+        {
+          "48": 9,
+          "65": 2,
+          "66": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        48,
+        49
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2018,
+      "max_year": 2018,
+      "contributing_edges": [
+        "h_00153"
+      ],
+      "multiplicities": [
+        {
+          "48": 4,
+          "49": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        47,
+        65,
+        69
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00157"
+      ],
+      "multiplicities": [
+        {
+          "47": 7,
+          "65": 2,
+          "69": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        24,
+        47
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00158"
+      ],
+      "multiplicities": [
+        {
+          "24": 1,
+          "47": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        32,
+        47
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00161"
+      ],
+      "multiplicities": [
+        {
+          "32": 1,
+          "47": 12
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        45,
+        65
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2013,
+      "max_year": 2013,
+      "contributing_edges": [
+        "h_00168"
+      ],
+      "multiplicities": [
+        {
+          "45": 1,
+          "65": 8
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        13,
+        45,
+        64
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2013,
+      "max_year": 2013,
+      "contributing_edges": [
+        "h_00169"
+      ],
+      "multiplicities": [
+        {
+          "45": 1,
+          "13": 1,
+          "64": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        65,
+        66,
+        67,
+        94
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2019,
+      "max_year": 2019,
+      "contributing_edges": [
+        "h_00173"
+      ],
+      "multiplicities": [
+        {
+          "94": 1,
+          "66": 17,
+          "65": 2,
+          "67": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        13,
+        32,
+        44,
+        94
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2019,
+      "max_year": 2019,
+      "contributing_edges": [
+        "h_00175"
+      ],
+      "multiplicities": [
+        {
+          "94": 1,
+          "32": 6,
+          "13": 1,
+          "44": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        1,
+        65,
+        66,
+        68,
+        90
+      ],
+      "weight": 0.25,
+      "arity": 5,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00191"
+      ],
+      "multiplicities": [
+        {
+          "90": 1,
+          "66": 23,
+          "68": 1,
+          "65": 3,
+          "1": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        2,
+        27,
+        44,
+        77,
+        82,
+        84,
+        90
+      ],
+      "weight": 0.1667,
+      "arity": 7,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00193"
+      ],
+      "multiplicities": [
+        {
+          "90": 1,
+          "84": 11,
+          "44": 1,
+          "2": 1,
+          "27": 1,
+          "82": 1,
+          "77": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        28,
+        89,
+        90,
+        91
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "uses_component"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00195"
+      ],
+      "multiplicities": [
+        {
+          "90": 1,
+          "91": 14,
+          "28": 1,
+          "89": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        65,
+        66,
+        74
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00221"
+      ],
+      "multiplicities": [
+        {
+          "74": 1,
+          "65": 47,
+          "66": 3
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        74,
+        76,
+        78
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00222"
+      ],
+      "multiplicities": [
+        {
+          "74": 1,
+          "76": 11,
+          "78": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        2,
+        74
+      ],
+      "weight": 2.0,
+      "arity": 2,
+      "relation_types": [
+        "extends",
+        "uses_component"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00223",
+        "h_00225"
+      ],
+      "multiplicities": [
+        {
+          "2": 1,
+          "74": 10
+        },
+        {
+          "2": 1,
+          "74": 24
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        74,
+        75
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "solves"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00224"
+      ],
+      "multiplicities": [
+        {
+          "74": 1,
+          "75": 27
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        8,
+        74
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00226"
+      ],
+      "multiplicities": [
+        {
+          "8": 1,
+          "74": 40
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        1,
+        52,
+        65,
+        69
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00227"
+      ],
+      "multiplicities": [
+        {
+          "52": 1,
+          "65": 34,
+          "1": 1,
+          "69": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        52,
+        53
+      ],
+      "weight": 4.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00228",
+        "h_00423",
+        "h_00424",
+        "h_00425"
+      ],
+      "multiplicities": [
+        {
+          "52": 1,
+          "53": 4
+        },
+        {
+          "52": 1,
+          "53": 2
+        },
+        {
+          "52": 1,
+          "53": 2
+        },
+        {
+          "52": 1,
+          "53": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        2,
+        44,
+        52,
+        82
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00229"
+      ],
+      "multiplicities": [
+        {
+          "52": 1,
+          "44": 1,
+          "2": 1,
+          "82": 8
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        28,
+        52
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "uses_component"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00231"
+      ],
+      "multiplicities": [
+        {
+          "28": 1,
+          "52": 37
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        18,
+        42,
+        52,
+        90
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00232"
+      ],
+      "multiplicities": [
+        {
+          "52": 38,
+          "42": 1,
+          "90": 1,
+          "18": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        65,
+        81
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00233"
+      ],
+      "multiplicities": [
+        {
+          "65": 30,
+          "81": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        81,
+        82
+      ],
+      "weight": 2.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00234",
+        "h_00541"
+      ],
+      "multiplicities": [
+        {
+          "81": 9,
+          "82": 1
+        },
+        {
+          "81": 2,
+          "82": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        13,
+        24,
+        81,
+        82,
+        84
+      ],
+      "weight": 0.25,
+      "arity": 5,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00235"
+      ],
+      "multiplicities": [
+        {
+          "81": 1,
+          "24": 1,
+          "13": 10,
+          "82": 1,
+          "84": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        65,
+        66,
+        68,
+        95
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00245"
+      ],
+      "multiplicities": [
+        {
+          "95": 1,
+          "66": 45,
+          "68": 1,
+          "65": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        26,
+        73,
+        95
+      ],
+      "weight": 1.0,
+      "arity": 3,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00246",
+        "h_00381"
+      ],
+      "multiplicities": [
+        {
+          "95": 1,
+          "73": 6,
+          "26": 1
+        },
+        {
+          "95": 1,
+          "26": 1,
+          "73": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        32,
+        44,
+        49,
+        84,
+        95
+      ],
+      "weight": 0.25,
+      "arity": 5,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00247"
+      ],
+      "multiplicities": [
+        {
+          "95": 15,
+          "32": 1,
+          "44": 1,
+          "49": 1,
+          "84": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        95,
+        96
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "solves"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00248"
+      ],
+      "multiplicities": [
+        {
+          "95": 1,
+          "96": 30
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        65,
+        69,
+        80
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00251"
+      ],
+      "multiplicities": [
+        {
+          "80": 1,
+          "65": 35,
+          "69": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        4,
+        38,
+        80,
+        82
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00253"
+      ],
+      "multiplicities": [
+        {
+          "80": 1,
+          "82": 12,
+          "38": 1,
+          "4": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        1,
+        80
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "solves"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00254"
+      ],
+      "multiplicities": [
+        {
+          "1": 1,
+          "80": 17
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        5,
+        80
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00256"
+      ],
+      "multiplicities": [
+        {
+          "5": 31,
+          "80": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        65,
+        85
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00257"
+      ],
+      "multiplicities": [
+        {
+          "65": 1,
+          "85": 11
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        5,
+        85
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00261"
+      ],
+      "multiplicities": [
+        {
+          "5": 1,
+          "85": 6
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        49,
+        65,
+        66
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2016,
+      "max_year": 2016,
+      "contributing_edges": [
+        "h_00262"
+      ],
+      "multiplicities": [
+        {
+          "49": 1,
+          "65": 39,
+          "66": 5
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        43,
+        49,
+        50,
+        84
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2016,
+      "max_year": 2016,
+      "contributing_edges": [
+        "h_00264"
+      ],
+      "multiplicities": [
+        {
+          "49": 1,
+          "84": 1,
+          "50": 9,
+          "43": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        48,
+        49,
+        50
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "uses_component"
+      ],
+      "min_year": 2016,
+      "max_year": 2016,
+      "contributing_edges": [
+        "h_00266"
+      ],
+      "multiplicities": [
+        {
+          "49": 1,
+          "50": 29,
+          "48": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        6,
+        65
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2015,
+      "max_year": 2015,
+      "contributing_edges": [
+        "h_00268"
+      ],
+      "multiplicities": [
+        {
+          "6": 1,
+          "65": 26
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        4,
+        6,
+        13,
+        32,
+        44,
+        84
+      ],
+      "weight": 0.2,
+      "arity": 6,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2015,
+      "max_year": 2015,
+      "contributing_edges": [
+        "h_00269"
+      ],
+      "multiplicities": [
+        {
+          "6": 17,
+          "44": 1,
+          "13": 1,
+          "4": 2,
+          "84": 1,
+          "32": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        5,
+        6
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2015,
+      "max_year": 2015,
+      "contributing_edges": [
+        "h_00272"
+      ],
+      "multiplicities": [
+        {
+          "5": 27,
+          "6": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        51,
+        65
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00278"
+      ],
+      "multiplicities": [
+        {
+          "51": 19,
+          "65": 3
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        2,
+        24,
+        43,
+        44,
+        48,
+        51
+      ],
+      "weight": 0.2,
+      "arity": 6,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00280"
+      ],
+      "multiplicities": [
+        {
+          "51": 21,
+          "24": 1,
+          "43": 1,
+          "44": 1,
+          "2": 1,
+          "48": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        51,
+        85
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "solves"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00281"
+      ],
+      "multiplicities": [
+        {
+          "51": 20,
+          "85": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        51,
+        52,
+        81
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00283"
+      ],
+      "multiplicities": [
+        {
+          "51": 38,
+          "52": 1,
+          "81": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        27,
+        65,
+        66,
+        67
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "addresses"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00284"
+      ],
+      "multiplicities": [
+        {
+          "27": 1,
+          "67": 35,
+          "66": 4,
+          "65": 9
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        27,
+        64,
+        79,
+        82
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00285"
+      ],
+      "multiplicities": [
+        {
+          "27": 1,
+          "82": 1,
+          "79": 9,
+          "64": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        24,
+        27,
+        32,
+        44,
+        64,
+        82,
+        84
+      ],
+      "weight": 0.1667,
+      "arity": 7,
+      "relation_types": [
+        "extends"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00286"
+      ],
+      "multiplicities": [
+        {
+          "27": 1,
+          "24": 16,
+          "64": 1,
+          "84": 1,
+          "82": 1,
+          "44": 2,
+          "32": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        27,
+        90
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "uses_technique"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00289"
+      ],
+      "multiplicities": [
+        {
+          "27": 40,
+          "90": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        54,
+        82
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2018,
+      "max_year": 2018,
+      "contributing_edges": [
+        "h_00290"
+      ],
+      "multiplicities": [
+        {
+          "54": 1,
+          "82": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        45,
+        46
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2013,
+      "max_year": 2013,
+      "contributing_edges": [
+        "h_00291"
+      ],
+      "multiplicities": [
+        {
+          "45": 1,
+          "46": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        47,
+        55
+      ],
+      "weight": 7.0,
+      "arity": 2,
+      "relation_types": [
+        "claims",
+        "presents"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00292",
+        "h_00627",
+        "h_00628",
+        "h_00629",
+        "h_00630",
+        "h_00631",
+        "h_00632"
+      ],
+      "multiplicities": [
+        {
+          "47": 1,
+          "55": 1
+        },
+        {
+          "47": 1,
+          "55": 2
+        },
+        {
+          "47": 1,
+          "55": 2
+        },
+        {
+          "47": 1,
+          "55": 2
+        },
+        {
+          "47": 1,
+          "55": 2
+        },
+        {
+          "47": 1,
+          "55": 2
+        },
+        {
+          "47": 1,
+          "55": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        44,
+        56
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00293"
+      ],
+      "multiplicities": [
+        {
+          "44": 1,
+          "56": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        28,
+        35
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00296"
+      ],
+      "multiplicities": [
+        {
+          "28": 1,
+          "35": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        36,
+        84
+      ],
+      "weight": 12.0,
+      "arity": 2,
+      "relation_types": [
+        "claims",
+        "presents"
+      ],
+      "min_year": 2017,
+      "max_year": 2017,
+      "contributing_edges": [
+        "h_00297",
+        "h_00684",
+        "h_00685",
+        "h_00686",
+        "h_00687",
+        "h_00688",
+        "h_00689",
+        "h_00690",
+        "h_00691",
+        "h_00692",
+        "h_00693",
+        "h_00694"
+      ],
+      "multiplicities": [
+        {
+          "36": 1,
+          "84": 1
+        },
+        {
+          "36": 2,
+          "84": 1
+        },
+        {
+          "36": 2,
+          "84": 1
+        },
+        {
+          "36": 2,
+          "84": 1
+        },
+        {
+          "36": 2,
+          "84": 1
+        },
+        {
+          "36": 2,
+          "84": 1
+        },
+        {
+          "36": 2,
+          "84": 1
+        },
+        {
+          "36": 2,
+          "84": 1
+        },
+        {
+          "36": 2,
+          "84": 1
+        },
+        {
+          "36": 2,
+          "84": 1
+        },
+        {
+          "36": 2,
+          "84": 1
+        },
+        {
+          "36": 2,
+          "84": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        25,
+        77
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2017,
+      "max_year": 2017,
+      "contributing_edges": [
+        "h_00301"
+      ],
+      "multiplicities": [
+        {
+          "25": 1,
+          "77": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        26,
+        37
+      ],
+      "weight": 12.0,
+      "arity": 2,
+      "relation_types": [
+        "claims",
+        "presents"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00302",
+        "h_00747",
+        "h_00748",
+        "h_00749",
+        "h_00750",
+        "h_00751",
+        "h_00752",
+        "h_00753",
+        "h_00754",
+        "h_00755",
+        "h_00756",
+        "h_00757"
+      ],
+      "multiplicities": [
+        {
+          "26": 1,
+          "37": 1
+        },
+        {
+          "26": 1,
+          "37": 2
+        },
+        {
+          "26": 1,
+          "37": 2
+        },
+        {
+          "26": 1,
+          "37": 2
+        },
+        {
+          "26": 1,
+          "37": 2
+        },
+        {
+          "26": 1,
+          "37": 2
+        },
+        {
+          "26": 1,
+          "37": 2
+        },
+        {
+          "26": 1,
+          "37": 2
+        },
+        {
+          "26": 1,
+          "37": 2
+        },
+        {
+          "26": 1,
+          "37": 2
+        },
+        {
+          "26": 1,
+          "37": 2
+        },
+        {
+          "26": 1,
+          "37": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        22,
+        84
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2021,
+      "max_year": 2021,
+      "contributing_edges": [
+        "h_00305"
+      ],
+      "multiplicities": [
+        {
+          "22": 1,
+          "84": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        12,
+        62
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00307"
+      ],
+      "multiplicities": [
+        {
+          "12": 1,
+          "62": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        6,
+        7
+      ],
+      "weight": 14.0,
+      "arity": 2,
+      "relation_types": [
+        "claims",
+        "presents"
+      ],
+      "min_year": 2015,
+      "max_year": 2015,
+      "contributing_edges": [
+        "h_00308",
+        "h_00818",
+        "h_00819",
+        "h_00820",
+        "h_00821",
+        "h_00822",
+        "h_00823",
+        "h_00824",
+        "h_00825",
+        "h_00826",
+        "h_00827",
+        "h_00828",
+        "h_00829",
+        "h_00830"
+      ],
+      "multiplicities": [
+        {
+          "6": 1,
+          "7": 1
+        },
+        {
+          "6": 1,
+          "7": 2
+        },
+        {
+          "6": 1,
+          "7": 2
+        },
+        {
+          "6": 1,
+          "7": 2
+        },
+        {
+          "6": 1,
+          "7": 2
+        },
+        {
+          "6": 1,
+          "7": 2
+        },
+        {
+          "6": 1,
+          "7": 2
+        },
+        {
+          "6": 1,
+          "7": 2
+        },
+        {
+          "6": 1,
+          "7": 2
+        },
+        {
+          "6": 1,
+          "7": 2
+        },
+        {
+          "6": 1,
+          "7": 2
+        },
+        {
+          "6": 1,
+          "7": 2
+        },
+        {
+          "6": 1,
+          "7": 2
+        },
+        {
+          "6": 1,
+          "7": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        29,
+        48
+      ],
+      "weight": 12.0,
+      "arity": 2,
+      "relation_types": [
+        "claims",
+        "presents"
+      ],
+      "min_year": 2018,
+      "max_year": 2018,
+      "contributing_edges": [
+        "h_00309",
+        "h_00831",
+        "h_00832",
+        "h_00833",
+        "h_00834",
+        "h_00835",
+        "h_00836",
+        "h_00837",
+        "h_00838",
+        "h_00839",
+        "h_00840",
+        "h_00841"
+      ],
+      "multiplicities": [
+        {
+          "29": 1,
+          "48": 1
+        },
+        {
+          "29": 2,
+          "48": 1
+        },
+        {
+          "29": 2,
+          "48": 1
+        },
+        {
+          "29": 2,
+          "48": 1
+        },
+        {
+          "29": 2,
+          "48": 1
+        },
+        {
+          "29": 2,
+          "48": 1
+        },
+        {
+          "29": 2,
+          "48": 1
+        },
+        {
+          "29": 2,
+          "48": 1
+        },
+        {
+          "29": 2,
+          "48": 1
+        },
+        {
+          "29": 2,
+          "48": 1
+        },
+        {
+          "29": 2,
+          "48": 1
+        },
+        {
+          "29": 2,
+          "48": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        52,
+        57
+      ],
+      "weight": 14.0,
+      "arity": 2,
+      "relation_types": [
+        "claims",
+        "presents"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00312",
+        "h_00917",
+        "h_00918",
+        "h_00919",
+        "h_00920",
+        "h_00921",
+        "h_00922",
+        "h_00923",
+        "h_00924",
+        "h_00925",
+        "h_00926",
+        "h_00927",
+        "h_00928",
+        "h_00929"
+      ],
+      "multiplicities": [
+        {
+          "52": 1,
+          "57": 1
+        },
+        {
+          "52": 1,
+          "57": 2
+        },
+        {
+          "52": 1,
+          "57": 2
+        },
+        {
+          "52": 1,
+          "57": 2
+        },
+        {
+          "52": 1,
+          "57": 2
+        },
+        {
+          "52": 1,
+          "57": 2
+        },
+        {
+          "52": 1,
+          "57": 2
+        },
+        {
+          "52": 1,
+          "57": 2
+        },
+        {
+          "52": 1,
+          "57": 2
+        },
+        {
+          "52": 1,
+          "57": 2
+        },
+        {
+          "52": 1,
+          "57": 2
+        },
+        {
+          "52": 1,
+          "57": 2
+        },
+        {
+          "52": 1,
+          "57": 2
+        },
+        {
+          "52": 1,
+          "57": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        11,
+        40
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00316"
+      ],
+      "multiplicities": [
+        {
+          "11": 1,
+          "40": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        85,
+        86
+      ],
+      "weight": 14.0,
+      "arity": 2,
+      "relation_types": [
+        "claims",
+        "presents"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00318",
+        "h_01006",
+        "h_01007",
+        "h_01008",
+        "h_01009",
+        "h_01010",
+        "h_01011",
+        "h_01012",
+        "h_01013",
+        "h_01014",
+        "h_01015",
+        "h_01016",
+        "h_01017",
+        "h_01018"
+      ],
+      "multiplicities": [
+        {
+          "85": 1,
+          "86": 1
+        },
+        {
+          "85": 1,
+          "86": 2
+        },
+        {
+          "85": 1,
+          "86": 2
+        },
+        {
+          "85": 1,
+          "86": 2
+        },
+        {
+          "85": 1,
+          "86": 2
+        },
+        {
+          "85": 1,
+          "86": 2
+        },
+        {
+          "85": 1,
+          "86": 2
+        },
+        {
+          "85": 1,
+          "86": 2
+        },
+        {
+          "85": 1,
+          "86": 2
+        },
+        {
+          "85": 1,
+          "86": 2
+        },
+        {
+          "85": 1,
+          "86": 2
+        },
+        {
+          "85": 1,
+          "86": 2
+        },
+        {
+          "85": 1,
+          "86": 2
+        },
+        {
+          "85": 1,
+          "86": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        16,
+        17
+      ],
+      "weight": 9.0,
+      "arity": 2,
+      "relation_types": [
+        "claims",
+        "presents"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00319",
+        "h_01019",
+        "h_01020",
+        "h_01021",
+        "h_01022",
+        "h_01023",
+        "h_01024",
+        "h_01025",
+        "h_01026"
+      ],
+      "multiplicities": [
+        {
+          "16": 1,
+          "17": 1
+        },
+        {
+          "16": 1,
+          "17": 2
+        },
+        {
+          "16": 1,
+          "17": 2
+        },
+        {
+          "16": 1,
+          "17": 2
+        },
+        {
+          "16": 1,
+          "17": 2
+        },
+        {
+          "16": 1,
+          "17": 2
+        },
+        {
+          "16": 1,
+          "17": 2
+        },
+        {
+          "16": 1,
+          "17": 2
+        },
+        {
+          "16": 1,
+          "17": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        41,
+        43
+      ],
+      "weight": 13.0,
+      "arity": 2,
+      "relation_types": [
+        "claims",
+        "presents"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00320",
+        "h_01027",
+        "h_01028",
+        "h_01029",
+        "h_01030",
+        "h_01031",
+        "h_01032",
+        "h_01033",
+        "h_01034",
+        "h_01035",
+        "h_01036",
+        "h_01037",
+        "h_01038"
+      ],
+      "multiplicities": [
+        {
+          "41": 1,
+          "43": 1
+        },
+        {
+          "41": 2,
+          "43": 1
+        },
+        {
+          "41": 2,
+          "43": 1
+        },
+        {
+          "41": 2,
+          "43": 1
+        },
+        {
+          "41": 2,
+          "43": 1
+        },
+        {
+          "41": 2,
+          "43": 1
+        },
+        {
+          "41": 2,
+          "43": 1
+        },
+        {
+          "41": 2,
+          "43": 1
+        },
+        {
+          "41": 2,
+          "43": 1
+        },
+        {
+          "41": 2,
+          "43": 1
+        },
+        {
+          "41": 2,
+          "43": 1
+        },
+        {
+          "41": 2,
+          "43": 1
+        },
+        {
+          "41": 2,
+          "43": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        23,
+        90
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00323"
+      ],
+      "multiplicities": [
+        {
+          "23": 1,
+          "90": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        31,
+        94
+      ],
+      "weight": 14.0,
+      "arity": 2,
+      "relation_types": [
+        "claims",
+        "presents"
+      ],
+      "min_year": 2019,
+      "max_year": 2019,
+      "contributing_edges": [
+        "h_00324",
+        "h_01081",
+        "h_01082",
+        "h_01083",
+        "h_01084",
+        "h_01085",
+        "h_01086",
+        "h_01087",
+        "h_01088",
+        "h_01089",
+        "h_01090",
+        "h_01091",
+        "h_01092",
+        "h_01093"
+      ],
+      "multiplicities": [
+        {
+          "31": 1,
+          "94": 1
+        },
+        {
+          "31": 2,
+          "94": 1
+        },
+        {
+          "31": 2,
+          "94": 1
+        },
+        {
+          "31": 2,
+          "94": 1
+        },
+        {
+          "31": 2,
+          "94": 1
+        },
+        {
+          "31": 2,
+          "94": 1
+        },
+        {
+          "31": 2,
+          "94": 1
+        },
+        {
+          "31": 2,
+          "94": 1
+        },
+        {
+          "31": 2,
+          "94": 1
+        },
+        {
+          "31": 2,
+          "94": 1
+        },
+        {
+          "31": 2,
+          "94": 1
+        },
+        {
+          "31": 2,
+          "94": 1
+        },
+        {
+          "31": 2,
+          "94": 1
+        },
+        {
+          "31": 2,
+          "94": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        21,
+        82
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2019,
+      "max_year": 2019,
+      "contributing_edges": [
+        "h_00325"
+      ],
+      "multiplicities": [
+        {
+          "21": 1,
+          "82": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        61,
+        80
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00326"
+      ],
+      "multiplicities": [
+        {
+          "61": 1,
+          "80": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        2,
+        58
+      ],
+      "weight": 13.0,
+      "arity": 2,
+      "relation_types": [
+        "claims",
+        "presents"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00329",
+        "h_01136",
+        "h_01137",
+        "h_01138",
+        "h_01139",
+        "h_01140",
+        "h_01141",
+        "h_01142",
+        "h_01143",
+        "h_01144",
+        "h_01145",
+        "h_01146",
+        "h_01147"
+      ],
+      "multiplicities": [
+        {
+          "2": 1,
+          "58": 1
+        },
+        {
+          "2": 1,
+          "58": 2
+        },
+        {
+          "2": 1,
+          "58": 2
+        },
+        {
+          "2": 1,
+          "58": 2
+        },
+        {
+          "2": 1,
+          "58": 2
+        },
+        {
+          "2": 1,
+          "58": 2
+        },
+        {
+          "2": 1,
+          "58": 2
+        },
+        {
+          "2": 1,
+          "58": 2
+        },
+        {
+          "2": 1,
+          "58": 2
+        },
+        {
+          "2": 1,
+          "58": 2
+        },
+        {
+          "2": 1,
+          "58": 2
+        },
+        {
+          "2": 1,
+          "58": 2
+        },
+        {
+          "2": 1,
+          "58": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        27,
+        34
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00330"
+      ],
+      "multiplicities": [
+        {
+          "27": 1,
+          "34": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        18,
+        19
+      ],
+      "weight": 13.0,
+      "arity": 2,
+      "relation_types": [
+        "claims",
+        "presents"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00331",
+        "h_01163",
+        "h_01164",
+        "h_01165",
+        "h_01166",
+        "h_01167",
+        "h_01168",
+        "h_01169",
+        "h_01170",
+        "h_01171",
+        "h_01172",
+        "h_01173",
+        "h_01174"
+      ],
+      "multiplicities": [
+        {
+          "18": 1,
+          "19": 1
+        },
+        {
+          "18": 1,
+          "19": 2
+        },
+        {
+          "18": 1,
+          "19": 2
+        },
+        {
+          "18": 1,
+          "19": 2
+        },
+        {
+          "18": 1,
+          "19": 2
+        },
+        {
+          "18": 1,
+          "19": 2
+        },
+        {
+          "18": 1,
+          "19": 2
+        },
+        {
+          "18": 1,
+          "19": 2
+        },
+        {
+          "18": 1,
+          "19": 2
+        },
+        {
+          "18": 1,
+          "19": 2
+        },
+        {
+          "18": 1,
+          "19": 2
+        },
+        {
+          "18": 1,
+          "19": 2
+        },
+        {
+          "18": 1,
+          "19": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        8,
+        39
+      ],
+      "weight": 11.0,
+      "arity": 2,
+      "relation_types": [
+        "claims",
+        "presents"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00333",
+        "h_01184",
+        "h_01185",
+        "h_01186",
+        "h_01187",
+        "h_01188",
+        "h_01189",
+        "h_01190",
+        "h_01191",
+        "h_01192",
+        "h_01193"
+      ],
+      "multiplicities": [
+        {
+          "8": 1,
+          "39": 1
+        },
+        {
+          "8": 1,
+          "39": 2
+        },
+        {
+          "8": 1,
+          "39": 2
+        },
+        {
+          "8": 1,
+          "39": 2
+        },
+        {
+          "8": 1,
+          "39": 2
+        },
+        {
+          "8": 1,
+          "39": 2
+        },
+        {
+          "8": 1,
+          "39": 2
+        },
+        {
+          "8": 1,
+          "39": 2
+        },
+        {
+          "8": 1,
+          "39": 2
+        },
+        {
+          "8": 1,
+          "39": 2
+        },
+        {
+          "8": 1,
+          "39": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        92,
+        93
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00335"
+      ],
+      "multiplicities": [
+        {
+          "92": 1,
+          "93": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        14,
+        81
+      ],
+      "weight": 16.0,
+      "arity": 2,
+      "relation_types": [
+        "claims",
+        "presents"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00336",
+        "h_01215",
+        "h_01216",
+        "h_01217",
+        "h_01218",
+        "h_01219",
+        "h_01220",
+        "h_01221",
+        "h_01222",
+        "h_01223",
+        "h_01224",
+        "h_01225",
+        "h_01226",
+        "h_01227",
+        "h_01228",
+        "h_01229"
+      ],
+      "multiplicities": [
+        {
+          "14": 1,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        },
+        {
+          "14": 2,
+          "81": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        15,
+        33
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00338"
+      ],
+      "multiplicities": [
+        {
+          "15": 1,
+          "33": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        59,
+        64
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2013,
+      "max_year": 2013,
+      "contributing_edges": [
+        "h_00339"
+      ],
+      "multiplicities": [
+        {
+          "59": 1,
+          "64": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        30,
+        49
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "presents"
+      ],
+      "min_year": 2016,
+      "max_year": 2016,
+      "contributing_edges": [
+        "h_00341"
+      ],
+      "multiplicities": [
+        {
+          "30": 1,
+          "49": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        51,
+        79
+      ],
+      "weight": 3.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00351",
+        "h_00352",
+        "h_00355"
+      ],
+      "multiplicities": [
+        {
+          "51": 2,
+          "79": 1
+        },
+        {
+          "51": 2,
+          "79": 1
+        },
+        {
+          "51": 2,
+          "79": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        73,
+        95
+      ],
+      "weight": 6.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00375",
+        "h_00376",
+        "h_00377",
+        "h_00378",
+        "h_00379",
+        "h_00380"
+      ],
+      "multiplicities": [
+        {
+          "73": 2,
+          "95": 1
+        },
+        {
+          "73": 2,
+          "95": 1
+        },
+        {
+          "73": 2,
+          "95": 1
+        },
+        {
+          "73": 2,
+          "95": 1
+        },
+        {
+          "73": 2,
+          "95": 1
+        },
+        {
+          "73": 2,
+          "95": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        72,
+        84
+      ],
+      "weight": 30.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2021,
+      "max_year": 2021,
+      "contributing_edges": [
+        "h_00385",
+        "h_00386",
+        "h_00387",
+        "h_00388",
+        "h_00389",
+        "h_00390",
+        "h_00391",
+        "h_00392",
+        "h_00393",
+        "h_00394",
+        "h_00395",
+        "h_00396",
+        "h_00397",
+        "h_00398",
+        "h_00399",
+        "h_00400",
+        "h_00401",
+        "h_00402",
+        "h_00403",
+        "h_00404",
+        "h_00405",
+        "h_00407",
+        "h_00408",
+        "h_00409",
+        "h_00410",
+        "h_00411",
+        "h_00412",
+        "h_00413",
+        "h_00414",
+        "h_00415"
+      ],
+      "multiplicities": [
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 1,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        },
+        {
+          "72": 2,
+          "84": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        52,
+        53,
+        79
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_00422"
+      ],
+      "multiplicities": [
+        {
+          "52": 1,
+          "53": 1,
+          "79": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        10,
+        11,
+        79
+      ],
+      "weight": 1.0,
+      "arity": 3,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00437",
+        "h_00438"
+      ],
+      "multiplicities": [
+        {
+          "11": 1,
+          "10": 1,
+          "79": 1
+        },
+        {
+          "11": 1,
+          "10": 1,
+          "79": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        43,
+        73
+      ],
+      "weight": 29.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00441",
+        "h_00442",
+        "h_00443",
+        "h_00444",
+        "h_00447",
+        "h_00448",
+        "h_00449",
+        "h_00450",
+        "h_00451",
+        "h_00452",
+        "h_00453",
+        "h_00454",
+        "h_00455",
+        "h_00456",
+        "h_00457",
+        "h_00458",
+        "h_00459",
+        "h_00460",
+        "h_00461",
+        "h_00462",
+        "h_00463",
+        "h_00465",
+        "h_00466",
+        "h_00467",
+        "h_00468",
+        "h_00469",
+        "h_00470",
+        "h_00471",
+        "h_00472"
+      ],
+      "multiplicities": [
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        },
+        {
+          "43": 1,
+          "73": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        43,
+        72,
+        73
+      ],
+      "weight": 1.0,
+      "arity": 3,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00445",
+        "h_00446"
+      ],
+      "multiplicities": [
+        {
+          "43": 1,
+          "72": 1,
+          "73": 1
+        },
+        {
+          "43": 1,
+          "72": 1,
+          "73": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        26,
+        43,
+        73
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00464"
+      ],
+      "multiplicities": [
+        {
+          "43": 1,
+          "26": 1,
+          "73": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        79,
+        80
+      ],
+      "weight": 2.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_00494",
+        "h_00495"
+      ],
+      "multiplicities": [
+        {
+          "79": 1,
+          "80": 2
+        },
+        {
+          "79": 1,
+          "80": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        27,
+        79,
+        82
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00498"
+      ],
+      "multiplicities": [
+        {
+          "27": 1,
+          "82": 1,
+          "79": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        27,
+        79
+      ],
+      "weight": 7.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00499",
+        "h_00502",
+        "h_00503",
+        "h_00504",
+        "h_00505",
+        "h_00506",
+        "h_00507"
+      ],
+      "multiplicities": [
+        {
+          "27": 1,
+          "79": 2
+        },
+        {
+          "27": 1,
+          "79": 2
+        },
+        {
+          "27": 1,
+          "79": 2
+        },
+        {
+          "27": 1,
+          "79": 2
+        },
+        {
+          "27": 1,
+          "79": 2
+        },
+        {
+          "27": 1,
+          "79": 2
+        },
+        {
+          "27": 1,
+          "79": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        27,
+        72,
+        79
+      ],
+      "weight": 1.0,
+      "arity": 3,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00500",
+        "h_00501"
+      ],
+      "multiplicities": [
+        {
+          "27": 1,
+          "79": 1,
+          "72": 1
+        },
+        {
+          "27": 1,
+          "79": 1,
+          "72": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        15,
+        27,
+        64
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_00508"
+      ],
+      "multiplicities": [
+        {
+          "27": 1,
+          "64": 1,
+          "15": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        74,
+        76
+      ],
+      "weight": 5.0,
+      "arity": 2,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00526",
+        "h_00527",
+        "h_00530",
+        "h_00533",
+        "h_00537"
+      ],
+      "multiplicities": [
+        {
+          "74": 1,
+          "76": 2
+        },
+        {
+          "74": 1,
+          "76": 2
+        },
+        {
+          "74": 1,
+          "76": 2
+        },
+        {
+          "74": 1,
+          "76": 2
+        },
+        {
+          "74": 1,
+          "76": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        74,
+        78,
+        79
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00528"
+      ],
+      "multiplicities": [
+        {
+          "74": 1,
+          "78": 1,
+          "79": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        72,
+        74,
+        76
+      ],
+      "weight": 3.0,
+      "arity": 3,
+      "relation_types": [
+        "evaluated_on"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_00529",
+        "h_00531",
+        "h_00532",
+        "h_00534",
+        "h_00535",
+        "h_00536"
+      ],
+      "multiplicities": [
+        {
+          "74": 1,
+          "76": 1,
+          "72": 1
+        },
+        {
+          "74": 1,
+          "76": 1,
+          "72": 1
+        },
+        {
+          "74": 1,
+          "76": 1,
+          "72": 1
+        },
+        {
+          "74": 1,
+          "76": 1,
+          "72": 1
+        },
+        {
+          "74": 1,
+          "76": 1,
+          "72": 1
+        },
+        {
+          "74": 1,
+          "76": 1,
+          "72": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        13,
+        22
+      ],
+      "weight": 9.0,
+      "arity": 2,
+      "relation_types": [
+        "claims"
+      ],
+      "min_year": 2021,
+      "max_year": 2021,
+      "contributing_edges": [
+        "h_00788",
+        "h_00789",
+        "h_00790",
+        "h_00791",
+        "h_00792",
+        "h_00793",
+        "h_00794",
+        "h_00795",
+        "h_00796"
+      ],
+      "multiplicities": [
+        {
+          "13": 1,
+          "22": 2
+        },
+        {
+          "13": 1,
+          "22": 2
+        },
+        {
+          "13": 1,
+          "22": 2
+        },
+        {
+          "13": 1,
+          "22": 2
+        },
+        {
+          "13": 1,
+          "22": 2
+        },
+        {
+          "13": 1,
+          "22": 2
+        },
+        {
+          "13": 1,
+          "22": 2
+        },
+        {
+          "13": 1,
+          "22": 2
+        },
+        {
+          "13": 1,
+          "22": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        2,
+        34
+      ],
+      "weight": 15.0,
+      "arity": 2,
+      "relation_types": [
+        "claims"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_01148",
+        "h_01149",
+        "h_01150",
+        "h_01151",
+        "h_01152",
+        "h_01153",
+        "h_01154",
+        "h_01155",
+        "h_01156",
+        "h_01157",
+        "h_01158",
+        "h_01159",
+        "h_01160",
+        "h_01161",
+        "h_01162"
+      ],
+      "multiplicities": [
+        {
+          "2": 1,
+          "34": 2
+        },
+        {
+          "2": 1,
+          "34": 2
+        },
+        {
+          "2": 1,
+          "34": 2
+        },
+        {
+          "2": 1,
+          "34": 2
+        },
+        {
+          "2": 1,
+          "34": 2
+        },
+        {
+          "2": 1,
+          "34": 2
+        },
+        {
+          "2": 1,
+          "34": 2
+        },
+        {
+          "2": 1,
+          "34": 2
+        },
+        {
+          "2": 1,
+          "34": 2
+        },
+        {
+          "2": 1,
+          "34": 2
+        },
+        {
+          "2": 1,
+          "34": 2
+        },
+        {
+          "2": 1,
+          "34": 2
+        },
+        {
+          "2": 1,
+          "34": 2
+        },
+        {
+          "2": 1,
+          "34": 2
+        },
+        {
+          "2": 1,
+          "34": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        2,
+        33
+      ],
+      "weight": 12.0,
+      "arity": 2,
+      "relation_types": [
+        "claims"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_01245",
+        "h_01246",
+        "h_01247",
+        "h_01248",
+        "h_01249",
+        "h_01250",
+        "h_01251",
+        "h_01252",
+        "h_01253",
+        "h_01254",
+        "h_01255",
+        "h_01256"
+      ],
+      "multiplicities": [
+        {
+          "2": 1,
+          "33": 2
+        },
+        {
+          "2": 1,
+          "33": 2
+        },
+        {
+          "2": 1,
+          "33": 2
+        },
+        {
+          "2": 1,
+          "33": 2
+        },
+        {
+          "2": 1,
+          "33": 2
+        },
+        {
+          "2": 1,
+          "33": 2
+        },
+        {
+          "2": 1,
+          "33": 2
+        },
+        {
+          "2": 1,
+          "33": 2
+        },
+        {
+          "2": 1,
+          "33": 2
+        },
+        {
+          "2": 1,
+          "33": 2
+        },
+        {
+          "2": 1,
+          "33": 2
+        },
+        {
+          "2": 1,
+          "33": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        17,
+        93
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_01298"
+      ],
+      "multiplicities": [
+        {
+          "17": 2,
+          "93": 3
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        17,
+        22,
+        25,
+        33,
+        39
+      ],
+      "weight": 0.25,
+      "arity": 5,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_01299"
+      ],
+      "multiplicities": [
+        {
+          "39": 23,
+          "22": 4,
+          "25": 1,
+          "33": 1,
+          "17": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        17,
+        37,
+        39
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_01301"
+      ],
+      "multiplicities": [
+        {
+          "37": 15,
+          "17": 1,
+          "39": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        37,
+        38
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_01303"
+      ],
+      "multiplicities": [
+        {
+          "37": 1,
+          "38": 30
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        17,
+        22,
+        25,
+        31,
+        33,
+        39,
+        93
+      ],
+      "weight": 0.1667,
+      "arity": 7,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2021,
+      "max_year": 2021,
+      "contributing_edges": [
+        "h_01304"
+      ],
+      "multiplicities": [
+        {
+          "22": 47,
+          "39": 6,
+          "31": 1,
+          "93": 1,
+          "17": 1,
+          "25": 2,
+          "33": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        22,
+        25,
+        33,
+        38,
+        39
+      ],
+      "weight": 0.25,
+      "arity": 5,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_01306"
+      ],
+      "multiplicities": [
+        {
+          "33": 17,
+          "25": 1,
+          "22": 5,
+          "39": 2,
+          "38": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        39,
+        40
+      ],
+      "weight": 2.0,
+      "arity": 2,
+      "relation_types": [
+        "authored_by",
+        "cites"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_01308",
+        "h_01350"
+      ],
+      "multiplicities": [
+        {
+          "39": 2,
+          "40": 6
+        },
+        {
+          "39": 6,
+          "40": 3
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        17,
+        25,
+        33,
+        39,
+        40,
+        62
+      ],
+      "weight": 0.2,
+      "arity": 6,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_01309"
+      ],
+      "multiplicities": [
+        {
+          "62": 24,
+          "39": 4,
+          "40": 1,
+          "17": 2,
+          "25": 1,
+          "33": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        22,
+        25,
+        31,
+        39,
+        70,
+        93
+      ],
+      "weight": 0.2,
+      "arity": 6,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_01311"
+      ],
+      "multiplicities": [
+        {
+          "70": 5,
+          "93": 1,
+          "22": 1,
+          "39": 1,
+          "31": 2,
+          "25": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        22,
+        31,
+        33
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2019,
+      "max_year": 2019,
+      "contributing_edges": [
+        "h_01315"
+      ],
+      "multiplicities": [
+        {
+          "31": 6,
+          "22": 1,
+          "33": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        17,
+        22,
+        23,
+        31,
+        32,
+        33,
+        39
+      ],
+      "weight": 0.1667,
+      "arity": 7,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_01318"
+      ],
+      "multiplicities": [
+        {
+          "23": 10,
+          "17": 4,
+          "22": 7,
+          "39": 1,
+          "31": 1,
+          "33": 1,
+          "32": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        17,
+        22,
+        23,
+        33,
+        37,
+        39,
+        74
+      ],
+      "weight": 0.1667,
+      "arity": 7,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_01323"
+      ],
+      "multiplicities": [
+        {
+          "74": 49,
+          "17": 4,
+          "39": 3,
+          "22": 6,
+          "23": 1,
+          "37": 1,
+          "33": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        23,
+        25,
+        33,
+        57
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_01324"
+      ],
+      "multiplicities": [
+        {
+          "57": 18,
+          "23": 1,
+          "33": 1,
+          "25": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        14,
+        17
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_01325"
+      ],
+      "multiplicities": [
+        {
+          "14": 4,
+          "17": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        22,
+        31,
+        32,
+        39,
+        55,
+        95
+      ],
+      "weight": 0.2,
+      "arity": 6,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_01327"
+      ],
+      "multiplicities": [
+        {
+          "95": 30,
+          "39": 2,
+          "22": 5,
+          "32": 1,
+          "55": 1,
+          "31": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        22,
+        23,
+        33,
+        38,
+        57,
+        61
+      ],
+      "weight": 0.2,
+      "arity": 6,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2022,
+      "max_year": 2022,
+      "contributing_edges": [
+        "h_01328"
+      ],
+      "multiplicities": [
+        {
+          "61": 19,
+          "22": 1,
+          "23": 1,
+          "57": 3,
+          "38": 2,
+          "33": 4
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        22,
+        30,
+        31,
+        33,
+        70
+      ],
+      "weight": 0.25,
+      "arity": 5,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2016,
+      "max_year": 2016,
+      "contributing_edges": [
+        "h_01329"
+      ],
+      "multiplicities": [
+        {
+          "30": 16,
+          "33": 1,
+          "22": 1,
+          "70": 1,
+          "31": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        7,
+        22,
+        23,
+        30,
+        33,
+        38,
+        39,
+        61
+      ],
+      "weight": 0.1429,
+      "arity": 8,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2015,
+      "max_year": 2015,
+      "contributing_edges": [
+        "h_01330"
+      ],
+      "multiplicities": [
+        {
+          "7": 19,
+          "61": 1,
+          "23": 1,
+          "22": 1,
+          "38": 4,
+          "39": 1,
+          "30": 1,
+          "33": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        22,
+        23,
+        51,
+        57
+      ],
+      "weight": 0.3333,
+      "arity": 4,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_01332"
+      ],
+      "multiplicities": [
+        {
+          "51": 24,
+          "23": 1,
+          "22": 3,
+          "57": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        17,
+        22,
+        23,
+        33,
+        34,
+        39,
+        55,
+        57,
+        61
+      ],
+      "weight": 0.125,
+      "arity": 9,
+      "relation_types": [
+        "cites"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_01333"
+      ],
+      "multiplicities": [
+        {
+          "34": 17,
+          "23": 3,
+          "61": 3,
+          "22": 2,
+          "17": 2,
+          "57": 3,
+          "33": 2,
+          "39": 1,
+          "55": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        29,
+        93
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "authored_by"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_01337"
+      ],
+      "multiplicities": [
+        {
+          "29": 1,
+          "93": 5
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        17,
+        22
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "authored_by"
+      ],
+      "min_year": 2021,
+      "max_year": 2021,
+      "contributing_edges": [
+        "h_01345"
+      ],
+      "multiplicities": [
+        {
+          "17": 1,
+          "22": 9
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        35,
+        58
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "authored_by"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_01348"
+      ],
+      "multiplicities": [
+        {
+          "35": 5,
+          "58": 3
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        39,
+        62
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "authored_by"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_01351"
+      ],
+      "multiplicities": [
+        {
+          "39": 5,
+          "62": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        21,
+        33
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "authored_by"
+      ],
+      "min_year": 2019,
+      "max_year": 2019,
+      "contributing_edges": [
+        "h_01354"
+      ],
+      "multiplicities": [
+        {
+          "21": 4,
+          "33": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        19,
+        55
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "authored_by"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_01363"
+      ],
+      "multiplicities": [
+        {
+          "19": 1,
+          "55": 3
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        33,
+        46,
+        58
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "authored_by"
+      ],
+      "min_year": 2013,
+      "max_year": 2013,
+      "contributing_edges": [
+        "h_01365"
+      ],
+      "multiplicities": [
+        {
+          "46": 8,
+          "58": 3,
+          "33": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        17,
+        74
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "authored_by"
+      ],
+      "min_year": 2024,
+      "max_year": 2024,
+      "contributing_edges": [
+        "h_01374"
+      ],
+      "multiplicities": [
+        {
+          "17": 1,
+          "74": 4
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        57,
+        58
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "authored_by"
+      ],
+      "min_year": 2020,
+      "max_year": 2020,
+      "contributing_edges": [
+        "h_01375"
+      ],
+      "multiplicities": [
+        {
+          "57": 5,
+          "58": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        32,
+        58,
+        95
+      ],
+      "weight": 0.5,
+      "arity": 3,
+      "relation_types": [
+        "authored_by"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_01378"
+      ],
+      "multiplicities": [
+        {
+          "95": 39,
+          "58": 1,
+          "32": 1
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        29,
+        30
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "authored_by"
+      ],
+      "min_year": 2016,
+      "max_year": 2016,
+      "contributing_edges": [
+        "h_01381"
+      ],
+      "multiplicities": [
+        {
+          "29": 1,
+          "30": 2
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        4,
+        7
+      ],
+      "weight": 1.0,
+      "arity": 2,
+      "relation_types": [
+        "authored_by"
+      ],
+      "min_year": 2015,
+      "max_year": 2015,
+      "contributing_edges": [
+        "h_01382"
+      ],
+      "multiplicities": [
+        {
+          "4": 3,
+          "7": 9
+        }
+      ]
+    },
+    {
+      "super_nodes": [
+        22,
+        25,
+        34,
+        56,
+        59
+      ],
+      "weight": 0.25,
+      "arity": 5,
+      "relation_types": [
+        "authored_by"
+      ],
+      "min_year": 2023,
+      "max_year": 2023,
+      "contributing_edges": [
+        "h_01384"
+      ],
+      "multiplicities": [
+        {
+          "34": 3,
+          "25": 1,
+          "22": 1,
+          "56": 1,
+          "59": 1
+        }
+      ]
+    }
+  ]
+}

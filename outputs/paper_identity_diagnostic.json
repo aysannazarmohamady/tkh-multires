@@ -1,0 +1,14 @@
+{
+  "level": 0,
+  "n_nodes_with_article": 5798,
+  "observed_nmi": 0.4835,
+  "null_nmi_mean": 0.0199,
+  "null_nmi_std": 0.001,
+  "null_nmi_95ci": [
+    0.0178,
+    0.0218
+  ],
+  "z_vs_null": 447.45,
+  "clusters_with_single_article_majority_over_50pct": 4,
+  "total_clusters_at_level": 14
+}

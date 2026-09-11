@@ -1,0 +1,98 @@
+{
+  "alpha": 0.5,
+  "n_edge_order_permutations": 20,
+  "per_snapshot": {
+    "2020": {
+      "structural_zero_fraction": 0.9231217239370996,
+      "tied_zero_rank": 0.4616579304989322,
+      "smallest_nonzero_rank": 0.9233158609978644,
+      "structural_variance_share_shipped": 0.17584119726920472,
+      "structural_variance_share_zero_pinned": 0.22532129346382326,
+      "ari_shipped_vs_zero_pinned_levels_0_2": [
+        0.5633146696675797,
+        0.5680944772961996,
+        0.574947055055189
+      ],
+      "own_10pct_removal_noise_band_L0_2.5_97.5pct": [
+        0.5882577081078678,
+        0.9600329196266243
+      ],
+      "n_primary_nodes": 1074,
+      "nodes_with_tie_on_path": 47,
+      "tie_share_of_primary": 0.043761638733705775,
+      "flipped_under_permutation_mean": 27.85,
+      "flipped_union_subset_of_tied": true,
+      "node_laminar_all_permutations": true
+    },
+    "2022": {
+      "structural_zero_fraction": 0.9332750582750583,
+      "tied_zero_rank": 0.4666860916860917,
+      "smallest_nonzero_rank": 0.9333721833721834,
+      "structural_variance_share_shipped": 0.15762180348618482,
+      "structural_variance_share_zero_pinned": 0.2026072033581583,
+      "ari_shipped_vs_zero_pinned_levels_0_2": [
+        0.5121953797507077,
+        0.640851359044294,
+        0.6336378836809179
+      ],
+      "own_10pct_removal_noise_band_L0_2.5_97.5pct": [
+        0.5605518757016511,
+        0.9563968941143849
+      ],
+      "n_primary_nodes": 1548,
+      "nodes_with_tie_on_path": 90,
+      "tie_share_of_primary": 0.05813953488372093,
+      "flipped_under_permutation_mean": 51.85,
+      "flipped_union_subset_of_tied": true,
+      "node_laminar_all_permutations": true
+    },
+    "2024": {
+      "structural_zero_fraction": 0.9463667226775487,
+      "tied_zero_rank": 0.4732005075271767,
+      "smallest_nonzero_rank": 0.9464010150543534,
+      "structural_variance_share_shipped": 0.13226421439365407,
+      "structural_variance_share_zero_pinned": 0.17088015881619628,
+      "ari_shipped_vs_zero_pinned_levels_0_2": [
+        0.5578548601414078,
+        0.6089850955495054,
+        0.6398008500212954
+      ],
+      "own_10pct_removal_noise_band_L0_2.5_97.5pct": [
+        0.4483254147281002,
+        0.8712462119721934
+      ],
+      "n_primary_nodes": 2980,
+      "nodes_with_tie_on_path": 171,
+      "tie_share_of_primary": 0.05738255033557047,
+      "flipped_under_permutation_mean": 98.55,
+      "flipped_union_subset_of_tied": true,
+      "node_laminar_all_permutations": true
+    },
+    "2026": {
+      "structural_zero_fraction": 0.9526352700005395,
+      "tied_zero_rank": 0.4763266260272248,
+      "smallest_nonzero_rank": 0.9526532520544496,
+      "structural_variance_share_shipped": 0.11930757532944165,
+      "structural_variance_share_zero_pinned": 0.15457101089212627,
+      "ari_shipped_vs_zero_pinned_levels_0_2": [
+        0.3637742023761718,
+        0.5934883070777581,
+        0.5820484157701609
+      ],
+      "own_10pct_removal_noise_band_L0_2.5_97.5pct": [
+        0.3386663825144803,
+        0.7028554941339955
+      ],
+      "n_primary_nodes": 4202,
+      "nodes_with_tie_on_path": 283,
+      "tie_share_of_primary": 0.06734888148500714,
+      "flipped_under_permutation_mean": 163.25,
+      "flipped_union_subset_of_tied": true,
+      "node_laminar_all_permutations": true
+    }
+  },
+  "canonical_tiebreak_changes_labelled_n_members": {
+    "changed": 126,
+    "labelled": 188
+  }
+}

@@ -1,0 +1,457 @@
+{
+  "meta": {
+    "cutoffs": [
+      2020,
+      2022,
+      2024,
+      2026
+    ],
+    "alpha": 0.5,
+    "linkage": "complete",
+    "semantic_model_for_shipped_hierarchies": "all-MiniLM-L6-v2 (real sentence embeddings, via HF Space)",
+    "semantic_model_for_t3_null_and_sensitivity": "same MiniLM embeddings (subset matching)",
+    "semantic_model_for_extrinsic_scorer": "TF-IDF (label-free scorer; see extrinsic_eval.py)",
+    "note": "commit hash not tracked in this environment; record at time of git commit."
+  },
+  "coherence": {
+    "design": "bibliographic coupling between article pairs via held-out `cites` relation (never used in clustering); provenance guard: no article's placement may derive from `cites`; permutation null over cluster labels (10,000 permutations)",
+    "per_snapshot": {
+      "2020": {
+        "cutoff": 2020,
+        "n_articles": 9,
+        "n_clusters": 5,
+        "within_pairs": 5,
+        "observed": 0.003,
+        "null_mean": -0.0,
+        "null_sd": 0.0148,
+        "z": 0.2,
+        "p_perm": 0.4006
+      },
+      "2022": {
+        "cutoff": 2022,
+        "n_articles": 14,
+        "n_clusters": 4,
+        "within_pairs": 31,
+        "observed": 0.0038,
+        "null_mean": 0.0,
+        "null_sd": 0.0075,
+        "z": 0.51,
+        "p_perm": 0.2936
+      },
+      "2024": {
+        "cutoff": 2024,
+        "n_articles": 25,
+        "n_clusters": 7,
+        "within_pairs": 112,
+        "observed": -0.0018,
+        "null_mean": -0.0001,
+        "null_sd": 0.0068,
+        "z": -0.25,
+        "p_perm": 0.5769
+      },
+      "2026": {
+        "cutoff": 2026,
+        "n_articles": 37,
+        "n_clusters": 11,
+        "within_pairs": 106,
+        "observed": 0.01,
+        "null_mean": 0.0,
+        "null_sd": 0.006,
+        "z": 1.68,
+        "p_perm": 0.0587
+      }
+    },
+    "result": "null at every snapshot (best case 2026: z=1.68, p=0.059) -- reported as a null result, not significant coherence evidence."
+  },
+  "paper_identity_diagnostic": {
+    "level": 0,
+    "n_nodes_with_article": 5798,
+    "observed_nmi": 0.4835,
+    "null_nmi_mean": 0.0199,
+    "null_nmi_std": 0.001,
+    "null_nmi_95ci": [
+      0.0178,
+      0.0218
+    ],
+    "z_vs_null": 447.45,
+    "clusters_with_single_article_majority_over_50pct": 4,
+    "total_clusters_at_level": 14
+  },
+  "stability": {
+    "note": "T3's event log (temporal_events.json) is built DIRECTLY from the shipped hierarchy_<year>.json files, not a separate re-clustering.",
+    "authoritative_perturbation_test": {
+      "method": "per-snapshot null: re-cluster after removing 10% of post-merge clustering-eligible edges (real MiniLM embeddings via subset matching); each transition tested against both endpoint nulls, conservative p = max, Holm-adjusted across transitions",
+      "n_seeds_per_snapshot": 1000,
+      "primary_node_set": "clustering-placed only (excludes post-hoc attachment)",
+      "null_mean_ari_by_snapshot_clustering_only": {
+        "2020": 0.773,
+        "2022": 0.758,
+        "2024": 0.642,
+        "2026": 0.501
+      },
+      "null_ci95_of_mean_by_snapshot_clustering_only": {
+        "2020": [
+          0.767,
+          0.779
+        ],
+        "2022": [
+          0.752,
+          0.765
+        ],
+        "2024": [
+          0.635,
+          0.649
+        ],
+        "2026": [
+          0.495,
+          0.507
+        ]
+      },
+      "k0_stayed_within_p2_target_all_seeds_all_snapshots": true,
+      "transitions_clustering_only_PRIMARY": [
+        {
+          "transition": "2020->2022",
+          "observed_ari": 0.6084100933146865,
+          "p_vs_prev_snapshot_null": 0.965034965034965,
+          "p_vs_curr_snapshot_null": 0.9210789210789211,
+          "p_conservative": 0.965034965034965,
+          "p_vs_2026_null_SUPERSEDED": 0.14785214785214784,
+          "p_conservative_holm": 1.0
+        },
+        {
+          "transition": "2022->2024",
+          "observed_ari": 0.693168736758654,
+          "p_vs_prev_snapshot_null": 0.7322677322677322,
+          "p_vs_curr_snapshot_null": 0.2907092907092907,
+          "p_conservative": 0.7322677322677322,
+          "p_vs_2026_null_SUPERSEDED": 0.03196803196803197,
+          "p_conservative_holm": 1.0
+        },
+        {
+          "transition": "2024->2026",
+          "observed_ari": 0.5915962903202416,
+          "p_vs_prev_snapshot_null": 0.6693306693306693,
+          "p_vs_curr_snapshot_null": 0.17482517482517482,
+          "p_conservative": 0.6693306693306693,
+          "p_vs_2026_null_SUPERSEDED": 0.17482517482517482,
+          "p_conservative_holm": 1.0
+        }
+      ],
+      "transitions_all_nodes_secondary": [
+        {
+          "transition": "2020->2022",
+          "observed_ari": 0.5921742388150096,
+          "p_vs_prev_snapshot_null": 0.951048951048951,
+          "p_vs_curr_snapshot_null": 0.7392607392607392,
+          "p_conservative": 0.951048951048951,
+          "p_vs_2026_null_SUPERSEDED": 0.05194805194805195,
+          "p_conservative_holm": 1.0
+        },
+        {
+          "transition": "2022->2024",
+          "observed_ari": 0.6608593721907773,
+          "p_vs_prev_snapshot_null": 0.5454545454545454,
+          "p_vs_curr_snapshot_null": 0.24075924075924077,
+          "p_conservative": 0.5454545454545454,
+          "p_vs_2026_null_SUPERSEDED": 0.016983016983016984,
+          "p_conservative_holm": 1.0
+        },
+        {
+          "transition": "2024->2026",
+          "observed_ari": 0.4752492644173095,
+          "p_vs_prev_snapshot_null": 0.7862137862137862,
+          "p_vs_curr_snapshot_null": 0.2897102897102897,
+          "p_conservative": 0.7862137862137862,
+          "p_vs_2026_null_SUPERSEDED": 0.2897102897102897,
+          "p_conservative_holm": 1.0
+        }
+      ],
+      "n_transitions_significant_primary_holm_0.05": 0,
+      "interpretation": "0/3 transitions are more stable than their own snapshots' 10%-edge-removal noise after Holm correction. The earlier claim that 2022->2024 is robustly stable (p=0.03) came from comparing against the 2026 null, which is much less stable than the 2022/2024 nulls, and is withdrawn. perturbation removes 10% of edges; real growth adds 40-92% across these transitions -- not a matched-magnitude comparison"
+    },
+    "superseded": {
+      "2026_only_null": "Earlier versions tested every transition against the 2026 null only; 2022->2024 then gave p=0.03 (primary), which (a) did not survive multiple-testing correction (Holm/BH adjusted p=0.089) and (b) used a null ~0.26 ARI less stable than the 2022/2024 snapshots' own nulls. Kept in t3_perturbation_real_embeddings.json as p_vs_2026_null_SUPERSEDED.",
+      "lambda_sweep_file": "outputs/lambda_selection_and_null.json is LEGACY: produced by src/temporal_reg.py (raw-edge perturbation, which breaks embedding subset matching; 13/20 seeds collapse to ARI=0) on an older pipeline state; its observed transition ARIs (0.82/0.44/0.50) do not match the shipped hierarchies (see above), so its growth-null comparison is NOT reported as evidence. Only its decision (lambda_sd=0, i.e. no temporal regularisation) is used, and that decision is the untuned default.",
+      "selected_lambda_sd": 0.0
+    }
+  },
+  "method_sensitivity": {
+    "source": "src/sensitivity_diagnostics.py",
+    "rank_normalisation_ties": {
+      "2020": {
+        "structural_zero_fraction": 0.9231217239370996,
+        "tied_zero_rank": 0.4616579304989322,
+        "smallest_nonzero_rank": 0.9233158609978644,
+        "structural_variance_share_shipped": 0.17584119726920472,
+        "structural_variance_share_zero_pinned": 0.22532129346382326,
+        "ari_shipped_vs_zero_pinned_levels_0_2": [
+          0.5633146696675797,
+          0.5680944772961996,
+          0.574947055055189
+        ],
+        "own_10pct_removal_noise_band_L0_2.5_97.5pct": [
+          0.5882577081078678,
+          0.9600329196266243
+        ]
+      },
+      "2022": {
+        "structural_zero_fraction": 0.9332750582750583,
+        "tied_zero_rank": 0.4666860916860917,
+        "smallest_nonzero_rank": 0.9333721833721834,
+        "structural_variance_share_shipped": 0.15762180348618482,
+        "structural_variance_share_zero_pinned": 0.2026072033581583,
+        "ari_shipped_vs_zero_pinned_levels_0_2": [
+          0.5121953797507077,
+          0.640851359044294,
+          0.6336378836809179
+        ],
+        "own_10pct_removal_noise_band_L0_2.5_97.5pct": [
+          0.5605518757016511,
+          0.9563968941143849
+        ]
+      },
+      "2024": {
+        "structural_zero_fraction": 0.9463667226775487,
+        "tied_zero_rank": 0.4732005075271767,
+        "smallest_nonzero_rank": 0.9464010150543534,
+        "structural_variance_share_shipped": 0.13226421439365407,
+        "structural_variance_share_zero_pinned": 0.17088015881619628,
+        "ari_shipped_vs_zero_pinned_levels_0_2": [
+          0.5578548601414078,
+          0.6089850955495054,
+          0.6398008500212954
+        ],
+        "own_10pct_removal_noise_band_L0_2.5_97.5pct": [
+          0.4483254147281002,
+          0.8712462119721934
+        ]
+      },
+      "2026": {
+        "structural_zero_fraction": 0.9526352700005395,
+        "tied_zero_rank": 0.4763266260272248,
+        "smallest_nonzero_rank": 0.9526532520544496,
+        "structural_variance_share_shipped": 0.11930757532944165,
+        "structural_variance_share_zero_pinned": 0.15457101089212627,
+        "ari_shipped_vs_zero_pinned_levels_0_2": [
+          0.3637742023761718,
+          0.5934883070777581,
+          0.5820484157701609
+        ],
+        "own_10pct_removal_noise_band_L0_2.5_97.5pct": [
+          0.3386663825144803,
+          0.7028554941339955
+        ]
+      }
+    },
+    "assignment_tie_breaking": {
+      "2020": {
+        "tie_share_of_primary": 0.043761638733705775,
+        "flipped_under_permutation_mean": 27.85,
+        "flipped_union_subset_of_tied": true,
+        "node_laminar_all_permutations": true
+      },
+      "2022": {
+        "tie_share_of_primary": 0.05813953488372093,
+        "flipped_under_permutation_mean": 51.85,
+        "flipped_union_subset_of_tied": true,
+        "node_laminar_all_permutations": true
+      },
+      "2024": {
+        "tie_share_of_primary": 0.05738255033557047,
+        "flipped_under_permutation_mean": 98.55,
+        "flipped_union_subset_of_tied": true,
+        "node_laminar_all_permutations": true
+      },
+      "2026": {
+        "tie_share_of_primary": 0.06734888148500714,
+        "flipped_under_permutation_mean": 163.25,
+        "flipped_union_subset_of_tied": true,
+        "node_laminar_all_permutations": true
+      }
+    },
+    "canonical_tiebreak_changes_labelled_n_members": {
+      "changed": 126,
+      "labelled": 188
+    },
+    "decision": "documented, not changed: both fixes re-cluster/re-assign every snapshot and invalidate existing labels; see report.md, Limitations."
+  },
+  "labels": {
+    "n_labelled_clusters": 188,
+    "by_snapshot_level": {
+      "2026_L0": 14,
+      "2020_L0": 11,
+      "2022_L0": 15,
+      "2024_L0": 15,
+      "2020_L1": 23,
+      "2022_L1": 32,
+      "2024_L1": 38,
+      "2026_L1": 40
+    },
+    "n_overclaims_uncorrected": 0,
+    "over_claim_rate": 0.0,
+    "method": "LLM labeller sees only member surface forms; each named entity in a gloss is checked against the member list and against independent `claims` text (article_year <= cutoff) with src/faithfulness_check.py. Entity-level check, not NLI of relationships.",
+    "level1_2026_entity_summary": {
+      "n_entities_checked": 246,
+      "n_supported_by_claims": 98,
+      "n_broad_catch_all_clusters": 4
+    },
+    "levels_2_3": "deterministic template labels from verbatim member forms (label_source='template'); outside the T5 faithfulness scope",
+    "legacy_pilot_2026_L0_detail": [
+      {
+        "cluster_id": 3,
+        "n_members": 20,
+        "label": "Tensorial & Magnetic Atomic Cluster Expansion",
+        "gloss": "Extends the Atomic Cluster Expansion framework to represent vectorial and tensorial atomic properties—including magnetic moments and charge transfer—for building interatomic potentials that predict energies, forces, and torques.",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "Directly supported by claims describing ACE generalized to scalar/vectorial/tensorial properties with magnetic moments and charges; no unsupported specifics asserted."
+      },
+      {
+        "cluster_id": 1,
+        "n_members": 40,
+        "label": "Equivariant/Directional Message-Passing GNNs for Molecules",
+        "gloss": "Graph neural network architectures—directional and SE(3)/E(3)-equivariant message passing—for predicting molecular properties and DFT Hamiltonians, evaluated largely on QM9.",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "CORRECTED after external review found evidence was missed on first pass: full 44-claim list confirms QM9 evaluation. The word 'largely' is a mild, hard-to-verify quantifier, worth softening in future passes, but not an unsupported fact."
+      },
+      {
+        "cluster_id": 5,
+        "n_members": 38,
+        "label": "Machine Learning for Multiscale Computational Modeling (Survey)",
+        "gloss": "A survey-level cluster covering machine learning methods (neural networks, generative models, transfer/meta-learning) applied to multiscale computational modeling tasks such as fluid mechanics, materials microstructure, and manufacturing, along with associated challenges like data scarcity and limited extrapolation.",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "Consistent with claims describing ML as a surrogate/accelerant in multiscale modeling, CNN-based materials microstructure estimation, and memory/computation-cost challenges."
+      },
+      {
+        "cluster_id": 13,
+        "n_members": 43,
+        "label": "Differentiable Density Functional Theory (D4FT)",
+        "gloss": "Methods for a GPU-accelerated, automatically-differentiable SCF-DFT implementation (D4FT), including neural local scaling and stochastic optimization, compared against established DFT packages (GPAW, Psi4).",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "CORRECTED after external review found evidence was missed on first pass: full 12-claim list confirms the GPAW/Psi4/PySCF comparison directly."
+      },
+      {
+        "cluster_id": 6,
+        "n_members": 145,
+        "label": "Equivariant Message-Passing MLIPs at Scale (MACE/SevenNet Family)",
+        "gloss": "Equivariant graph neural network interatomic potentials (including MACE-style higher-order message passing and SevenNet) with techniques for GPU parallelization and scalable training, addressing computational efficiency and generalization challenges in machine-learned interatomic potentials.",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "Systematic entity check (7 articles, 89 claims): MACE (9 supporting claims), SevenNet (11), equivariant (10), ACE (16) all GROUNDED_AND_SUPPORTED; 'GPU parallelization' as an exact phrase is GROUNDED_BUT_UNVERIFIABLE (GPU and parallel/parallelization each individually well-supported, 8 and 7 claims respectively, but not as one exact phrase) -- not an overclaim, but illustrates a real limitation of substring-based checking for compound phrases."
+      },
+      {
+        "cluster_id": 7,
+        "n_members": 160,
+        "label": "Generalization Challenges in Long-Range MLIPs (Charge, Chemical Space)",
+        "gloss": "Reviews and addresses generalization challenges for machine-learned interatomic potentials, particularly long-range electrostatic and charge-transfer prediction, chemical-space under-sampling bias, and accelerating DFT-NEB-based geometry/barrier calculations.",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "Systematic entity check (3 articles, 90 claims): long-range (8), chemical space (2), DFT-NEB (1), generalization (1) all GROUNDED_AND_SUPPORTED; charge-transfer is GROUNDED_BUT_UNVERIFIABLE (a real member term, but no claim happens to mention it directly)."
+      },
+      {
+        "cluster_id": 9,
+        "n_members": 200,
+        "label": "AFLOW High-Throughput Materials Discovery Framework",
+        "gloss": "An automated high-throughput DFT calculation framework (AFLOW) with standardized protocols, covering electronic-structure methods (DFT+U, GW approximation) and phonon/symmetry analysis tools for materials discovery.",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "Systematic entity check (3 articles, 40 claims): AFLOW (16), DFT+U (4), phonon (1), symmetry (1), high-throughput (1) all GROUNDED_AND_SUPPORTED; GW approximation is GROUNDED_BUT_UNVERIFIABLE (a real member term, no claim happens to mention it directly)."
+      },
+      {
+        "cluster_id": 4,
+        "n_members": 279,
+        "label": "EquiformerV2: Equivariant Transformer for High-Degree Representations",
+        "gloss": "An equivariant graph transformer (EquiformerV2) using higher-degree tensor representations, attention re-normalization, and denoising pre-training for scalable, accurate atomic property prediction.",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "Systematic entity check (38 claims): EquiformerV2 (7), attention re-normalization (2), equivariant (3), higher-degree (1) GROUNDED_AND_SUPPORTED; denoising is GROUNDED_BUT_UNVERIFIABLE."
+      },
+      {
+        "cluster_id": 8,
+        "n_members": 386,
+        "label": "DeePMD-kit: Deep Potential Molecular Dynamics Software",
+        "gloss": "Software package (DeePMD-kit) for Deep Potential models, incorporating active learning, automated model selection, and molecular dynamics analysis techniques (e.g. Arrhenius plot analysis, mean-squared-displacement regression) for materials simulation workflows.",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "Systematic entity check (78 claims): DeePMD-kit (6), Deep Potential (2), molecular dynamics (6) GROUNDED_AND_SUPPORTED; active learning and Arrhenius are GROUNDED_BUT_UNVERIFIABLE."
+      },
+      {
+        "cluster_id": 10,
+        "n_members": 326,
+        "label": "Universal Graph-Based ML Interatomic Potentials & DFT Surrogates",
+        "gloss": "A broad collection of graph neural network interatomic potentials and deep-learning DFT surrogates (including M3GNet, CHGNet, DeepH, D4FT, and Deep Potential Molecular Dynamics) spanning universal materials modeling, charge-informed potentials, and multiscale bridging from first-principles to continuum simulations.",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "Systematic entity check (16 articles, 210 claims): M3GNet (15), CHGNet (13), DeepH (24), D4FT (10) all strongly GROUNDED_AND_SUPPORTED; 'Deep Potential Molecular Dynamics', 'multiscale', 'charge-informed' are GROUNDED_BUT_UNVERIFIABLE."
+      },
+      {
+        "cluster_id": 14,
+        "n_members": 198,
+        "label": "Materials Databases & Universal Simulation Infrastructure",
+        "gloss": "Infrastructure for materials data and simulation, spanning materials databases (Materials Project), universal atomistic simulation frameworks (Orb-v3), and universal atomic models (UMA), including toolkit/agent components for automated materials workflows.",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "Systematic entity check (5 articles, 68 claims): Materials Project (8), Orb-v3 (10), UMA (12), agent (1) GROUNDED_AND_SUPPORTED; toolkit is GROUNDED_BUT_UNVERIFIABLE."
+      },
+      {
+        "cluster_id": 2,
+        "n_members": 701,
+        "label": "Graph Neural Networks for Molecular & Crystal Property Prediction",
+        "gloss": "Graph neural network frameworks for predicting molecular and crystalline material properties, including phonon spectra, structural defects, and general-purpose message-passing architectures (e.g. MEGNet-style universal frameworks, virtual-node GNNs).",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "Systematic entity check (20 articles, 279 claims): phonon (21), crystal (29), message-passing (2), graph neural network (3), virtual node (2) all GROUNDED_AND_SUPPORTED; 'structural defects' is GROUNDED_BUT_UNVERIFIABLE. Note: this is a large, heterogeneous cluster (20 articles) -- the gloss is intentionally general rather than asserting specific findings, given the breadth."
+      },
+      {
+        "cluster_id": 11,
+        "n_members": 941,
+        "label": "AI/ML Foundation Models & Benchmarking for Materials Science",
+        "gloss": "Broad survey and infrastructure cluster covering AI foundation models for materials science, benchmarking datasets (e.g. Matbench), and multiscale modeling reviews spanning solid-state physics and chemistry.",
+        "faithfulness_verdict": "faithful (but see honest caveat below)",
+        "faithfulness_note": "Systematic entity check (21 articles, 296 claims): foundation model (5), Matbench (17), multiscale (4), benchmark (15), survey (1) all GROUNDED_AND_SUPPORTED. HONEST CAVEAT: with 21 articles and 941 members, this is less a single coherent 'idea' and more a broad catch-all bucket -- a real, structural limitation of forcing a corpus this size into ~10-15 top-level clusters (P2's budget), not a labelling defect. Worth stating explicitly in the report rather than dressing up a broad bucket as a tight topic."
+      },
+      {
+        "cluster_id": 12,
+        "n_members": 733,
+        "label": "Interatomic Potentials for Atomic Transport & Diffusion Simulation",
+        "gloss": "A large, heterogeneous cluster of foundational machine-learned interatomic potentials applied to atomic transport, migration barriers, and diffusion in crystalline/solid-state materials, including neural network potentials and flow-matching-based simulation acceleration.",
+        "faithfulness_verdict": "faithful (but see honest caveat below)",
+        "faithfulness_note": "Systematic entity check (39 articles, 545 claims): migration barrier (8), diffusion (7), atomic transport (1) GROUNDED_AND_SUPPORTED; 'flow matching' and 'neural network potential' are GROUNDED_BUT_UNVERIFIABLE (real member terms, no direct claim match). HONEST CAVEAT: 39 articles in one cluster is the most extreme case of the same P2-budget-forced heterogeneity noted for cluster 11 -- this label captures a real common theme (transport/diffusion) but cannot represent the full diversity of 39 papers as one 'coherent scientific idea' in the sense the task originally asks for."
+      }
+    ]
+  },
+  "extrinsic": {
+    "usable_questions": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4",
+      "Q6",
+      "Q7",
+      "Q8",
+      "Q9",
+      "Q10",
+      "Q12",
+      "Q13",
+      "Q14"
+    ],
+    "coverage_failures": [
+      "Q5",
+      "Q11"
+    ],
+    "total_targets": 47,
+    "hierarchical_found_any_cost": 0,
+    "flat_found_any_cost": 2,
+    "conclusion": "NULL / UNINFORMATIVE RESULT: TF-IDF gives zero lexical similarity between natural-language questions and short technical target names for the large majority of targets, so neither system can retrieve them regardless of cost. This is a scorer limitation, not a finding about the hierarchy's usefulness. A denser embedding scorer is needed before this comparison is informative.",
+    "caveat": "An earlier version of this script reported a positive-looking result (hierarchical beating flat at low cost) that was an artifact of non-deterministic Python set iteration order breaking ties among zero-similarity candidates — corrected here."
+  },
+  "verified_vs_assumed": {
+    "verified_directly_by_rerunning": [
+      "All four hierarchies regenerate deterministically from method.py (edge labels unchanged by the authored_by attachment fix; only 105/131/250/318 previously-unassigned author nodes change)",
+      "Level-0 counts 11/15/15/14 (P2) and node-level laminarity PASS on all 4 snapshots; laminarity also holds under 20 random edge-order permutations per snapshot",
+      "Embedding scripts' edge filter equals method.filter_snapshot at every cutoff (tests/test_filter_consistency.py), and the shipped 334-row embedding order equals the 2026 edge order",
+      "Every label's n_members matches the current hierarchy (guard in merge_supernodes.py)",
+      "Persistent ids recomputed by merge_supernodes.py reproduce temporal_events.json exactly",
+      "Coherence probe z/p unchanged by the attachment fix (authors never touch `cites`)",
+      "T3 snapshot-matched nulls: each reference clustering equals the shipped hierarchy (asserted)"
+    ],
+    "assumed_or_not_yet_verified": [
+      "Label faithfulness is checked at entity level; asserted relationships are not NLI-verified, and labeller and checker were the same model family (procedural, not model-level, separation)",
+      "Extrinsic task is a NULL/uninformative result with a TF-IDF scorer (0/47 hierarchical, 2/47 flat)",
+      "Coherence probe has low power (9-37 articles per snapshot)",
+      "10%-edge-removal is not a matched-magnitude null for 40-92% real growth",
+      "persistent_id is tracked at level 0 only"
+    ]
+  }
+}
