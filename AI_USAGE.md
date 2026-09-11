@@ -848,3 +848,38 @@ level-0 counts remain within the P2 target, and all other downstream
 results (coherence z/p, T3 perturbation ARIs, T6 extrinsic result) were
 unchanged or matched previous values, confirming this fix didn't
 introduce any regression.
+
+## Final review and completion round (T2/T3/T5/T6/T7)
+
+**Tool:** Claude (Anthropic), in two steps: an independent review of the whole
+repository, then implementation of the review's "path to submittable".
+
+**Major prompts:** "Verify the repo runs and check the five prior-review claims
+(rank normalisation, tie-breaking, T3 null, exclusion sets, README counts);
+write a script that merges labels and persistent ids into the §6.2 super-node
+schema" → "Complete the project based on the review."
+
+**What changed (accepted after verification):**
+- `method.py`: `authored_by` is now used in post-hoc attachment. It was hard-coded out despite the docstring, which left all 318 authors unassigned at 2026. Also: sorted iteration, `sort_keys` output, corrected docstrings.
+- `compute_embeddings_hf.py`, `hf_space/app.py`: now exclude `presents` and use `eff_first_seen`. `tests/test_filter_consistency.py` asserts equality with `method.filter_snapshot`.
+- `t3_perturbation_real_embeddings.py`: a null per snapshot (1,000 seeds), a conservative two-endpoint test and Holm correction. The earlier "2022→2024 significant (p=0.03)" is **withdrawn**; all Holm p = 1.0.
+- New `sensitivity_diagnostics.py`: quantifies the rank-normalisation tie and the assignment tie-break. Decision: **document, don't fix** (either fix invalidates the labels).
+  - One result is stronger than the reviewer stated: zero-pinning moves level 0 by ARI 0.36–0.56, below the noise band at 2020/2022.
+- 2026 level-1 labels (40 clusters): written by Claude from `labeller_input` only (claims never shown), then checked with `faithfulness_check.py` via the new `merge_label_draft.py`. 0/40 NOT_GROUNDED.
+- `merge_supernodes.py`: writes the §6.2 schema, with template labels for levels 2–3 and a `--strict` mode.
+- Also new or rewritten: `assemble_metrics.py`, `make_figures.py`, `reproduce.sh`, a 5-page `report.md` (old report moved to `docs/`), and README.
+
+**Rejected:** the reviewer's statement that the zero-pinning fix's effect is
+"within noise" — the re-measurement showed it is not at 2020/2022.
+
+**Verified:**
+- Re-clustering is unchanged by the attachment fix; only author nodes changed, and all label counts and persistent ids are identical.
+- Every T3 reference re-clustering equals the shipped hierarchy (asserted).
+- A clean-room run (fresh copy, new venv, `pip install -r requirements.txt`, `bash reproduce.sh`) found two problems, both fixed:
+  - `structural_similarity_matrix` summed weights in hash-seed-dependent set order. This caused ~1e-17 differences that flipped ~1% of T3 null seeds between processes. It now uses `math.fsum`; the shipped hierarchies are unchanged and the T3 p-values moved by ≤ 0.001.
+  - `sensitivity_diagnostics.json` had been computed before the 2026 L1 labels existed (now 126/188).
+
+  A second clean-room run then matched every JSON output exactly.
+
+**Not verified:** relational faithfulness of glosses. The check is
+entity-level, and the same model family wrote and checked the labels.
