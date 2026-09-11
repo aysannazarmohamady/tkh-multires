@@ -28,6 +28,9 @@ Usage:
 """
 
 import argparse
+import sys
+sys.path.insert(0, "src")
+from load_graph import compute_eff_first_seen
 import json
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -131,8 +134,9 @@ def filter_snapshot(data: dict, cutoff_year: int | None) -> tuple[list, list]:
     clustering.
     """
     if cutoff_year is not None:
+        eff_first_seen = compute_eff_first_seen(data)
         nodes = [n for n in data["nodes"]
-                 if n.get("first_seen_year") is not None and n["first_seen_year"] <= cutoff_year]
+                 if eff_first_seen.get(n["id"]) is not None and eff_first_seen[n["id"]] <= cutoff_year]
         node_ids = {n["id"] for n in nodes}
         all_edges = [e for e in data["hyperedges"]
                      if e.get("provenance", {}).get("article_year") is not None
