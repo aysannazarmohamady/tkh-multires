@@ -1,38 +1,35 @@
 """
 T3 — Temporal coupling: persistent cluster identity + event log.
 
-MECHANISM DECISION (revised after a deeper external review): temporal
-regularization (lambda > 0) was tested and REJECTED. Two independent
-findings ruled it out:
-1. Perturbation-robustness test (10% edge removal, 5 seeds): lambda=0 has
-   the HIGHEST mean perturbation-ARI (0.457) of any value tested
-   (lambda_sd in {0, 0.1, 0.25, 0.5} of the distance distribution's std);
-   every nonzero lambda tested was worse. See
-   `outputs/lambda_selection_and_null.json`.
-2. A circularity problem in how "stability" was being measured: the
-   regularizer subtracts lambda from the distance of hyperedge pairs that
-   were co-clustered in the PREVIOUS snapshot, and stability was then
-   measured as ARI against that same previous snapshot's partition. The
-   mechanism was optimizing the exact metric used to evaluate it, so a
-   large apparent "improvement" (transition ARI 0.42 -> 0.81 in an earlier,
-   buggy version) could not fail to appear regardless of whether it
-   reflected anything real. We caught and neutralized this ourselves before
-   it reached the final report — see report.md, "T3 circularity found and
-   fixed" for the full account, including a null model (shuffled prior
-   labels) that confirms lambda=0 behaves identically whether the prior is
-   real or shuffled, exactly as it should since lambda=0 never reads the
-   prior at all.
+CRITICAL FIX (found by external review): an earlier version built its own
+chain via `temporal_reg.run_chain`, which uses TF-IDF (not the real
+MiniLM sentence embeddings used to produce the actually-shipped
+`hierarchy_*.json` files). This TF-IDF chain produced a DIFFERENT
+clustering — level-0 counts of 13/14/21/27 across snapshots, violating
+P2 at 2024 and 2026 (target 10-15) — and agreed with the shipped
+hierarchies at only ARI 0.28-0.51. Worse, `enrich_events_with_t4_cohesion`
+then joined this TF-IDF chain's integer cluster labels against T4's
+cohesion scores, which were computed from the REAL (MiniLM) hierarchies —
+an integer label like "5" means a completely different set of nodes in
+each clustering, so every attached cohesion value was silently wrong.
 
-This module therefore uses `lambda_sd=0` (no regularization): clusters are
-identified purely by post-hoc hyperedge-Jaccard matching across
-independently-clustered snapshots. Identity is TRACKED, not artificially
-enforced. Real transition ARI (0.43-0.53, mean 0.49, with the corrected
-rank-normalized similarity) is reported honestly as the actual level of
-cross-snapshot consistency, not inflated by a circular mechanism.
+Fix: this module now reads cluster/edge labels DIRECTLY from the shipped
+`outputs/hierarchy_<year>.json` files (the same ones used for T1, T2, T6),
+not from a separately re-run TF-IDF chain. This guarantees T3's event log
+describes the actual delivered hierarchy, and that T4's cohesion join uses
+labels from the same clustering that produced them.
+
+Mechanism decision (still applies): temporal regularization (lambda > 0)
+was tested and rejected earlier (see report.md) because it did not
+improve, and was slightly worse than, lambda=0 under perturbation, and an
+earlier (separate) implementation of it was found to be circular. This
+module therefore uses plain post-hoc hyperedge-Jaccard matching across the
+independently-clustered, real-embedding-based snapshots — no
+regularization is applied here at all.
 
 Matching signal: hyperedge-set Jaccard overlap between a snapshot-t level-0
 cluster and a snapshot-(t+1) level-0 cluster, restricted to hyperedges
-present in both snapshots (an edge born at t+1 cannot be "in" any t-cluster).
+present in both snapshots.
 """
 
 import json
@@ -40,10 +37,38 @@ from collections import defaultdict
 
 import numpy as np
 
-from temporal_reg import run_chain, CUTOFFS
-
 CONTINUATION_THRESHOLD = 0.5  # mutual best match above this -> continuation
 BIRTH_THRESHOLD = 0.1         # below this (or no match) -> counted as new
+
+HIERARCHY_PATHS = {
+    2020: "outputs/hierarchy_2020.json",
+    2022: "outputs/hierarchy_2022.json",
+    2024: "outputs/hierarchy_2024.json",
+    2026: "outputs/hierarchy.json",
+}
+
+
+def load_chain_from_shipped_hierarchies(hierarchy_paths: dict) -> dict:
+    """Returns {cutoff: {"node_labels_l0": {...}, "edge_labels_l0": {...},
+    "k0": int}}, read directly from the actually-delivered hierarchy files
+    — no re-clustering, no separate embedding backend."""
+    chain = {}
+    for cutoff, path in hierarchy_paths.items():
+        hier = json.load(open(path))
+        node_labels_l0 = {nid: v[0] for nid, v in hier["node_assignment"].items() if v[0] is not None}
+        edge_ids = hier.get("edge_ids")
+        edge_labels_all = hier.get("edge_cluster_labels")
+        edge_labels_l0 = {}
+        if edge_ids and edge_labels_all:
+            edge_labels_l0 = {eid: int(lbl) for eid, lbl in zip(edge_ids, edge_labels_all[0])}
+        k0 = hier["level_cluster_counts"][0]
+        assert 10 <= k0 <= 15, (
+            f"Shipped hierarchy for cutoff={cutoff} has level-0 count {k0}, "
+            f"outside the P2 target (10-15). Refusing to build T3 events on "
+            f"an invalid hierarchy."
+        )
+        chain[cutoff] = {"node_labels_l0": node_labels_l0, "edge_labels_l0": edge_labels_l0, "k0": k0}
+    return chain
 
 
 def cluster_edge_sets(edge_labels: dict) -> dict:
@@ -234,14 +259,12 @@ def enrich_events_with_t4_cohesion(all_events: dict, cutoffs: list) -> dict:
 
 
 def main():
-    data = json.load(open("data/tkh_collection10.json"))
-    emb_path = "outputs/semantic_embeddings.npy"
-    order_path = "outputs/embedding_edge_order.json"
-    alpha, lam_sd = 0.5, 0.0
-
-    print(f"Running chain (alpha={alpha}, lambda_sd={lam_sd} — no regularization, "
-          f"evidence-based choice; see module docstring)...")
-    chain = run_chain(data, alpha, lam_sd, emb_path, order_path, cutoffs=CUTOFFS)
+    CUTOFFS = sorted(HIERARCHY_PATHS.keys())
+    print("Loading cluster/edge labels directly from the shipped hierarchy files "
+          "(no re-clustering, no separate embedding backend)...")
+    chain = load_chain_from_shipped_hierarchies(HIERARCHY_PATHS)
+    for c in CUTOFFS:
+        print(f"  cutoff={c}: k0={chain[c]['k0']} (verified within P2's 10-15 target)")
 
     prev_ids = {}
     next_persistent_id = [0]
@@ -274,23 +297,25 @@ def main():
     with open("outputs/temporal_events.json", "w") as f:
         json.dump({
             "reliability_note": (
-                "Temporal regularization (lambda > 0) was tested and rejected: "
-                "it did not improve perturbation-robustness (lambda=0 had the "
-                "highest mean perturbation-ARI of any value tested), and an "
-                "earlier version's large apparent transition-ARI gain turned out "
-                "to be circular (the regularizer directly manipulates the same "
-                "metric used to evaluate it). This log uses lambda=0: identity "
-                "is tracked via post-hoc hyperedge-Jaccard matching only, not "
-                "artificially enforced. See outputs/lambda_selection_and_null.json "
-                "and report.md ('T3 circularity found and fixed') for the full "
-                "evidence trail. Real cross-snapshot ARI (~0.43-0.53, mean 0.49) "
-                "is the honest reliability level for events below — some "
-                "'continued' classifications may still reflect an imperfect "
-                "matching threshold rather than deep conceptual continuity."
+                "CORRECTED: an earlier version built its own clustering chain "
+                "via a TF-IDF-based re-run, which produced a DIFFERENT hierarchy "
+                "from the one actually shipped (level-0 counts 13/14/21/27, "
+                "violating P2 at 2024/2026) and agreed with the shipped "
+                "hierarchies at only ARI 0.28-0.51. Worse, T4 cohesion scores "
+                "(computed from the real, shipped hierarchies) were then joined "
+                "onto this different clustering's integer labels, silently "
+                "attaching wrong values. This version reads cluster/edge labels "
+                "directly from the shipped `hierarchy_<year>.json` files (same "
+                "ones used for T1/T2/T6), so events and T4 cohesion now come "
+                "from the same clustering. Real cross-snapshot ARI on the "
+                "shipped hierarchies (not this file) is reported separately in "
+                "report.md; identity here is tracked via post-hoc "
+                "hyperedge-Jaccard matching, not artificially enforced by any "
+                "regularization (lambda=0, rejected earlier — see report.md, "
+                "'T3 circularity found and fixed')."
             ),
             "level": 0,
-            "alpha": alpha,
-            "lambda_sd": lam_sd,
+            "source": "shipped hierarchy_<year>.json files (real MiniLM embeddings), not a re-clustering",
             "continuation_threshold": CONTINUATION_THRESHOLD,
             "birth_threshold": BIRTH_THRESHOLD,
             "events_by_snapshot": all_events,
