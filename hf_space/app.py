@@ -23,7 +23,7 @@ except ImportError:
     def GPU_DECORATOR(fn):
         return fn
 
-EXCLUDED_FROM_CLUSTERING = {"claims", "authored_by"}
+EXCLUDED_FROM_CLUSTERING = {"claims", "authored_by", "presents"}  # keep in sync with src/method.py
 HELD_OUT_FOR_COHERENCE = {"cites"}
 MODEL_NAME = "all-MiniLM-L6-v2"
 
@@ -67,10 +67,31 @@ def merge_evaluated_on_by_article(edges):
     return others + merged
 
 
+def compute_eff_first_seen(data):
+    """Must match src/load_graph.py's compute_eff_first_seen exactly:
+    min(node's first_seen_year, earliest incident edge's article_year)."""
+    earliest = {}
+    for e in data["hyperedges"]:
+        ay = e.get("provenance", {}).get("article_year")
+        if ay is None:
+            continue
+        for m in e["members"]:
+            if m not in earliest or ay < earliest[m]:
+                earliest[m] = ay
+    eff = {}
+    for n in data["nodes"]:
+        fsy, eey = n.get("first_seen_year"), earliest.get(n["id"])
+        eff[n["id"]] = eey if fsy is None else (fsy if eey is None else min(fsy, eey))
+    return eff
+
+
 def filter_clustering_edges(data, cutoff_year=None):
-    if cutoff_year:
-        nodes = [n for n in data["nodes"] if n.get("first_seen_year") is not None and n["first_seen_year"] <= cutoff_year]
-        node_ids = {n["id"] for n in nodes}
+    """Must match src/method.py's filter_snapshot (edge part) exactly;
+    enforced by tests/test_filter_consistency.py."""
+    if cutoff_year is not None:
+        eff = compute_eff_first_seen(data)
+        node_ids = {n["id"] for n in data["nodes"]
+                    if eff.get(n["id"]) is not None and eff[n["id"]] <= cutoff_year}
         all_edges = [e for e in data["hyperedges"]
                      if e.get("provenance", {}).get("article_year") is not None
                      and e["provenance"]["article_year"] <= cutoff_year
@@ -110,7 +131,7 @@ def compute_embeddings(file_obj, cutoff_year):
 
     status = (
         f"Embedded {len(edges)} clustering-eligible hyperedges "
-        f"(excluded: {EXCLUDED_FROM_CLUSTERING}, held out: {HELD_OUT_FOR_COHERENCE}, "
+        f"(excluded: {sorted(EXCLUDED_FROM_CLUSTERING)}, held out: {HELD_OUT_FOR_COHERENCE}, "
         f"evaluated_on merged per-article) with {MODEL_NAME}. Shape: {embeddings.shape}."
     )
     return status, emb_path, order_path
