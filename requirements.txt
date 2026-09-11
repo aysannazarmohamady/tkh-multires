@@ -1,7 +1,9 @@
-# Pin exact versions once finalized. Placeholder core deps for now.
-numpy==1.26.4
-scipy==1.13.0
-scikit-learn==1.4.2
-networkx==3.3
-pandas==2.2.2
-sentence-transformers==2.7.0
+# Core pipeline dependencies (src/load_graph.py, src/method.py).
+# Pinned to the versions actually used to produce the outputs in outputs/.
+# sentence-transformers/gradio are NOT needed here — they only run on the
+# Hugging Face Space (see hf_space/requirements.txt), since this
+# environment has no network access to huggingface.co.
+numpy==2.4.4
+scipy==1.17.1
+scikit-learn==1.8.0
+matplotlib==3.10.8  # src/make_figures.py only
