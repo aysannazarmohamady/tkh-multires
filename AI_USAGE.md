@@ -607,3 +607,244 @@ remaining action items.
   2024->2026: 0.499 observed vs 0.059 null). This was not something we
   were trying to produce; it's reported because it's what the test
   actually showed.
+
+## T5 — Labelling with measured faithfulness
+
+**Tool:** Claude (Anthropic), guided by my direction on which independent
+signal to use for faithfulness.
+
+**My decision:** when asked which relation should serve as the
+independent faithfulness-check signal, I specified `claims`, on the
+condition that (a) it is never given to the labeller as input, and (b)
+only claims with `article_year <= cutoff` are used (temporal honesty, P6).
+
+**What Claude implemented and I verified:**
+- `src/prepare_labelling_input.py`: builds, per cluster, a strict
+  separation between `labeller_input` (member surface forms) and
+  `faithfulness_signal` (claims text), so a labelling script cannot
+  accidentally leak one into the other.
+- While inspecting the first real output, Claude caught its own bug: a
+  cluster's associated articles were determined via a member node's broad
+  `provenance.articles` field, which pulled in claims from an unrelated
+  paper (a shared dataset node's provenance listed many papers, not just
+  the cluster's own). Fixed by switching to edge-level
+  `provenance.article_id` (the one paper that actually produced each
+  clustering edge) before proceeding — I asked for and got a direct
+  before/after check on the same cluster confirming the fix (unrelated
+  "MACE" claims disappeared once the fix was applied).
+- Ran a small pilot (4 of 14 level-0 clusters): generated a label + gloss
+  for each using only `labeller_input`, then separately checked each gloss
+  against only `faithfulness_signal`, finding 2 clean and 2 "partial
+  overclaim" verdicts (specific details like a dataset or comparison
+  target that were inferred from the member list but not actually
+  confirmed by the independent claims).
+
+**What I directed after seeing the pilot result:** accepted the honest
+50% pilot over-claim rate (small sample, not treated as a final number)
+and asked that the specific *pattern* behind both failures (over-specific
+inference from a mixed member list) be written up as an actionable
+guardrail for a full labelling run, not just a raw statistic.
+
+**Limitation flagged in the report, not hidden:** the labelling and the
+faithfulness check were both done by the same model in one session; the
+separation is procedural (structured to only look at the correct fields
+at each step), not the stronger guarantee a genuinely separate model call
+would give. Noted directly in `report.md` rather than presented as fully
+independent.
+
+## T6 — Extrinsic evaluation and metrics.json assembly
+
+**Tool:** Claude (Anthropic), following a detailed external design spec.
+
+**My decisions:**
+- Chose TF-IDF (not a second Hugging Face round-trip for a denser
+  embedding model) as the "different embedding family from MiniLM" scorer,
+  to avoid another slow external round-trip while still satisfying the
+  independence requirement (TF-IDF and MiniLM embeddings share no
+  geometry).
+- Confirmed `claims` as the T5 faithfulness signal (see T5 entry above),
+  which fed into this section's design for keeping T6 extrinsic
+  independent of T5 by making it label-free.
+
+**What Claude implemented and I verified:**
+- `src/extrinsic_eval.py`: beam search (label-free, mean-TF-IDF cluster
+  representation) vs. flat baseline vs. null (shuffled) hierarchy,
+  compared at equal cost via recall@cost curves, not a single hit-rate
+  number.
+- Caught a real bug during the first run: the initial recall metric
+  checked only whether a target appeared ANYWHERE in a ranked list, which
+  is trivially 100% for the flat baseline (it ranks every node). Had
+  Claude fix this to recall AT specific cost thresholds before accepting
+  any result.
+- Ran a beam-width ablation (3/5/8) to check the result wasn't an artifact
+  of one arbitrary choice, then a paired bootstrap CI + sign test at a
+  pre-specified cost (200) across the 12 usable questions.
+- Accepted the honest result as-is: a real, non-trivial efficiency
+  advantage for the hierarchy at low cost, but not statistically
+  significant given the small question count, and low absolute recall for
+  both systems (attributed to TF-IDF's lexical vocabulary mismatch with
+  natural-language questions, not to the hierarchy being useless).
+
+**metrics.json**: assembled per the requested structure (meta, coherence,
+stability, labels, extrinsic, verified_vs_assumed) by pulling directly
+from `coherence_probe.py`, `lambda_selection_and_null.json`,
+`labelling_faithfulness_pilot.json`, and `extrinsic_eval_summary.json` —
+no numbers were retyped by hand, all pulled programmatically from the
+actual output files, to avoid transcription errors.
+
+**Verification note carried into `verified_vs_assumed`:** an external
+reviewer's T6 data-quality count (20 cited_work-only targets) could not be
+reproduced under two different normalization schemes (both gave 15). We
+used our own directly-verified number rather than the unverified external
+one, and recorded the discrepancy explicitly rather than silently picking
+either value.
+
+## Major correction round: T3/T4 clustering mismatch, T5 misjudgment, T6 cost bug
+
+**Tool:** Claude (Anthropic), directed by an extremely thorough external
+review that verified everything by actually re-running it in a clean
+virtualenv from our own pinned `requirements.txt`.
+
+**What was found, all independently verified before fixing:**
+1. **T1:** confirmed real (17 nodes where an edge's `article_year`
+   predates the node's own `first_seen_year`, e.g. NequIP). Not yet fixed
+   (documented as a remaining gap in `metrics.json`).
+2. **T3/T4, severe:** `temporal_reg.run_chain` uses TF-IDF, producing a
+   DIFFERENT clustering from the shipped `hierarchy_*.json` files (level-0
+   counts 13/14/21/27, violating P2 at 2 snapshots; only ARI 0.28-0.51
+   agreement with what's actually delivered). Worse, T4's cohesion scores
+   (computed from the real, shipped hierarchies) were then joined onto
+   this different clustering's integer labels — every attached value was
+   silently wrong. **Fixed** by rewriting `build_temporal_events.py` to
+   read cluster/edge labels directly from the shipped hierarchy files,
+   with a hard assert that `10 <= k0 <= 15`, so events and T4 cohesion now
+   come from the same clustering by construction.
+3. **T5, embarrassing:** both "partial_overclaim" verdicts in the pilot
+   were WRONG. I had only skimmed the first several of 44/12 claims per
+   cluster; the actual missing evidence (QM9 claims for cluster 1;
+   GPAW/Psi4/PySCF comparison for cluster 13) was present further down
+   the list. True pilot over-claim rate: 0/4, not 2/4. I verified this
+   myself directly (grep'd the full claim lists) before correcting
+   `labelling_faithfulness_pilot.json`. This is a real lesson for the
+   full-scale run: the judging PROCESS must check every available claim
+   systematically, not skim.
+4. **T6:** `beam_search_ranking`'s returned cost omitted the super-node
+   scoring overhead spent during descent (66-102 per question) from hit
+   positions, understating the true cost. Fixed by returning overhead
+   separately and adding it to every hit position; also switched
+   steps-to-first-hit to report the fraction found (censored) alongside
+   the survivorship-biased median, not just the median.
+5. **metrics.json:** was previously assembled by an ad-hoc inline script,
+   not a checked-in one. Fixed with `src/assemble_metrics.py`.
+6. Removed a stray `{src,data,outputs}` folder (a leftover from an old
+   shell brace-expansion bug early in this project).
+
+**What I directed:** confirmed each finding myself before accepting any
+fix (grep'd the NequIP example, re-ran `temporal_reg.run_chain` directly
+to reproduce the 13/14/21/27 counts, read the full claim lists for
+clusters 1 and 13), then had Claude implement each fix, verifying the
+corrected outputs (all `k0` now 10-15, cohesion values populated
+correctly, corrected pilot verdicts, corrected extrinsic costs) before
+accepting them as final.
+
+**Deliberately deferred, not silently dropped** (given time constraints
+in this session): T1's `eff_first_seen` fix; re-running the
+perturbation/growth-null analysis in `temporal_reg.py` with real
+embeddings instead of TF-IDF; the full-scale T5 rollout with the
+redesigned three-category judge; `hierarchy.json`'s super-node-record
+schema per §6.2. All listed explicitly in `metrics.json`'s
+`verified_vs_assumed.assumed_or_not_yet_verified`.
+
+## Final correction round: T6 tie-breaking bug, T3 authoritative perturbation test
+
+**Tool:** Claude (Anthropic), directed by an external review that traced a
+specific bug to Python's hash-randomization using multiple PYTHONHASHSEED
+values.
+
+**What was found and verified before fixing:**
+1. T6's one apparent "hit" (Q8) was a node with TF-IDF score exactly 0.0,
+   tied with 101 others; its reported position depended on `set()`
+   iteration order (hash-randomization dependent, verified to range
+   136-236 across seeds). I confirmed this myself: traced the exact hit
+   (`cite_00001`) and its score (0.0) directly.
+2. T3's original perturbation test perturbed raw edges before the
+   `evaluated_on` merge, breaking edge-id alignment with the fixed
+   embeddings file, forcing a TF-IDF fallback where 13/20 seeds degenerated
+   to a single cluster (ARI=0) — an invalid result.
+
+**What Claude implemented and I verified:**
+- `src/extrinsic_eval.py`: deterministic (sorted) candidate order, and a
+  `rank_of` function that treats zero similarity as "not retrieved" rather
+  than arbitrarily ranked among ties. Corrected result: 0/47 hierarchical,
+  2/47 flat — reported as a null, uninformative comparison (TF-IDF's
+  lexical mismatch with natural-language questions), not a hierarchy win.
+- `src/t3_perturbation_real_embeddings.py`: perturbs post-merge
+  clustering-eligible edges, using real MiniLM embeddings via subset
+  matching. Result closely matched (not identically — small seed-sequence
+  differences) an independent external re-run: mean ARI 0.438 [0.393,
+  0.484] vs. their 0.456 [0.409, 0.505]. All 3 real transition ARIs
+  (0.587/0.668/0.487) exceed this noise floor — a genuine, verified P5
+  result.
+- Regenerated `metrics.json` via `assemble_metrics.py` and fixed
+  `report.md`'s stale coherence table (z=2.84/2.59 from a superseded
+  clustering) and the stale "+0.067" extrinsic claim.
+
+**Honest framing carried into the report:** the `lambda_sd=0` decision was
+made earlier from a since-invalidated (TF-IDF, degenerate) analysis; the
+new, correct perturbation test is reported as an independent verification
+that doesn't contradict that choice, not as evidence that originally
+justified it — this distinction was flagged by the reviewer and is stated
+explicitly rather than blurred.
+
+## Final T3 fix: corrected statistical test (per-transition vs. per-seed distribution)
+
+**Tool:** Claude (Anthropic). The reviewer explicitly flagged this as
+their own error repeated from an earlier round ("I made the same error
+last round; that was my mistake"), not just mine.
+
+**What was found:** the T3 perturbation test compared a single
+transition's ARI against the confidence interval of the *mean*
+perturbation ARI — an interval that shrinks as more seeds are added and
+says little about any one transition. Also: my node set (all assigned
+nodes) differed from an external re-run's (clustering-placed only),
+explaining a numeric discrepancy; a random-seed convention difference
+(sampling edges to remove vs. to keep) explained the rest.
+
+**Fix, verified before finalizing:**
+- Increased to 100 seeds.
+- Corrected test: `p = (1 + #seeds with ARI >= transition ARI) / (1 + n_seeds)`,
+  per transition, against the real per-seed distribution.
+- Report both node sets (clustering-placed only as primary, all-assigned
+  as secondary) since they answer slightly different questions.
+- Removed the binary `above_floor` flag in favor of per-transition p-values.
+- Result closely matched the external re-run's clustering-only ARIs
+  exactly (0.608/0.693/0.592) once using the same node set, confirming
+  the earlier discrepancy was fully explained by the two stated causes,
+  not a remaining bug.
+
+**Corrected, more honest conclusion:** only the 2022->2024 transition is
+robustly more stable than 10%-edge-removal noise (p=0.03); the other two
+transitions are not distinguishable from noise by this test. This
+replaces an earlier, overclaiming "all three transitions beat the noise
+floor" statement that used the wrong statistical comparison — also fixed
+directly in `report.md`, not left inconsistent with the corrected script.
+
+## eff_first_seen fix (Day 1 item)
+
+**Tool:** Claude (Anthropic).
+
+**Fix:** `compute_eff_first_seen()` added to `load_graph.py` (imported by
+`method.py`), using `min(node's own first_seen_year, earliest
+provenance.article_year among edges mentioning it)` instead of the raw
+`first_seen_year` field. This resolved the 17-node inconsistency (e.g.
+NequIP) an external review found, where an edge's article predates the
+node's own recorded first-seen year.
+
+**Verified:** confirmed the 17-node count matched exactly before
+implementing; re-ran the full pipeline (T1, T2 for all 4 snapshots,
+coherence probe, T3/T4, T6) afterward and confirmed `dropped_partial_edges`
+is now 0 at every cutoff (previously nonzero at 2020/2022/2024), all
+level-0 counts remain within the P2 target, and all other downstream
+results (coherence z/p, T3 perturbation ARIs, T6 extrinsic result) were
+unchanged or matched previous values, confirming this fix didn't
+introduce any regression.
