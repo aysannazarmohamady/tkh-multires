@@ -9,25 +9,37 @@ Implements the method described in Deliverable 0 (report.md):
    candidates to the node's already-assigned coarser cluster, which is what
    guarantees the laminar property (P1) rather than hoping for it.
 
-Embedding choice: this environment has no network access to huggingface.co,
-so a pretrained sentence-transformer is not usable here. We use TF-IDF
-(scikit-learn, fully offline) over each hyperedge's concatenated member
-surface forms as the semantic signal instead. This is a weaker semantic
-signal than a transformer embedding would give (no synonym/paraphrase
-awareness), and is documented as a limitation, not hidden. Swapping in a
-transformer embedding later (e.g. sentence-transformers, once network access
-is available) only requires replacing `semantic_similarity_matrix`.
+Semantic signal: the shipped hierarchies use real sentence embeddings
+(all-MiniLM-L6-v2, 384-d) precomputed once on the 2026 clustering-edge set
+by `compute_embeddings_hf.py` / `hf_space/app.py` (this sandbox has no
+network access to huggingface.co) and passed in via `--embeddings-path` /
+`--embeddings-order`. Without those flags the script falls back to offline
+TF-IDF over each hyperedge's concatenated member surface forms — a weaker
+signal (no synonym/paraphrase awareness, correlates ~0.69 with the
+structural signal vs ~0.31 for MiniLM), kept only as a fallback.
 
-Relation-type filtering: per report.md, `claims` (near-degenerate, dominates
-by volume) is excluded from clustering, and `cites` is held out entirely as
-the independent signal for the T6 coherence check — neither participates in
-`s_struct` or `s_sem` here.
+Relation-type filtering: `claims`, `authored_by` and `presents` are
+excluded from clustering (EXCLUDED_FROM_CLUSTERING) and `cites` is held out
+entirely as the independent signal for the T6 coherence check
+(HELD_OUT_FOR_COHERENCE). None of them enter `s_struct` or `s_sem`; their
+nodes are placed afterwards by `place_articles_via_presents` and
+`attach_leftover_nodes`, with a per-node `provenance` tag.
+
+Known sensitivities (documented, deliberately NOT changed — changing them
+re-clusters every snapshot and invalidates all labels; see report.md,
+"Limitations"): (a) rank normalisation gives all zero-overlap structural
+pairs one tied mid-rank, so structure acts mostly as a binary "any overlap"
+bonus; (b) majority-vote ties in node assignment are broken by edge-list
+order. Both are quantified by `src/sensitivity_diagnostics.py`.
 
 Usage:
-    python src/method.py --data data/tkh_collection10.json --cutoff 2026
+    python src/method.py --data data/tkh_collection10.json --cutoff 2026 \
+        --embeddings-path outputs/semantic_embeddings.npy \
+        --embeddings-order outputs/embedding_edge_order.json
 """
 
 import argparse
+import math
 import sys
 sys.path.insert(0, "src")
 from load_graph import compute_eff_first_seen
@@ -44,6 +56,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 EXCLUDED_FROM_CLUSTERING = {"claims", "authored_by", "presents"}  # near-degenerate volume (claims), pure identity (authored_by), or contributes nothing to similarity and only anchors article placement (presents; arity 2, see place_articles_via_presents)
 HELD_OUT_FOR_COHERENCE = {"cites"}     # never touched by clustering; for T6
+# Post-hoc attachment priority; `cites` last so it is used only as a last resort.
+ATTACH_RELATION_ORDER = ["claims", "authored_by", "cites"]
+assert set(ATTACH_RELATION_ORDER) >= (EXCLUDED_FROM_CLUSTERING | HELD_OUT_FOR_COHERENCE) - {"presents"}
 
 
 def load_tkh(path: str) -> dict:
@@ -104,34 +119,28 @@ def filter_snapshot(data: dict, cutoff_year: int | None) -> tuple[list, list]:
     HELD_OUT_FOR_COHERENCE relation types from the clustering edge set.
 
     Temporal-leak fix (found by external review, same issue as in
-    load_graph.py): nodes are filtered on `first_seen_year` (when the
-    corpus itself first recorded the entity), not `year`/`origin_year`
-    (when the entity was invented/published in the real world). Edges are
-    filtered on `provenance.article_year`, not their own `year` field, for
-    the same reason. An earlier version used `year` for both, which let
-    334/332/143 nodes (at cutoffs 2020/2022/2024 respectively) into a
-    snapshot before the corpus had any record of them — a "knowledge from
-    the future" leak at the snapshot-construction level.
+    load_graph.py): a node enters a snapshot when
+    `eff_first_seen = min(first_seen_year, earliest incident edge's
+    article_year) <= cutoff` (when the corpus first recorded it), never on
+    `year`/`origin_year` (when the entity was invented in the real world).
+    Edges are filtered on `provenance.article_year`. An earlier version used
+    `year` for both, leaking 334/332/143 "future" nodes into the
+    2020/2022/2024 snapshots.
 
-    `authored_by` is now excluded from clustering (moved into post-hoc
-    attachment, same treatment as `claims`): it is a pure identity edge
-    (which authors wrote this paper) with no topical content, and
-    including it in the structural similarity pulled clusters toward
-    "same paper" rather than "same idea".
+    `authored_by` is excluded from clustering: it is a pure identity edge
+    with no topical content, and including it pulled clusters toward "same
+    paper" rather than "same idea". Its author nodes are placed afterwards
+    by `attach_leftover_nodes` (provenance "authored_by").
 
-    Correction during implementation: `presents` was also excluded in an
-    earlier version of this fix, following an external review's
-    suggestion, but this broke something else — with `presents` excluded,
-    the only clustering-eligible relation touching `article` nodes at all
-    was `proposes_future_work` (45 edges, not every article has one), so
-    most articles could only reach a cluster via post-hoc attachment
-    through `cites` — directly reintroducing the coherence-probe
-    circularity that `cites`-provenance filtering exists to prevent
-    (verified: `coherence_probe.py`'s `provenance == "primary"` assertion
-    failed after this exclusion). `presents` links an article to the
-    specific technique/method it presents, which is topical content about
-    the article, not pure identity like `authored_by` — so it is kept in
-    clustering.
+    `presents` is also excluded: it is arity-2 {article, method}, so its
+    weighted-Jaccard overlap with other edges is almost always zero and it
+    contributes nothing to similarity. Articles are instead placed
+    deterministically by `place_articles_via_presents` (they inherit the
+    path of the method they present), which keeps article placement
+    independent of `cites` and therefore of the T6 coherence probe.
+    (An intermediate version excluded `presents` WITHOUT that placement
+    step, which routed articles through `cites` and tripped the coherence
+    probe's provenance assertion; that is why the placement step exists.)
     """
     if cutoff_year is not None:
         eff_first_seen = compute_eff_first_seen(data)
@@ -201,8 +210,12 @@ def structural_similarity_matrix(edges: list) -> np.ndarray:
             if not inter:
                 continue
             union = member_sets[i] | member_sets[j]
-            w_inter = sum(weight.get(v, 1.0) for v in inter)
-            w_union = sum(weight.get(v, 1.0) for v in union)
+            # math.fsum is exactly rounded, hence independent of set-iteration
+            # order (which depends on PYTHONHASHSEED). Plain sum() gave ~1e-17
+            # run-to-run differences that flipped near-tied ranks in ~1% of
+            # perturbed re-clusterings (found by the clean-room check).
+            w_inter = math.fsum(weight.get(v, 1.0) for v in inter)
+            w_union = math.fsum(weight.get(v, 1.0) for v in union)
             s = w_inter / w_union if w_union > 0 else 0.0
             sim[i, j] = s
             sim[j, i] = s
@@ -467,8 +480,9 @@ def attach_leftover_nodes(nodes: list, all_edges: list, assignment: dict,
                            provenance: dict, n_levels: int) -> dict:
     """Second pass, run only after primary clustering + assignment.
 
-    Some node types (`claim`, `cited_work` in this dataset) appear *only* in
-    the excluded/held-out relation types (`claims`, `cites`), so they never
+    Some node types (`claim`, `author`, `cited_work` in this dataset) appear
+    *only* in the excluded/held-out relation types (`claims`, `authored_by`,
+    `cites`), so they never
     get an assignment from `assign_nodes`. Rather than leave them out of the
     hierarchy entirely, attach each such node to the cluster of whichever
     already-assigned node it shares an EXCLUDED_FROM_CLUSTERING or
@@ -480,7 +494,8 @@ def attach_leftover_nodes(nodes: list, all_edges: list, assignment: dict,
     attached via a `cites` edge must NOT be treated as independent evidence
     when `cites` is later used as the T6 coherence probe — that would test
     the clustering against the very relation that placed the node there.
-    `provenance[node_id]` is set to "cites" or "claims" for attached nodes
+    `provenance[node_id]` is set to the attaching relation ("claims",
+    "authored_by" or "cites") for attached nodes
     (or left as "primary" for nodes assigned by `assign_nodes`), and T6 must
     filter out `provenance == "cites"` nodes before running the coherence
     check.
@@ -494,10 +509,12 @@ def attach_leftover_nodes(nodes: list, all_edges: list, assignment: dict,
     unassigned_set = set(unassigned)
 
     attached, still_unassigned = 0, 0
-    # Process `claims` before `cites`: prefer the non-probe relation when a
-    # node happens to have both available, to minimize how many nodes end up
-    # excluded from the coherence probe.
-    for rel in ["claims", "cites"]:
+    # Process non-probe relations before `cites`: prefer them when a node
+    # has several available, to minimise how many nodes end up excluded
+    # from the coherence probe. Fix: an earlier version hard-coded
+    # ["claims", "cites"] despite this docstring, so `authored_by` was never
+    # used and every author node stayed unassigned (318 at 2026).
+    for rel in ATTACH_RELATION_ORDER:
         edges_for_rel = leftover_edges_by_relation.get(rel, [])
         neighbor_assignments = defaultdict(list)
         for e in edges_for_rel:
@@ -507,7 +524,7 @@ def attach_leftover_nodes(nodes: list, all_edges: list, assignment: dict,
                 if m in unassigned_set:
                     neighbor_assignments[m].extend(assigned_members)
 
-        for nid in list(unassigned_set):
+        for nid in sorted(unassigned_set):  # sorted: deterministic provenance order
             neighbors = neighbor_assignments.get(nid, [])
             if not neighbors:
                 continue
@@ -678,7 +695,7 @@ def main():
             "node_assignment_provenance": provenance,
             "edge_ids": [e["id"] for e in edges],
             "edge_cluster_labels": [[int(x) for x in lvl] for lvl in levels],
-        }, f, indent=2)
+        }, f, indent=2, sort_keys=True)
     print(f"Saved to {args.out}")
 
 
