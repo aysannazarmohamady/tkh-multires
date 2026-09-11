@@ -1,3 +1,4 @@
-gradio
-sentence-transformers
+# Hugging Face Space only (not needed for the main pipeline).
+sentence-transformers>=2.2
+gradio>=4.0
 numpy
