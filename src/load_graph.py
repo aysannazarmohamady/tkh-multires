@@ -45,9 +45,49 @@ def load_tkh(path: str) -> dict:
         return json.load(f)
 
 
+def compute_eff_first_seen(data: dict) -> dict:
+    """{node_id: effective_first_seen_year} = min(the node's own
+    `first_seen_year`, the earliest `provenance.article_year` among edges
+    that mention it).
+
+    Fix (found by external review): 17 nodes (e.g. NequIP: recorded
+    `first_seen_year=2023`, but mentioned by an edge from a 2021 article)
+    have a `first_seen_year` LATER than an edge that actually references
+    them — an export inconsistency, not a real "this entity only entered
+    the corpus later" fact. Using the raw `first_seen_year` for these 17
+    nodes was itself a small residual temporal-leak/inconsistency: it
+    could exclude a node from a snapshot that already, correctly, contains
+    an edge mentioning it (which would then be among the
+    `dropped_partial_edges`). Using the earliest of the two sources fixes
+    this for exactly the affected nodes and is a no-op for the other
+    5,781.
+    """
+    earliest_edge_year = {}
+    for e in data["hyperedges"]:
+        ay = e.get("provenance", {}).get("article_year")
+        if ay is None:
+            continue
+        for m in e["members"]:
+            if m not in earliest_edge_year or ay < earliest_edge_year[m]:
+                earliest_edge_year[m] = ay
+
+    eff = {}
+    for n in data["nodes"]:
+        fsy = n.get("first_seen_year")
+        eey = earliest_edge_year.get(n["id"])
+        if fsy is None:
+            eff[n["id"]] = eey
+        elif eey is None:
+            eff[n["id"]] = fsy
+        else:
+            eff[n["id"]] = min(fsy, eey)
+    return eff
+
+
 def build_snapshot(data: dict, cutoff_year: int) -> dict:
+    eff_first_seen = compute_eff_first_seen(data)
     nodes = [n for n in data["nodes"]
-             if n.get("first_seen_year") is not None and n["first_seen_year"] <= cutoff_year]
+             if eff_first_seen.get(n["id"]) is not None and eff_first_seen[n["id"]] <= cutoff_year]
     node_ids = {n["id"] for n in nodes}
 
     edges = []
@@ -60,8 +100,6 @@ def build_snapshot(data: dict, cutoff_year: int) -> dict:
         if all(m in node_ids for m in members):
             edges.append(e)
         else:
-            # Edge's own article_year <= cutoff, but references a node not
-            # yet first-seen in the corpus at this cutoff. Data-quality flag.
             dropped_partial += 1
 
     return {
