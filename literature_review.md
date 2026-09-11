@@ -157,7 +157,8 @@ similarity by a temporal-decay kernel to make the clustering time-aware.
    rules overlapping clusters out of scope. We therefore add a **hard
    assignment step**: after cutting the dendrogram, each node is assigned to
    the single cluster containing the largest share of its incident
-   hyperedges (ties broken by total incident hyperedge weight). We treat
+   hyperedges (ties are broken by edge-list order — a documented
+   limitation, quantified in `src/sensitivity_diagnostics.py`). We treat
    "keep the overlap, as in the original papers" as the credible alternative
    we considered and rejected, specifically because it conflicts with P1 as
    stated in this task, not because overlap is a bad idea in general.
@@ -174,10 +175,11 @@ similarity by a temporal-decay kernel to make the clustering time-aware.
    temporal terms.
 4. DeWolfe & Théberge's time kernel is a **continuous sliding window**
    (parameterized by `sigma`), whereas our task defines **discrete cumulative
-   snapshots**. We adapt the idea by using it to compare a hyperedge's
-   position in the current snapshot against its own history in prior
-   snapshots (for T3 identity tracking) rather than as a continuous decay
-   over the whole timeline.
+   snapshots**. We tested an analogous temporal term (a λ-weighted pull
+   toward the previous snapshot's clustering) and rejected it, because it
+   raised cross-snapshot ARI by construction; identity is instead tracked
+   by post-hoc hyperedge-Jaccard matching between independently clustered
+   snapshots (see report.md §5).
 
 ## Positioning summary
 
