@@ -260,29 +260,28 @@ themselves — implemented as `src/coherence_probe.py`, which asserts every
 article's `provenance == "primary"` before running, so a future regression
 that re-introduces the leak fails loudly instead of silently.
 
-**Results (permutation test, n=10,000), re-run after the rank-normalization
-fix (see below) changed the underlying clustering:**
+**Results (permutation test, n=10,000), on the final, current clustering
+(after the temporal-leak and P3 fixes below) — STALE NUMBERS CORRECTED:**
+an earlier draft of this document quoted z=2.84/2.59 from an intermediate
+clustering that no longer exists; the current, reproducible numbers are:
 
-| snapshot | articles | within-cluster pairs | observed | null sd | z | p |
-|---|---|---|---|---|---|---|
-| 2020 | 9 | 1 | -0.0138 | 0.0321 | -0.44 | 1.00 |
-| 2022 | 14 | 13 | 0.0102 | 0.0100 | 1.01 | 0.155 |
-| 2024 | 25 | 61 | 0.0167 | 0.0059 | **2.84** | **0.0068** |
-| 2026 | 37 | 98 | 0.0135 | 0.0052 | **2.59** | **0.0107** |
+| snapshot | z | p |
+|---|---|---|
+| 2020 | 0.20 | 0.40 |
+| 2022 | 0.51 | 0.29 |
+| 2024 | -0.25 | 0.58 |
+| 2026 | 1.68 | 0.059 |
 
-**Updated honest interpretation — no longer a null result.** An earlier
-draft of this document reported a null result here, based on the
-pre-rank-normalization clustering. After fixing the rank-normalization bug
-(below), which changed which articles land in the same clusters, re-running
-the identical probe now finds a **statistically significant** coherence
-signal at 2024 (z=2.84, p=0.0068) and 2026 (z=2.59, p=0.011): co-clustered
-articles share references more than the degree-preserving null predicts.
-2020 and 2022 remain non-significant, consistent with too few articles
-(9 and 14) for this probe to reliably detect an effect either way. We flag
-this reversal explicitly rather than quietly updating the number: the
-direction changed because a real bug fix changed the clustering, not
-because of any adjustment to the probe itself, and the same
-`provenance == "primary"` circularity guard applies unchanged.
+**Honest interpretation: a null result at every snapshot.** The clustering
+has changed multiple times during this project as bugs were found and
+fixed (temporal leak, rank-normalization, paper-frequency weighting,
+`presents` handling); the coherence-probe result changed along with it —
+briefly appearing significant under one intermediate clustering, now null
+under the final one. We report the current, reproducible number rather
+than a more favorable past one, and note the instability across fixes
+explicitly: it reflects the underlying clustering being revised as real
+bugs were found, not an issue with the probe's design (the
+`provenance != "cites"` circularity guard applies unchanged throughout).
 
 **Caveat, stated directly:** with only 25-37 articles even at the
 significant snapshots, this remains one probe on a small population, not
@@ -638,6 +637,165 @@ ambiguous weak links, consistent with an honest ARI of ~0.49 rather than
 the inflated ~0.81 the circular mechanism had produced. Output in
 `outputs/temporal_events.json`, which carries this full account as a
 `reliability_note` field, not only in this report.
+
+### T5 — Labelling with measured faithfulness
+
+**Design, per the P6/§6 circularity concern:** labels are generated using
+ONLY `labeller_input` (member surface forms, grouped by node type — the
+same content that drove clustering, unavoidable for a topical label).
+Faithfulness is then checked using ONLY the generated gloss plus
+`faithfulness_signal`: `claims` text (P6-compliant: `article_year <=
+cutoff` only) from the specific articles whose hyperedges were assigned to
+that cluster, determined via **edge-level** `provenance.article_id` (not a
+member node's broader `provenance.articles` list — see the correction
+below). `claims` text is never shown during label generation. Implemented
+in `src/prepare_labelling_input.py`.
+
+**A precision bug found and fixed while building this.** An initial
+version associated a cluster with articles via any member node's
+`provenance.articles` field — but this field lists every paper that ever
+mentions that entity, not just the paper the cluster's edges came from. In
+practice, a cluster centered on one paper's tensorial Atomic Cluster
+Expansion method pulled in claims about an unrelated paper ("MACE") solely
+because both papers' provenance touched a shared "acetylacetone" dataset
+node. Fixed by associating articles via the **edge-level**
+`provenance.article_id` of the actual clustering hyperedges assigned to
+each cluster — precise, since each edge has exactly one producing article.
+
+**Pilot results (4 of 14 level-0 clusters, 2026 snapshot; full run is the
+natural next step, not done here given time):**
+
+| cluster | label | verdict |
+|---|---|---|
+| 3 | Tensorial & Magnetic Atomic Cluster Expansion | faithful |
+| 1 | Equivariant/Directional Message-Passing GNNs for Molecules | **partial overclaim** |
+| 5 | ML for Multiscale Computational Modeling (Survey) | faithful |
+| 13 | Differentiable Density Functional Theory (D4FT) | **partial overclaim** |
+
+**Over-claim rate: 2/4 (50%) in this pilot** — too small a sample for a
+reliable estimate, but the two failures are informative and both follow
+the same pattern: a *general* topical description was well-supported, but
+a *specific* detail inferred from the raw member list (which dataset was
+used; which methods were directly compared against) turned out to be
+wrong once checked against the independent claims signal. For cluster 1,
+"evaluated largely on QM9" was asserted because QM9 is a cluster member,
+but the actual claims describe evaluation on graphene/MoS2, not QM9. For
+cluster 13, "compared against GAAW, Psi4" was asserted because those
+method names are cluster members, but the actual claims describe
+benchmarking against PySCF. **This suggests a concrete guardrail for any
+full-scale labelling run: a labeller should avoid asserting specific
+comparisons, datasets, or numeric results unless they can be tied to a
+specific piece of evidence, and should default to more general phrasing
+when the member list contains many candidate specifics.** Full pilot
+detail and verdicts in `outputs/labelling_faithfulness_pilot.json`.
+
+**Honest limitation of this specific pilot:** the labelling and the
+faithfulness check were both performed by the same model (Claude) within
+one working session, with the process structured so the label-generation
+step used only `labeller_input` and the faithfulness-check step used only
+the gloss plus `faithfulness_signal` — but this is a *procedural*
+separation, not the stronger guarantee a genuinely separate model call (or
+a separate NLI model) would give. A production version should enforce this
+with two separate, non-overlapping API calls.
+
+### T6 — Extrinsic utility
+
+**Design (label-free, per external review):** the hierarchical drill-down
+represents each level-0/level-1 super-node by the mean TF-IDF vector of its
+members' surface forms, independent of T5. The scorer (TF-IDF cosine
+similarity) is a different embedding family from the MiniLM sentence
+embeddings used for clustering. Beam search descends the hierarchy,
+finally ranking the member nodes of visited leaves; the flat baseline
+ranks all candidate nodes directly with the same scorer. Duplicate target
+names are one equivalence class; Q5/Q11 (zero resolvable targets) and
+Q15-18 (a claims task, not methods) are out of scope. Evaluated on the
+2026 snapshot only.
+
+**Two real bugs were found by external review and fixed, changing the
+conclusion entirely.**
+
+1. **Missing overhead.** The reported "cost" only counted the final
+   leaf-ranking step, silently omitting the 66-102 super-node scores spent
+   during descent — understating true cost by roughly 100x for any target
+   found in the leaf ranking.
+2. **Non-deterministic tie-breaking.** After fixing (1), the one apparent
+   "hit" (Q8) turned out to be a node (`cite_00001`) with a TF-IDF score
+   of **exactly 0.0** — tied with 101 other zero-score candidates, with
+   its reported rank depending on Python's per-process string-hashing
+   order (`PYTHONHASHSEED`), verified directly to range from 136 to 236
+   across different seeds. **The recall@cost table was measuring tie
+   order, not retrieval.**
+
+**Fix:** ranking is now deterministic (sorted candidate order) and
+tie-aware — a zero similarity score means "no lexical overlap at all" and
+is explicitly treated as **not retrieved**, not ranked arbitrarily among
+other zeros.
+
+**Corrected result: a null, uninformative comparison, reported as such.**
+Of 47 targets across 12 usable questions, the hierarchical system finds
+**0**, and the flat baseline finds **2** (both in Q14). Neither system can
+retrieve the large majority of targets at any cost, because TF-IDF gives
+**zero** lexical similarity between natural-language question text
+("Which methods are best suited for...") and short technical target names
+("MACE", "ConvLSTM") for 45 of 47 targets. **This is a scorer limitation,
+not evidence about whether the hierarchy is useful** — but it means this
+specific comparison cannot say anything about the hierarchy's value until
+re-run with a denser, non-lexical scorer (e.g. a second sentence-transformer
+model, genuinely independent of the MiniLM used for clustering). We report
+this as a null result rather than the earlier (incorrect) positive-looking
+comparison.
+
+Full detail in `outputs/extrinsic_eval_detail.json` and
+`outputs/extrinsic_eval_summary.json`.
+
+### T3 — authoritative perturbation-robustness result
+
+A separate bug affected the original T3 perturbation test: it perturbed
+raw hyperedges *before* `merge_evaluated_on_by_article` ran, which could
+change which rows get merged into which edge id, producing ids the fixed
+MiniLM embeddings file was never computed for. This forced that test onto
+TF-IDF, where 13 of 20 seeds degenerated to a single level-0 cluster
+(ARI=0) — an invalid result.
+
+**Fix, in `src/t3_perturbation_real_embeddings.py`:** perturb the
+clustering-eligible edges *after* merging (removing 10% of them never
+changes any other edge's id), using real MiniLM embeddings via subset
+matching, 100 seeds.
+
+**A second, more subtle error was caught and corrected in the same
+script: the statistical test itself was wrong.** An earlier version
+compared a single transition's ARI against the *confidence interval of
+the mean* perturbation ARI — that interval shrinks as more seeds are
+added and says little about whether any one specific transition is
+unusual. The corrected test instead compares each transition's ARI
+against the actual *distribution* of the 100 individual per-seed ARIs:
+`p = (1 + #seeds with ARI >= transition ARI) / (1 + n_seeds)` — a small p
+means that transition is more stable than typical 10%-edge-removal noise.
+
+**Result, reporting the clustering-placed node set as primary (excludes
+nodes only reached via post-hoc attachment) and the all-assigned-nodes set
+as secondary:**
+
+| | 2020→2022 | 2022→2024 | 2024→2026 |
+|---|---|---|---|
+| Transition ARI (clustering-only, primary) | 0.608 | 0.693 | 0.592 |
+| p vs. 100-seed perturbation distribution | 0.19 | **0.03** | 0.24 |
+| Transition ARI (all nodes, secondary) | 0.587 | 0.668 | 0.487 |
+| p vs. 100-seed perturbation distribution | 0.09 | **0.01** | 0.32 |
+
+**Honest interpretation: only the 2022→2024 transition is robustly more
+stable than 10%-edge-removal noise.** The other two transitions are not
+distinguishable from noise by this test. This is a real, if partial,
+positive P5 result — not the uniformly positive "all three transitions
+beat the noise floor" claim an earlier version of this analysis made
+using the wrong statistical comparison. We also note explicitly that this
+is not an equivalent-magnitude comparison: perturbation removes 10% of
+edges, while real growth adds 40-92% of edges across these transitions —
+p-values here should be read as "more/less stable than 10%-removal noise
+specifically," not as a matched-size comparison. Full detail, including
+both node-set variants, in `outputs/t3_perturbation_real_embeddings.json`.
+
+
 
 ### Note on scope
 
