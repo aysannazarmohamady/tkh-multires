@@ -1,0 +1,196 @@
+{
+  "meta": {
+    "cutoffs": [
+      2020,
+      2022,
+      2024,
+      2026
+    ],
+    "alpha": 0.5,
+    "linkage": "complete",
+    "semantic_model_for_shipped_hierarchies": "all-MiniLM-L6-v2 (real sentence embeddings, via HF Space)",
+    "semantic_model_for_perturbation_and_extrinsic_scripts": "TF-IDF (offline; see script docstrings for why real embeddings aren't used there)",
+    "note": "commit hash not tracked in this environment; record at time of git commit. requirements.txt confirmed to install cleanly in an independent clean virtualenv by an external reviewer."
+  },
+  "coherence": {
+    "design": "bibliographic coupling between article pairs via held-out `cites` relation (never used in clustering); provenance guard: no article's placement may derive from `cites` (relaxed from `provenance == 'primary'` to `!= 'cites'` since articles may also be placed deterministically via `presents`)",
+    "per_snapshot": {
+      "2020": {
+        "cutoff": 2020,
+        "n_articles": 9,
+        "n_clusters": 5,
+        "within_pairs": 5,
+        "observed": 0.003,
+        "null_mean": -0.0,
+        "null_sd": 0.0148,
+        "z": 0.2,
+        "p_perm": 0.4006
+      },
+      "2022": {
+        "cutoff": 2022,
+        "n_articles": 14,
+        "n_clusters": 4,
+        "within_pairs": 31,
+        "observed": 0.0038,
+        "null_mean": 0.0,
+        "null_sd": 0.0075,
+        "z": 0.51,
+        "p_perm": 0.2936
+      },
+      "2024": {
+        "cutoff": 2024,
+        "n_articles": 25,
+        "n_clusters": 7,
+        "within_pairs": 112,
+        "observed": -0.0018,
+        "null_mean": -0.0001,
+        "null_sd": 0.0068,
+        "z": -0.25,
+        "p_perm": 0.5769
+      },
+      "2026": {
+        "cutoff": 2026,
+        "n_articles": 37,
+        "n_clusters": 11,
+        "within_pairs": 106,
+        "observed": 0.01,
+        "null_mean": 0.0,
+        "null_sd": 0.006,
+        "z": 1.68,
+        "p_perm": 0.0587
+      }
+    },
+    "result": "null at every snapshot (best case 2026: z=1.68, p=0.059) \u2014 reported as a null result, not significant coherence evidence."
+  },
+  "paper_identity_diagnostic": {
+    "level": 0,
+    "n_nodes_with_article": 5480,
+    "observed_nmi": 0.485,
+    "null_nmi_mean": 0.021,
+    "null_nmi_std": 0.001,
+    "null_nmi_95ci": [
+      0.0191,
+      0.0231
+    ],
+    "z_vs_null": 450.55,
+    "clusters_with_single_article_majority_over_50pct": 4,
+    "total_clusters_at_level": 14
+  },
+  "stability": {
+    "note": "T3's event log (temporal_events.json) is built DIRECTLY from the shipped hierarchy_<year>.json files, not a separate re-clustering.",
+    "authoritative_perturbation_test": {
+      "method": "src/t3_perturbation_real_embeddings.py \u2014 perturbs post-merge clustering-eligible edges (10% removed, 100 seeds), real MiniLM embeddings via subset matching; corrected statistical test (each transition vs. the distribution of individual seed ARIs, not the CI of the mean)",
+      "primary_node_set": "clustering-placed only (excludes post-hoc attachment)",
+      "transition_aris_clustering_only": [
+        0.6084100933146865,
+        0.693168736758654,
+        0.5915962903202416
+      ],
+      "transition_p_values_clustering_only": [
+        0.18811881188118812,
+        0.0297029702970297,
+        0.2376237623762376
+      ],
+      "transition_aris_all_nodes_secondary": [
+        0.5865725450192922,
+        0.66793869386088,
+        0.48732844248227397
+      ],
+      "transition_p_values_all_nodes_secondary": [
+        0.0891089108910891,
+        0.009900990099009901,
+        0.31683168316831684
+      ],
+      "k0_stayed_within_p2_target_all_seeds": true,
+      "interpretation": "Only the 2022->2024 transition is robustly more stable than 10%-edge-removal noise (p=0.03 primary, p=0.01 secondary); 2020->2022 and 2024->2026 are not distinguishable from noise by this test. A partial, not uniform, P5 result. Not an equivalent-magnitude comparison (perturbation removes 10% of edges; real growth adds 40-92%)."
+    },
+    "lambda_decision": {
+      "note": "lambda=0 was chosen after an earlier (TF-IDF-based, degenerate) perturbation analysis; that analysis is NOT the authoritative perturbation result above, and should be read as 'lambda=0 is an untuned default that happened not to be contradicted', not as a result that positively informed the choice.",
+      "selected_lambda_sd": 0.0,
+      "raw_lambda_sweep_file": "outputs/lambda_selection_and_null.json (TF-IDF-based, degenerate \u2014 see file for caveats)"
+    }
+  },
+  "labels": {
+    "pilot_n_labelled": 4,
+    "pilot_over_claim_rate": 0.0,
+    "pilot_note": "CORRECTED from an earlier, wrong 2/4: 0/4 in this pilot, after checking every claim in each cluster's full list rather than skimming the first several. Sample (n=4) is still too small for a reliable rate estimate; a full-scale run with a Wilson CI is the natural next step. The real finding from this pilot is a process lesson: faithfulness judging must check every available claim systematically (e.g. per-entity search), not read a partial list and judge from impression.",
+    "pilot_detail": [
+      {
+        "cluster_id": 3,
+        "n_members": 20,
+        "label": "Tensorial & Magnetic Atomic Cluster Expansion",
+        "gloss": "Extends the Atomic Cluster Expansion framework to represent vectorial and tensorial atomic properties\u2014including magnetic moments and charge transfer\u2014for building interatomic potentials that predict energies, forces, and torques.",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "Directly supported by claims describing ACE generalized to scalar/vectorial/tensorial properties with magnetic moments and charges; no unsupported specifics asserted."
+      },
+      {
+        "cluster_id": 1,
+        "n_members": 40,
+        "label": "Equivariant/Directional Message-Passing GNNs for Molecules",
+        "gloss": "Graph neural network architectures\u2014directional and SE(3)/E(3)-equivariant message passing\u2014for predicting molecular properties and DFT Hamiltonians, evaluated largely on QM9.",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "CORRECTED: originally marked partial_overclaim because the QM9 claims were missed on first pass. Checking the full 44-claim list finds: 'The Message Passing Neural Network (MPNN) achieves state-of-the-art performance on all QM9 regression targets...' and 'Across all QM9 properties, the MPNN reduces the mean absolute error by 30-70%...'. QM9 evaluation is directly supported. The word 'largely' is a mild, hard-to-verify quantifier (only 2 of 44 claims are QM9-specific; most others describe DFT-Hamiltonian prediction on graphene/MoS2), worth softening in a future pass, but this is not an over-claim of an unsupported fact."
+      },
+      {
+        "cluster_id": 5,
+        "n_members": 38,
+        "label": "Machine Learning for Multiscale Computational Modeling (Survey)",
+        "gloss": "A survey-level cluster covering machine learning methods (neural networks, generative models, transfer/meta-learning) applied to multiscale computational modeling tasks such as fluid mechanics, materials microstructure, and manufacturing, along with associated challenges like data scarcity and limited extrapolation.",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "Consistent with claims describing ML as a surrogate/accelerant in multiscale modeling, CNN-based materials microstructure estimation, and memory/computation-cost challenges of hierarchical and concurrent modeling."
+      },
+      {
+        "cluster_id": 13,
+        "n_members": 43,
+        "label": "Differentiable Density Functional Theory (D4FT)",
+        "gloss": "Methods for a GPU-accelerated, automatically-differentiable SCF-DFT implementation (D4FT), including neural local scaling and stochastic optimization, compared against established DFT packages (GPAW, Psi4).",
+        "faithfulness_verdict": "faithful",
+        "faithfulness_note": "CORRECTED: originally marked partial_overclaim because this specific claim was missed on first pass. Checking the full 12-claim list finds: 'D4FT scales to carbon clusters up to C180, achieving wall-clock runtimes an order of magnitude faster (~1100s for C180) than PySCF, GPAW, Psi4, and JAX-SCF.' The GPAW/Psi4 comparison is directly supported."
+      }
+    ],
+    "full_scale_run": "NOT YET DONE \u2014 pilot only (4/14 level-0 clusters, 2026 snapshot)."
+  },
+  "extrinsic": {
+    "usable_questions": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4",
+      "Q6",
+      "Q7",
+      "Q8",
+      "Q9",
+      "Q10",
+      "Q12",
+      "Q13",
+      "Q14"
+    ],
+    "coverage_failures": [
+      "Q5",
+      "Q11"
+    ],
+    "total_targets": 47,
+    "hierarchical_found_any_cost": 0,
+    "flat_found_any_cost": 2,
+    "conclusion": "NULL / UNINFORMATIVE RESULT: TF-IDF gives zero lexical similarity between natural-language questions and short technical target names for the large majority of targets, so neither system can retrieve them regardless of cost. This is a scorer limitation, not a finding about the hierarchy's usefulness. A denser embedding scorer is needed before this comparison is informative.",
+    "caveat": "An earlier version of this script reported a positive-looking result (hierarchical beating flat at low cost) that was an artifact of non-deterministic Python set iteration order breaking ties among zero-similarity candidates \u2014 corrected here."
+  },
+  "verified_vs_assumed": {
+    "verified_directly_by_rerunning": [
+      "T1 snapshot counts and temporal-leak fix",
+      "T2 level-0 cluster counts (10-15 target) on all 4 snapshots",
+      "Node-level laminarity PASS on all 4 snapshots",
+      "Coherence probe z/p values, reproduced exactly by an independent external review",
+      "T3/T4: events and cohesion both derive from the same shipped hierarchies, reproduced byte-identically by an independent external review",
+      "T5 pilot: corrected to 0/4 overclaims after external review found both original verdicts were wrong (evidence was present but missed on an incomplete read)",
+      "T6: cost accounting AND ranking determinism corrected -- an independent review traced a specific 'hit' to a hash-randomization artifact among zero-similarity ties (verified: the hit node, cite_00001, has TF-IDF score exactly 0.0)",
+      "T3 authoritative perturbation test: real MiniLM embeddings via subset matching after the evaluated_on merge, 100 seeds, all k0 within P2 target, ARI closely matched an independent external re-run once using the same node set",
+      "eff_first_seen fix: 17 nodes (e.g. NequIP) where an edge's article_year predated the node's own first_seen_year now correctly included from the earlier snapshot; dropped_partial_edges is now 0 at every cutoff (was previously nonzero at 2020/2022/2024)"
+    ],
+    "assumed_or_not_yet_verified": [
+      "Full-scale T5 labelling (only a 4-cluster pilot exists, corrected to 0/4 overclaims, still too small a sample for a real rate; task requires 'more than eyeballing ten')",
+      "Extrinsic task result is now a confirmed NULL/uninformative result with TF-IDF (0/47 hierarchical, 2/47 flat found) -- a denser embedding scorer is needed before this comparison says anything about the hierarchy's value",
+      "hierarchy_*.json files do not yet contain the full per-super-node record schema (id, level, parent_id, member_ids, label, gloss, persistent_id) that section 6.2 of the task specifies"
+    ]
+  }
+}
