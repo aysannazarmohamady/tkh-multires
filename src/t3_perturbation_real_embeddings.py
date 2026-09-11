@@ -1,21 +1,37 @@
 """
-T3 — Corrected perturbation-robustness test.
+T3 — Perturbation-robustness test with SNAPSHOT-MATCHED nulls.
 
-Fix (found by external review): the previous version perturbed RAW
-hyperedges before `merge_evaluated_on_by_article` ran, which could change
-which rows get merged into which edge id, producing edge ids the fixed
-MiniLM embeddings file was never computed for. That forced an earlier
-version onto TF-IDF for this specific test, and even then 13/20
-perturbation seeds collapsed to a single level-0 cluster (ARI=0).
+Question: is each real cross-snapshot transition (a -> b) at least as
+stable as the clustering's own noise floor, i.e. re-clustering after
+removing 10% of the clustering-eligible hyperedges?
 
-Fix: perturb the CLUSTERING-ELIGIBLE edges (AFTER merging), so removing
-10% of them never changes any other edge's id — the real, fixed MiniLM
-embeddings file can be used directly via subset matching.
+Fix 1 (earlier external review): perturb the post-merge clustering-eligible
+edges, so removing 10% never changes other edge ids and the fixed MiniLM
+embeddings file can be used via subset matching.
+
+Fix 2 (this review round): an earlier version compared EVERY transition
+against a single null built on the 2026 snapshot. Smaller snapshots cluster
+much more stably (mean null ARI ~0.77 at 2020 vs ~0.50 at 2026), so the
+2026 null was far too lenient for earlier transitions and produced the
+only "significant" result (2022->2024, p=0.03), which also did not survive
+multiple-testing correction. Now:
+  - a separate 10%-removal null is built for EVERY snapshot;
+  - transition a->b is tested against both endpoint nulls, and the
+    conservative p = max(p_vs_null(a), p_vs_null(b)) is reported;
+  - p-values are Holm-adjusted across the 3 transitions;
+  - n_seeds defaults to 1000 so thresholds sit well above the 1/(n+1)
+    resolution floor.
+The superseded 2026-only p-values are kept in the output, clearly labelled,
+for traceability. Caveat unchanged: 10% removal is not a matched-magnitude
+comparison to 40-92% real growth.
 
 Usage:
-    python src/t3_perturbation_real_embeddings.py
+    python src/t3_perturbation_real_embeddings.py [--n-seeds 1000]
 """
 
+import argparse
+import contextlib
+import io
 import json
 import sys
 
@@ -60,119 +76,136 @@ def perturb_clustering_edges(edges, seed, frac=0.10):
     return [e for i, e in enumerate(edges) if i not in remove_idx]
 
 
-def main():
-    data = json.load(open("data/tkh_collection10.json"))
-    node_lookup = {n["id"]: n for n in data["nodes"]}
-    cutoff = 2026
+HIERARCHY_PATHS = {2020: "outputs/hierarchy_2020.json", 2022: "outputs/hierarchy_2022.json",
+                   2024: "outputs/hierarchy_2024.json", 2026: "outputs/hierarchy.json"}
+
+
+def ari_on_common(ref: dict, other: dict) -> float:
+    common = sorted(set(ref) & set(other))
+    return adjusted_rand_score([ref[n] for n in common], [other[n] for n in common])
+
+
+def p_upper(null: np.ndarray, observed: float) -> float:
+    """p = fraction of null seeds at least as stable as `observed` (+1 smoothing)."""
+    return float((1 + (null >= observed).sum()) / (1 + len(null)))
+
+
+def holm(pvals: list) -> list:
+    order = np.argsort(pvals)
+    m, adj, running = len(pvals), [0.0] * len(pvals), 0.0
+    for rank, i in enumerate(order):
+        running = max(running, min(1.0, (m - rank) * pvals[i]))
+        adj[i] = running
+    return adj
+
+
+def boot_ci(arr, n_boot=5000):
+    rng = np.random.default_rng(0)
+    boot = [rng.choice(arr, size=len(arr), replace=True).mean() for _ in range(n_boot)]
+    return [float(x) for x in np.percentile(boot, [2.5, 97.5])]
+
+
+def snapshot_null(data, node_lookup, cutoff, n_seeds, shipped):
     nodes, edges = filter_snapshot(data, cutoff)
     all_edges_snap = [e for e in data["hyperedges"]
-                       if e.get("provenance", {}).get("article_year") is not None
-                       and e["provenance"]["article_year"] <= cutoff]
+                      if e.get("provenance", {}).get("article_year") is not None
+                      and e["provenance"]["article_year"] <= cutoff]
+    with contextlib.redirect_stdout(io.StringIO()):  # silence per-run attachment logs
+        ref_all, ref_co, ref_k0 = cluster_snapshot(nodes, edges, all_edges_snap, node_lookup)
+        # The reference must BE the shipped hierarchy, or the null is about a different object.
+        if ref_all != shipped["all"] or ref_co != shipped["co"]:
+            raise RuntimeError(f"{cutoff}: re-clustering differs from shipped hierarchy; re-run method.py")
+        aris_all, aris_co, k0s = [], [], []
+        for seed in range(n_seeds):
+            pa, pc, k0 = cluster_snapshot(nodes, perturb_clustering_edges(edges, seed), all_edges_snap, node_lookup)
+            aris_all.append(ari_on_common(ref_all, pa))
+            aris_co.append(ari_on_common(ref_co, pc))
+            k0s.append(k0)
+    aris_all, aris_co = np.array(aris_all), np.array(aris_co)
+    print(f"  {cutoff}: {len(edges)} edges, ref k0={ref_k0}; null ARI clustering-only "
+          f"mean={aris_co.mean():.3f}, all-nodes mean={aris_all.mean():.3f}; k0 range {min(k0s)}-{max(k0s)}")
+    return {
+        "n_clustering_edges": len(edges), "reference_k0": ref_k0,
+        "perturbed_k0_range": [min(k0s), max(k0s)],
+        "perturbed_k0_all_within_p2": all(10 <= k <= 15 for k in k0s),
+        "aris_clustering_only": aris_co, "aris_all_nodes": aris_all,
+    }
 
-    print(f"Reference clustering (2026, {len(edges)} clustering-eligible edges, post-merge)...")
-    ref_all, ref_clustering_only, ref_k0 = cluster_snapshot(nodes, edges, all_edges_snap, node_lookup)
-    print(f"  k0={ref_k0}")
 
-    n_seeds = 100
-    aris_all, aris_clustering_only, k0s = [], [], []
-    for seed in range(n_seeds):
-        perturbed_edges = perturb_clustering_edges(edges, seed=seed, frac=0.10)
-        pert_all, pert_clustering_only, pert_k0 = cluster_snapshot(nodes, perturbed_edges, all_edges_snap, node_lookup)
-        k0s.append(pert_k0)
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--n-seeds", type=int, default=1000)
+    ap.add_argument("--out", default="outputs/t3_perturbation_real_embeddings.json")
+    args = ap.parse_args()
 
-        common_all = sorted(set(ref_all) & set(pert_all))
-        aris_all.append(adjusted_rand_score([ref_all[n] for n in common_all], [pert_all[n] for n in common_all]))
+    data = json.load(open("data/tkh_collection10.json"))
+    node_lookup = {n["id"]: n for n in data["nodes"]}
 
-        common_co = sorted(set(ref_clustering_only) & set(pert_clustering_only))
-        aris_clustering_only.append(adjusted_rand_score(
-            [ref_clustering_only[n] for n in common_co], [pert_clustering_only[n] for n in common_co]))
+    shipped = {}
+    for c, path in HIERARCHY_PATHS.items():
+        h = json.load(open(path))
+        prov = h["node_assignment_provenance"]
+        lab_all = {nid: v[0] for nid, v in h["node_assignment"].items() if v[0] is not None}
+        shipped[c] = {"all": lab_all, "co": {n: l for n, l in lab_all.items() if prov.get(n) == "primary"}}
 
-        if seed % 20 == 0:
-            print(f"  seed={seed}: k0={pert_k0}, ARI(all)={aris_all[-1]:.3f}, "
-                  f"ARI(clustering-only)={aris_clustering_only[-1]:.3f}")
+    print(f"Building 10%-removal nulls, {args.n_seeds} seeds per snapshot...")
+    nulls = {c: snapshot_null(data, node_lookup, c, args.n_seeds, shipped[c]) for c in CUTOFFS}
 
-    aris_all, aris_clustering_only = np.array(aris_all), np.array(aris_clustering_only)
+    transitions, rows = list(zip(CUTOFFS[:-1], CUTOFFS[1:])), {"clustering_only": [], "all_nodes": []}
+    for key, lab_key, null_key in [("clustering_only", "co", "aris_clustering_only"),
+                                   ("all_nodes", "all", "aris_all_nodes")]:
+        for a, b in transitions:
+            obs = ari_on_common(shipped[a][lab_key], shipped[b][lab_key])
+            p_prev, p_curr = p_upper(nulls[a][null_key], obs), p_upper(nulls[b][null_key], obs)
+            rows[key].append({
+                "transition": f"{a}->{b}", "observed_ari": obs,
+                "p_vs_prev_snapshot_null": p_prev, "p_vs_curr_snapshot_null": p_curr,
+                "p_conservative": max(p_prev, p_curr),
+                "p_vs_2026_null_SUPERSEDED": p_upper(nulls[2026][null_key], obs),
+            })
+        for r, adj in zip(rows[key], holm([r["p_conservative"] for r in rows[key]])):
+            r["p_conservative_holm"] = adj
 
-    def boot_ci(arr):
-        rng = np.random.default_rng(0)
-        boot = [rng.choice(arr, size=len(arr), replace=True).mean() for _ in range(5000)]
-        return np.percentile(boot, [2.5, 97.5])
+    for key in rows:
+        print(f"\n{key}{' (PRIMARY)' if key == 'clustering_only' else ''}:")
+        for r in rows[key]:
+            print(f"  {r['transition']}: ARI={r['observed_ari']:.3f}  p_prev={r['p_vs_prev_snapshot_null']:.3f}  "
+                  f"p_curr={r['p_vs_curr_snapshot_null']:.3f}  p_cons(Holm)={r['p_conservative_holm']:.3f}  "
+                  f"[superseded 2026-null p={r['p_vs_2026_null_SUPERSEDED']:.3f}]")
+    n_sig = sum(r["p_conservative_holm"] < 0.05 for r in rows["clustering_only"])
 
-    ci_all = boot_ci(aris_all)
-    ci_co = boot_ci(aris_clustering_only)
-
-    print(f"\nPerturbation ARI, {n_seeds} seeds:")
-    print(f"  All assigned nodes:       mean={aris_all.mean():.3f}, 95% CI [{ci_all[0]:.3f}, {ci_all[1]:.3f}]")
-    print(f"  Clustering-placed only:   mean={aris_clustering_only.mean():.3f}, "
-          f"95% CI [{ci_co[0]:.3f}, {ci_co[1]:.3f}]  <- PRIMARY (excludes post-hoc attachment)")
-    print(f"k0 range across perturbed seeds: {min(k0s)}-{max(k0s)} "
-          f"(all within P2's 10-15 target: {all(10 <= k <= 15 for k in k0s)})")
-
-    hierarchy_paths = {2020: "outputs/hierarchy_2020.json", 2022: "outputs/hierarchy_2022.json",
-                       2024: "outputs/hierarchy_2024.json", 2026: "outputs/hierarchy.json"}
-    labels_all_by_cutoff, labels_co_by_cutoff = {}, {}
-    for c, p in hierarchy_paths.items():
-        h = json.load(open(p))
-        prov = h.get("node_assignment_provenance", {})
-        labels_all_by_cutoff[c] = {nid: v[0] for nid, v in h["node_assignment"].items() if v[0] is not None}
-        labels_co_by_cutoff[c] = {nid: l for nid, l in labels_all_by_cutoff[c].items() if prov.get(nid) == "primary"}
-
-    def transition_aris_for(labels_by_cutoff):
-        out = []
-        for prev_c, curr_c in zip(CUTOFFS[:-1], CUTOFFS[1:]):
-            l1, l2 = labels_by_cutoff[prev_c], labels_by_cutoff[curr_c]
-            common = sorted(set(l1) & set(l2))
-            out.append(adjusted_rand_score([l1[n] for n in common], [l2[n] for n in common]))
-        return out
-
-    trans_all = transition_aris_for(labels_all_by_cutoff)
-    trans_co = transition_aris_for(labels_co_by_cutoff)
-
-    def per_transition_p(aris, transitions):
-        """CORRECTED test (fix: an earlier version compared a single
-        transition ARI against the confidence interval of the MEAN
-        perturbation ARI — that interval shrinks as seeds are added and
-        says little about any one transition. The correct test compares
-        each transition against the actual DISTRIBUTION of individual
-        seed ARIs: p = fraction of seeds at least as stable as the
-        transition.)"""
-        return [(1 + (aris >= t).sum()) / (1 + len(aris)) for t in transitions]
-
-    p_all = per_transition_p(aris_all, trans_all)
-    p_co = per_transition_p(aris_clustering_only, trans_co)
-
-    print(f"\nCORRECTED per-transition test (p = fraction of {n_seeds} perturbation "
-          f"seeds with ARI >= the transition's ARI; low p = transition is more "
-          f"stable than typical noise):")
-    print(f"  All-nodes transitions:            ARI={[round(a,3) for a in trans_all]}, p={[round(p,3) for p in p_all]}")
-    print(f"  Clustering-only transitions (PRIMARY): ARI={[round(a,3) for a in trans_co]}, p={[round(p,3) for p in p_co]}")
-    print(f"\nNote: this is NOT an 'equivalent-sized' comparison — perturbation removes "
-          f"10% of edges, while real growth adds 40-92% across these transitions. "
-          f"Interpret p-values as 'more/less stable than 10%-edge-removal noise', "
-          f"not as a matched-magnitude comparison.")
-
-    with open("outputs/t3_perturbation_real_embeddings.json", "w") as f:
-        json.dump({
-            "method": "perturb post-merge clustering-eligible edges (10% removed), real MiniLM "
-                      "embeddings via subset matching; two node sets reported",
-            "n_seeds": n_seeds,
-            "reference_k0": ref_k0,
-            "perturbed_k0_range": [min(k0s), max(k0s)],
-            "perturbed_k0_all_within_p2": all(10 <= k <= 15 for k in k0s),
-            "perturbation_aris_all_nodes": aris_all.tolist(),
-            "perturbation_aris_clustering_only": aris_clustering_only.tolist(),
-            "perturbation_ari_mean_all_nodes": float(aris_all.mean()),
-            "perturbation_ari_mean_clustering_only": float(aris_clustering_only.mean()),
-            "perturbation_ari_ci95_all_nodes": [float(ci_all[0]), float(ci_all[1])],
-            "perturbation_ari_ci95_clustering_only": [float(ci_co[0]), float(ci_co[1])],
-            "transition_aris_all_nodes": trans_all,
-            "transition_aris_clustering_only": trans_co,
-            "transition_p_values_all_nodes": p_all,
-            "transition_p_values_clustering_only_PRIMARY": p_co,
-            "caveat_not_equivalent_sized": "perturbation removes 10% of edges; real growth adds 40-92% "
-                                            "across these transitions -- not a matched-magnitude comparison",
-        }, f, indent=2)
-    print("\nSaved outputs/t3_perturbation_real_embeddings.json")
+    out = {
+        "method": "per-snapshot null: re-cluster after removing 10% of post-merge clustering-eligible "
+                  "edges (real MiniLM embeddings via subset matching); each transition tested against "
+                  "both endpoint nulls, conservative p = max, Holm-adjusted across transitions",
+        "n_seeds": args.n_seeds,
+        "null_by_snapshot": {
+            str(c): {
+                "n_clustering_edges": v["n_clustering_edges"], "reference_k0": v["reference_k0"],
+                "perturbed_k0_range": v["perturbed_k0_range"],
+                "perturbed_k0_all_within_p2": v["perturbed_k0_all_within_p2"],
+                "ari_mean_clustering_only": float(v["aris_clustering_only"].mean()),
+                "ari_ci95_of_mean_clustering_only": boot_ci(v["aris_clustering_only"]),
+                "ari_2.5_97.5_pct_clustering_only": [float(x) for x in np.percentile(v["aris_clustering_only"], [2.5, 97.5])],
+                "ari_mean_all_nodes": float(v["aris_all_nodes"].mean()),
+                "ari_ci95_of_mean_all_nodes": boot_ci(v["aris_all_nodes"]),
+                "aris_clustering_only": v["aris_clustering_only"].tolist(),
+                "aris_all_nodes": v["aris_all_nodes"].tolist(),
+            } for c, v in nulls.items()
+        },
+        "transitions_clustering_only_PRIMARY": rows["clustering_only"],
+        "transitions_all_nodes_secondary": rows["all_nodes"],
+        "n_transitions_significant_primary_holm_0.05": n_sig,
+        "interpretation": (f"{n_sig}/3 transitions are more stable than their own snapshots' 10%-edge-removal "
+                           "noise after Holm correction. The earlier claim that 2022->2024 is robustly stable "
+                           "(p=0.03) came from comparing against the 2026 null, which is much less stable than "
+                           "the 2022/2024 nulls, and is withdrawn."),
+        "caveat_not_equivalent_sized": "perturbation removes 10% of edges; real growth adds 40-92% across "
+                                       "these transitions -- not a matched-magnitude comparison",
+    }
+    with open(args.out, "w") as f:
+        json.dump(out, f, indent=2)
+    print(f"\nSaved {args.out}")
 
 
 if __name__ == "__main__":
