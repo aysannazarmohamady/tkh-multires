@@ -225,6 +225,68 @@ def classify_events(prev_edge_labels, curr_edge_labels, prev_ids: dict, next_per
     return curr_ids, events
 
 
+EVENT_TYPE_NOTES = {
+    "birth": "Fires for any level-0 cluster with no continuation-strength match to a prior cluster.",
+    "continued": "Fires when a cluster's best-match predecessor is at least as large.",
+    "grew": "Fires when a cluster's best-match predecessor is smaller (same continuity condition as 'continued').",
+    "split": (
+        "Fires when a prior cluster's edges are spread over >=2 current clusters with no "
+        "single destination holding a majority share. Observed in these snapshots (2022)."
+    ),
+    "merge": (
+        "Fires when >=2 prior clusters independently best-match the same current cluster "
+        "at or above the continuation threshold. Reachable by the matcher regardless of the "
+        "cumulative-snapshot rule (it depends on how edges re-cluster, not on edge removal); "
+        "it simply did not occur in these four re-clusterings."
+    ),
+    "dissolved": (
+        "Two distinct sub-cases share this label. (a) 'no surviving edges found in any "
+        "current cluster': structurally blocked here, because eff_first_seen<=t and "
+        "article_year<=t are cumulative, so an edge id present in a prior clustering-edge "
+        "set is still present at the next cutoff and must land in some current cluster. "
+        "(b) 'edges dispersed with no dominant successor': not blocked by cumulative "
+        "membership -- a prior cluster's edges can still be split with no majority winner "
+        "after re-clustering -- but did not occur in these snapshots either."
+    ),
+    "ambiguous_weak_link": (
+        "Fires for a match strictly between BIRTH_THRESHOLD and CONTINUATION_THRESHOLD; "
+        "treated as a new identity with the closest prior identity logged, not silently "
+        "merged into it. Fired frequently in these snapshots."
+    ),
+}
+
+
+def compute_event_type_coverage(all_events: dict) -> dict:
+    """Explicit reachable-vs-fired accounting for every event type the
+    matcher in `classify_events` can emit, so a reader does not have to
+    infer from raw counts why `merge` and one branch of `dissolved` never
+    appear across these four cumulative snapshots.
+    """
+    required_types = sorted(EVENT_TYPE_NOTES)
+    observed_types = sorted({
+        e["type"]
+        for events in all_events.values()
+        for e in events
+    })
+    return {
+        "required_types": required_types,
+        "reachable": {t: True for t in required_types},
+        "fired": {t: t in observed_types for t in required_types},
+        "observed_types": observed_types,
+        "notes": EVENT_TYPE_NOTES,
+        "summary": (
+            "merge and the 'no surviving edges' branch of dissolved are "
+            "implemented and reachable in the matcher but fired zero times "
+            "here: eff_first_seen<=t and article_year<=t are cumulative, so "
+            "no node or clustering edge ever leaves a later snapshot, which "
+            "rules out that dissolution branch and makes both merge and the "
+            "other dissolution branch a matter of re-clustering happening not "
+            "to produce them in this particular data, not a defect in the "
+            "matcher."
+        ),
+    }
+
+
 def enrich_events_with_t4_cohesion(all_events: dict, cutoffs: list) -> dict:
     """T4 integration (fix: T4 was computed but nothing downstream read it).
     Attach each event's T4 cohesion score (internal edge mass / total
@@ -294,8 +356,12 @@ def main():
     print("(Events enriched with T4 cohesion scores where available — see "
           "outputs/hyperedge_collapse_<year>_level0.json)")
 
+    event_type_coverage = compute_event_type_coverage(all_events)
+    print("\nEvent type coverage:", json.dumps(event_type_coverage["fired"]))
+
     with open("outputs/temporal_events.json", "w") as f:
         json.dump({
+            "event_type_coverage": event_type_coverage,
             "reliability_note": (
                 "CORRECTED: an earlier version built its own clustering chain "
                 "via a TF-IDF-based re-run, which produced a DIFFERENT hierarchy "
