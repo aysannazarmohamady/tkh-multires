@@ -883,3 +883,56 @@ schema" → "Complete the project based on the review."
 
 **Not verified:** relational faithfulness of glosses. The check is
 entity-level, and the same model family wrote and checked the labels.
+
+## Post-review correction — T4 scope clarification and T3 event-type coverage
+
+**Tool:** Claude (Anthropic), directed by an external reviewer's (Codex) two
+claims and a request to resolve them against the assignment text itself.
+
+**Major prompts (paraphrased):** "Codex says T4 is post-hoc, not
+load-bearing, and that merge/dissolved never firing is a matcher defect —
+check both against the actual assignment wording and tell me if they're
+gate failures." → "Apply only the two agreed fixes, minimally, without
+touching anything else."
+
+**What changed (accepted after checking against the assignment's P4/T4 and
+T3/P5 wording):**
+- `report.md` §4 and §8: added an explicit note that the T4 native collapse
+  is a per-level read-out operator, not a step that feeds back into the
+  distance matrix/clustering that produces the next level. Documented as a
+  limitation of the method family (agglomerative hyperedge clustering has
+  no coarsening loop), not fixed by re-architecting the method —
+  re-architecting was judged out of scope for a resubmission and not
+  required by the assignment's P4 wording ("implemented and actually used
+  by the method," not "recursively drives the hierarchy").
+- `report.md` §5 and §9: added a one-line explanation of why `merge` and
+  one branch of `dissolved` never fire, referencing the new
+  `event_type_coverage` block.
+- `src/build_temporal_events.py`: added `EVENT_TYPE_NOTES` and
+  `compute_event_type_coverage()`, recording per event type whether it is
+  reachable, whether it fired in these four snapshots, and why —
+  distinguishing the two `dissolved` sub-cases, since only one ("no
+  surviving edges anywhere") is structurally blocked by cumulative
+  `eff_first_seen<=t`/`article_year<=t` membership; the other, and `merge`,
+  are reachable but simply did not occur in this data. Pure function of the
+  already-computed event log — no new randomness or ordering dependence.
+- `outputs/temporal_events.json`: regenerated via
+  `python3 src/build_temporal_events.py`.
+
+**Rejected:** Codex's framing of both findings as gate failures (T4 "not
+load-bearing," merge/dissolved "never firing" as a defect). The
+assignment's P4/T4 text requires the coarsening rule be "implemented and
+actually used by the method," which the shipped T4 satisfies (real
+hyperedge input, tests proving output changes with input, loss quantified)
+without requiring a recursive coarsening loop the chosen method family
+doesn't have. The assignment's P5/T3 text requires events be "trackable,"
+not that every type fire; under cumulative snapshots, non-firing of
+`merge`/`dissolved` is a documented data property, consistent with the
+rubric's explicit instruction to flag rather than hide uncertainty.
+
+**Verified:** `python3 src/build_temporal_events.py` re-run twice,
+byte-identical output both times; `python3 src/merge_supernodes.py
+--template-unlabelled --strict` passes against the regenerated
+`temporal_events.json` with no errors (checked `merge_supernodes.py` reads
+only the unchanged `events_by_snapshot` key, confirming `hierarchy_*.json`
+files did not need to change).
