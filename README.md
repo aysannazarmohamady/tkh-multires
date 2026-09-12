@@ -9,6 +9,9 @@ tracking, and an evaluation designed to avoid coherence circularity.
 limitations). The full review/correction history is in
 `docs/report_review_history.md`; AI assistance is logged in `AI_USAGE.md`.
 
+<img width="2172" height="724" alt="image" src="https://github.com/user-attachments/assets/0aec8b6a-0f3f-4628-abea-48a8aba03cdb" />
+
+
 ## Status
 
 All tasks T1–T7 are complete. Headline results, stated plainly:
