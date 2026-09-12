@@ -132,6 +132,17 @@ relation beyond the stored multiplicities, and edge identity when several
 edges land on the same σ (weights are summed). Hand-verified on the arity-20
 edge `h_00050` (multiplicities 18/1/1).
 
+**Scope of "load-bearing."** T4 is a per-level read-out operator, not a
+recursive coarsening step: it consumes the already-fixed agglomerative
+hierarchy and reports each level's native coarse hypergraph independently;
+its output does not feed back into the distance matrix or clustering that
+produced the *next* level's cluster labels, only into the T3 cohesion signal
+(§5) and this loss accounting. The agglomerative hyperedge-clustering method
+has no level-to-level coarsening loop for T4 to sit inside, so this is a
+property of the chosen method family, not an unapplied rule — but it means
+"T4's output is used downstream" should be read as "used by evaluation,"
+not "drives the hierarchy."
+
 ## 5. Temporal coupling (T3)
 
 Each snapshot is clustered independently (no regularisation). Identity is
@@ -143,7 +154,14 @@ successors → split; < 0.1 → birth/dissolution; otherwise an explicit
 super-node. Observed: 11 births (2020); then 3 continued + 3 grew + 2 split +
 2 births + 7 weak links (2022); 2 + 5 + 2 births + 6 weak links (2024);
 5 + 3 + 1 birth + 5 weak links (2026). The cost of not enforcing continuity is
-visible: many weak links, no guaranteed identity.
+visible: many weak links, no guaranteed identity. `merge` and one branch of
+`dissolved` never fire: both are implemented and reachable in the matcher,
+but no node or clustering edge ever leaves a later snapshot under cumulative
+`eff_first_seen ≤ t` / `article_year ≤ t`, which rules out "no surviving
+edges anywhere" dissolution outright and left merge and the dispersal-based
+dissolution branch simply unproduced by these four re-clusterings. The full
+reachable/fired breakdown, by type, is in the `event_type_coverage` block of
+`outputs/temporal_events.json`.
 
 ![level-0 evolution](outputs/fig_level0_evolution.png)
 
@@ -250,6 +268,12 @@ laminarity always holds. Results are reproducible because the order is fixed,
 but not order-invariant. A canonical tie-break is one line, yet would change
 `n_members` in 126/188 labelled clusters.
 
+**T4 is read-out-only.** As noted in §4, the native coarse-hypergraph
+representation does not recursively drive clustering at the next level; it
+is consumed by T3 cohesion and by the loss accounting in this report, not by
+the distance matrix. Wiring a coarsening feedback loop into an agglomerative
+method would mean changing the method family, not fixing an oversight.
+
 **Other.** Persistent identity exists only at level 0; P1/P2 exclude nodes
 with no incident edge at *t*; the coherence probe has little power; the
 λ-sweep file (`lambda_selection_and_null.json`) is legacy and its growth-null
@@ -265,7 +289,9 @@ re-clustering equals the shipped hierarchy (asserted); persistent ids
 recomputed by the merge step reproduce `temporal_events.json`; every label's
 member count matches the current hierarchy; the `authored_by` attachment fix
 changed only the 105/131/250/318 author nodes and left coherence unchanged;
-a clean-room run (fresh venv, `bash reproduce.sh`) reproduces every output.
+a clean-room run (fresh venv, `bash reproduce.sh`) reproduces every output;
+`outputs/temporal_events.json`'s `event_type_coverage` block reproduces
+identically and matches the per-transition counts stated in §5.
 That check found and we fixed one real nondeterminism: structural weights were
 summed in set-iteration order (hash-seed dependent), giving ~1e-17 differences
 that flipped ~1% of perturbed re-clusterings; `math.fsum` removes it, and the
